@@ -1,0 +1,1 @@
+import NewHomePageRoute from './new-home-page/page'; export default function Home() { return <NewHomePageRoute />; }

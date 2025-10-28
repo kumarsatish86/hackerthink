@@ -1,0 +1,419 @@
+.codeInline {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  font-family: 'Courier New', monospace;
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  color: #e53e3e;
+  font-size: 0.95em;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.codeBlock {
+  display: block;
+  margin-bottom: 0;
+  padding: 1rem 1.25rem;
+  background-color: #1a202c;
+  background-image: linear-gradient(to right, #1a202c, #2d3748);
+  color: #e2e8f0;
+  font-family: 'Courier New', monospace;
+  border-radius: 0.5rem 0.5rem 0 0;
+  overflow-x: auto;
+  white-space: pre;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #4299e1;
+  position: relative;
+}
+
+.codeBlock::before {
+  content: "$ ";
+  color: #718096;
+  user-select: none;
+}
+
+.exampleWrapper {
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transform: translateZ(0);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exampleWrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.exampleExplanation {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 1.25rem;
+  border-left: 4px solid #4299e1;
+  background-color: #f8fafc;
+  color: #4a5568;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+  border-radius: 0 0 0.5rem 0.5rem;
+  position: relative;
+}
+
+.exampleExplanation::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(66, 153, 225, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.exampleExplanation p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.exampleExplanation p:last-child {
+  margin-bottom: 0;
+}
+
+.exampleHeader {
+  display: block;
+  padding: 0.5rem 1rem;
+  background-color: #edf2f7;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0;
+}
+
+.syntaxHighlight {
+  color: #48bb78;
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(72, 187, 120, 0.3);
+}
+
+.optionHighlight {
+  color: #4299e1;
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(66, 153, 225, 0.3);
+}
+
+.pathHighlight {
+  color: #ed8936;
+  font-weight: 500;
+  text-shadow: 0 0 2px rgba(237, 137, 54, 0.3);
+}
+
+.specialCharHighlight {
+  color: #9f7aea;
+  font-weight: 500;
+}
+
+.exampleSection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.commandDescription {
+  margin-bottom: 0.5rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* Example Type Badges */
+.exampleBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-left: 0.5rem;
+}
+
+.basicBadge {
+  background-color: #e6fffa;
+  color: #319795;
+  border: 1px solid #b2f5ea;
+}
+
+.advancedBadge {
+  background-color: #ebf4ff;
+  color: #4c51bf;
+  border: 1px solid #c3dafe;
+}
+
+.intermediateBadge {
+  background-color: #fffaf0;
+  color: #dd6b20;
+  border: 1px solid #feebc8;
+}
+
+/* Animation for the cursor in code blocks */
+.liveCursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: #4299e1;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+  opacity: 0.7;
+}
+
+/* Hero Section Styles */
+.heroSection {
+  background: linear-gradient(135deg, #4a5568 0%, #1a202c 100%);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.terminalGraphic {
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.terminalWindow {
+  position: absolute;
+  right: -150px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-15deg);
+  width: 500px;
+  height: 300px;
+  background-color: #1a202c;
+  border-radius: 8px;
+  border: 1px solid #4a5568;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+.terminalWindow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  background-color: #2d3748;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #4a5568;
+}
+
+.terminalWindow::after {
+  content: '• • •';
+  position: absolute;
+  top: 0;
+  left: 10px;
+  line-height: 25px;
+  color: #a0aec0;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+/* Terminal Animation in Learn Section */
+.terminalAnimation {
+  width: 100%;
+  max-width: 300px;
+  background-color: #1a202c;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.terminalHeader {
+  height: 30px;
+  background-color: #2d3748;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.terminalDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: #fc8181;
+}
+
+.terminalDot:nth-child(2) {
+  background-color: #f6e05e;
+}
+
+.terminalDot:nth-child(3) {
+  background-color: #68d391;
+}
+
+.terminalBody {
+  padding: 15px;
+  min-height: 150px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #e2e8f0;
+  position: relative;
+}
+
+.terminalText {
+  line-height: 1.6;
+}
+
+.command {
+  color: #4299e1;
+  font-weight: bold;
+}
+
+.terminalCursor {
+  position: absolute;
+  bottom: 15px;
+  left: 40px;
+  width: 10px;
+  height: 20px;
+  background-color: #e2e8f0;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.codeBlockContainer {
+  position: relative;
+  overflow: visible;
+}
+
+.codeBlockActions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.exampleWrapper:hover .codeBlockActions {
+  opacity: 1;
+}
+
+.copyButton {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #4a5568;
+  border: none;
+  height: 28px;
+  width: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.copyButton:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: #2b6cb0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.copyButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Adjust spacing for headings that introduce examples */
+h3 + .exampleWrapper,
+h4 + .exampleWrapper {
+  margin-top: 0.5rem;
+}
+
+/* Remove excessive space between example sections */
+.exampleWrapper + h3,
+.exampleWrapper + h4 {
+  margin-top: 1.5rem;
+}
+
+/* Fix the spacing issue with empty divs */
+.emptyDiv {
+  margin: 0;
+  padding: 0;
+  height: 0;
+}
+
+/* Styles for the Notes section */
+.notesSection h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3748;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.notesSection h4 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.notesSection div.flex {
+  display: flex;
+  margin: 0.5rem 0;
+  align-items: flex-start;
+}
+
+.notesSection div.flex span.font-semibold {
+  min-width: 12rem;
+  font-weight: 600;
+  color: #4a5568;
+  flex-shrink: 0;
+  padding-right: 1rem;
+}
+
+.notesSection div.mt-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+}
+
+.notesSection div.mt-2 span.font-semibold {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+} 

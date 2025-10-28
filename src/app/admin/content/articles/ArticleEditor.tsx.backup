@@ -1,0 +1,2349 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+// Removed dynamic import - not needed anymore
+import Image from 'next/image';
+import { MediaPicker, MediaItem } from '../../../../components/MediaPicker';
+import DirectQuillEditor from '../../../../components/DirectQuillEditor';
+import { formatDistanceToNow } from 'date-fns';
+import toast, { Toaster } from 'react-hot-toast';
+// Removed react-quill import - using DirectQuillEditor instead
+import 'katex/dist/katex.min.css';
+import katex from 'katex';
+import 'highlight.js/styles/github.css';
+// Removed Delta import - not needed anymore
+import { WithContext, Article as ArticleSchema } from 'schema-dts';
+import JsonEditor from '../../../../components/JsonEditor';
+
+// Article interface
+interface Article {
+  id?: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  featured_image?: string | null;
+  featured_image_alt?: string;
+  status: 'draft' | 'published' | 'scheduled';
+  schedule_date?: string;
+  category_id?: string | null;
+  author_id?: string;
+  tags?: string[];
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  estimated_reading_time?: number;
+  word_count?: number;
+  schema_json?: string;
+}
+
+// Category interface
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Author {
+  id: string;
+  name: string;
+}
+
+interface ArticleEditorProps {
+  article?: Article;
+  onSave: (article: Article) => void;
+  categories: Category[];
+  authors: Author[];
+}
+
+// Removed QuillModules interface - not needed anymore
+
+// Available code languages for the code-block
+const CODE_LANGUAGES = [
+  { label: 'Plain Text', value: 'plain' },
+  { label: 'Auto Detect', value: 'auto' },
+  { label: 'HTML/XML', value: 'xml' },
+  { label: 'JavaScript', value: 'javascript' },
+  { label: 'TypeScript', value: 'typescript' },
+  { label: 'CSS', value: 'css' },
+  { label: 'Python', value: 'python' },
+  { label: 'Java', value: 'java' },
+  { label: 'C', value: 'c' },
+  { label: 'C++', value: 'cpp' },
+  { label: 'Bash', value: 'bash' },
+  { label: 'Go', value: 'go' },
+  { label: 'Ruby', value: 'ruby' },
+  { label: 'PHP', value: 'php' },
+];
+
+// Removed QuillWrapper component - using DirectQuillEditor instead
+  
+  // Initialize Quill with our custom components
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !quillInstance) {
+      // Import Quill directly and table modules
+      Promise.all([
+        import('quill'),
+        import('quill-table'),
+        import('quill-table-ui')
+      ]).then(([quillModule, quillTable, quillTableUI]) => {
+        try {
+          const Quill = quillModule.default;
+          const Delta = Quill.import('delta');
+          
+          // First, import necessary base classes
+          const BlockEmbed = Quill.import('blots/block/embed') as any;
+          const CodeBlock = Quill.import('formats/code-block') as any;
+          
+          // First, make sure all the basic formats are registered
+          try {
+            // Fix for bullet list format - the correct approach is to not try to manually register it
+            // Quill already has these formats built in, and trying to re-register them causes issues
+            // Instead, we'll make sure we're not accidentally removing them
+            
+            // Fix for bullet list format - the correct approach is to not try to manually register it
+            // Just ensure the List format is available and let Quill handle the rest
+            try {
+              const List = Quill.import('formats/list');
+              console.log('List format available:', !!List);
+              
+              // Don't try to register formats that are already built into Quill
+              if (List) {
+                console.log('Using built-in Quill list formats');
+              }
+            } catch (err) {
+              console.warn('Error ensuring list format:', err);
+            }
+          } catch (err) {
+            console.warn('Error ensuring basic formats:', err);
+          }
+          
+          // WebPush service worker code removed to prevent /sw.js 404 errors
+          // This was causing browser to look for non-existent service worker file
+          
+          // Try a completely different approach for the table module
+          try {
+            console.log('Setting up table modules...');
+            
+            // Import the table modules directly, avoiding default exports
+            const TableModule = quillTable.default || quillTable;
+            const TableUIModule = quillTableUI.default || quillTableUI;
+            
+            // Fix for the ModuleClass constructor error: instead of using register,
+            // we'll try a different approach
+            
+            // 1. First register any table formats that might be needed
+            const Container = Quill.import('blots/container');
+            const Block = Quill.import('blots/block');
+            
+            // Create simple format classes with proper typings
+            // Removed manual table format registrations as per QUILL-TABLE-SUPPORT.md
+            // The table module registers these formats itself, and manual registration
+            // causes "Cannot register X specified in formats config" errors
+            console.log('Skipping manual table format registrations to avoid conflicts');
+            
+            // Check if table formats are already registered by the table module
+            console.log('Table format registered:', !!Quill.imports['formats/table']);
+            console.log('Table row format registered:', !!Quill.imports['formats/table-row']);
+            console.log('Table cell format registered:', !!Quill.imports['formats/table-cell']);
+            console.log('Table header format registered:', !!Quill.imports['formats/table-header']);
+            
+            // 2. Now register the modules - this is the part that's failing with "ModuleClass is not a constructor"
+            // Instead of creating a temporary quill instance, we'll directly set up the module imports
+            if (!Quill.imports['modules/table'] && TableModule) {
+              try {
+                // Safer approach: directly add to Quill.imports
+                Quill.imports['modules/table'] = TableModule;
+                console.log('Successfully added table module');
+              } catch (e) {
+                console.warn('Error adding table module', e);
+              }
+            }
+            
+            if (!Quill.imports['modules/tableUI'] && TableUIModule) {
+              try {
+                // Same for tableUI
+                Quill.imports['modules/tableUI'] = TableUIModule;
+                console.log('Successfully added tableUI module');
+              } catch (e) {
+                console.warn('Error adding tableUI module', e);
+              }
+            }
+          } catch (err) {
+            console.warn('Error setting up table modules:', err);
+          }
+          
+          // Don't try to register individual table blots - they're handled by the module
+          // Just define our custom blots
+          
+          // Formula Blot for KaTeX
+          class FormulaBlot extends BlockEmbed {
+            static blotName: string;
+            static tagName: string;
+            static className: string;
+            
+            static create(value: string) {
+              let node = super.create();
+              node.setAttribute('data-formula', value);
+              
+              try {
+                katex.render(value, node, { 
+                  throwOnError: false,
+                  displayMode: true
+                });
+              } catch (e: any) {
+                node.innerHTML = `<span style="color:red;">Formula Error: ${e.message || 'Unknown error'}</span>`;
+              }
+              
+              return node;
+            }
+            
+            static value(node: HTMLElement) {
+              return node.getAttribute('data-formula');
+            }
+          }
+          
+          // Set required properties for Quill to recognize the blot
+          FormulaBlot.blotName = 'formula';
+          FormulaBlot.tagName = 'div';
+          FormulaBlot.className = 'ql-formula';
+          
+          // Code Block with syntax highlighting
+          class SyntaxCodeBlock extends CodeBlock {
+            static blotName: string;
+            static tagName: string;
+            static className: string;
+            
+            static create(value: string) {
+              const node = super.create(value);
+              if (typeof value === 'string') {
+                // Extract language from value (format: 'language:code')
+                const parts = value.split(':');
+                if (parts.length > 1) {
+                  node.setAttribute('data-language', parts[0]);
+                  if (typeof window !== 'undefined' && parts[0] !== 'plain') {
+                    // Dynamically import highlight.js to highlight the code
+                    import('highlight.js').then(hljs => {
+                      try {
+                        const code = parts.slice(1).join(':');
+                        const highlighted = parts[0] !== 'auto' 
+                          ? hljs.default.highlight(code, { language: parts[0] }).value
+                          : hljs.default.highlightAuto(code).value;
+                        node.innerHTML = highlighted;
+                      } catch (e) {
+                        console.warn('Error highlighting code:', e);
+                      }
+                    }).catch(err => {
+                      console.error('Failed to load highlight.js:', err);
+                    });
+                  }
+                }
+              }
+              return node;
+            }
+            
+            static formats(node: HTMLElement) {
+              return node.getAttribute('data-language') || 'plain';
+            }
+          }
+          
+          // Set required properties for Quill to recognize the blot
+          SyntaxCodeBlock.blotName = 'code-block';
+          SyntaxCodeBlock.tagName = 'pre';
+          SyntaxCodeBlock.className = 'ql-syntax';
+          
+          // Register custom blots with path
+          Quill.register('formats/formula', FormulaBlot, true);
+          Quill.register('formats/code-block', SyntaxCodeBlock, true);
+          
+          // Manually register required table formats
+          try {
+            // These are needed to avoid the "Cannot register X specified in formats" errors
+            const Table = Quill.import('formats/table');
+            const TableCell = Quill.import('formats/table-cell');
+            const TableRow = Quill.import('formats/table-row');
+            const TableBody = Quill.import('formats/table-body');
+            const TableHeader = Quill.import('formats/table-header');
+            
+            if (!Table) {
+              console.warn('Table format not found, this may cause issues');
+            }
+            
+            // Register formats if they aren't already registered
+            if (!Quill.imports['formats/table']) {
+              console.log('Registering table formats manually');
+              // The formats should be registered by the table module, but we'll ensure they're available
+            }
+          } catch (err) {
+            console.warn('Could not register table formats:', err);
+            // Continue anyway - the table module might register them for us
+          }
+          
+          // Add custom CSS for tables since we don't have quill-table.css
+          if (typeof document !== 'undefined') {
+            // Add CSS only if it doesn't already exist
+            if (!document.getElementById('quill-table-styles')) {
+              const style = document.createElement('style');
+              style.id = 'quill-table-styles';
+              style.textContent = `
+                .ql-table {
+                  width: 100%;
+                  border-collapse: collapse;
+                }
+                .ql-table td, .ql-table th {
+                  border: 1px solid #ccc;
+                  padding: 8px;
+                  min-width: 50px;
+                }
+                .ql-table th {
+                  font-weight: bold;
+                  background-color: #f3f4f6;
+                }
+                .ql-table-contained {
+                  width: auto;
+                }
+                .ql-table-full {
+                  width: 100%;
+                }
+                
+                /* Table Context Menu Styles - for both class types */
+                /* The older class name */
+                .ql-table-operation-menu,
+                /* The actual class name being used */
+                .ql-table-menu {
+                  position: absolute !important;
+                  background: white !important;
+                  border: 1px solid #ccc !important;
+                  border-radius: 4px !important;
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+                  padding: 5px 0 !important;
+                  min-width: 180px !important;
+                  z-index: 1000 !important;
+                }
+                
+                /* Menu Items - both class naming patterns */
+                .ql-table-operation-menu .ql-table-operation-item,
+                .ql-table-menu .ql-table-menu__item {
+                  display: block !important;
+                  padding: 8px 15px !important;
+                  font-size: 14px !important;
+                  color: #333 !important;
+                  cursor: pointer !important;
+                  text-align: left !important;
+                  border: none !important;
+                  background: none !important;
+                  width: 100% !important;
+                  font-family: inherit !important;
+                }
+                
+                /* Menu Item Hover - both class patterns */
+                .ql-table-operation-menu .ql-table-operation-item:hover,
+                .ql-table-menu .ql-table-menu__item:hover {
+                  background-color: #f3f4f6 !important;
+                }
+                
+                /* Active/Selected state - both class patterns */
+                .ql-table-operation-menu .ql-table-operation-item.ql-active,
+                .ql-table-menu .ql-table-menu__item.ql-active {
+                  background-color: #e5e7eb !important;
+                }
+                
+                /* Text content styling */
+                .ql-table-menu__item-text {
+                  display: inline-block !important;
+                  vertical-align: middle !important;
+                  margin-left: 8px !important;
+                  font-size: 14px !important;
+                  line-height: 1.5 !important;
+                }
+                
+                /* Icon styling */
+                .ql-table-menu__item-icon {
+                  display: inline-block !important;
+                  vertical-align: middle !important;
+                }
+                
+                /* Ensure the menu appears on top */
+                .ql-table-menu {
+                  z-index: 9999 !important;
+                }
+              `;
+              document.head.appendChild(style);
+              console.log('Added custom table and context menu styles');
+            }
+          }
+          
+          // Create Quill instance
+          if (wrapperRef.current) {
+            // Add custom button handlers
+            const customModules = { ...modules };
+            
+            if (customModules.toolbar && customModules.toolbar.container) {
+              customModules.toolbar = {
+                ...customModules.toolbar,
+                handlers: {
+                  // Formula button handler
+                  'formula': function(this: any) {
+                    const promptValue = prompt('Enter LaTeX formula:');
+                    
+                    if (promptValue && this.quill) {
+                      const range = this.quill.getSelection(true);
+                      this.quill.insertEmbed(range.index, 'formula', promptValue, 'user');
+                      this.quill.setSelection(range.index + 1, 'silent');
+                    }
+                  },
+                  // Table button handler
+                  'table': function(this: any) {
+                    if (!this.quill) return;
+                    
+                    // Check if table module is available
+                    const tableModule = this.quill.getModule('table');
+                    if (!tableModule) {
+                      console.error('Table module not available');
+                      alert('Table functionality is not available. Please try refreshing the page.');
+                      return;
+                    }
+                    
+                    try {
+                      // Get current selection
+                      const range = this.quill.getSelection(true);
+                      
+                      // Try different table insertion methods based on what's available
+                      if (typeof tableModule.insertTable === 'function') {
+                        // Method 1: Standard insertTable method
+                        tableModule.insertTable(2, 2);
+                      } else if (typeof tableModule.insert === 'function') {
+                        // Method 2: Some implementations use insert method
+                        tableModule.insert(range.index, 2, 2);
+                      } else {
+                        // Method 3: Fallback - try to manually insert a basic table structure
+                        console.warn('No table insertion method found, using fallback');
+                        
+                        // Create a simple table HTML structure
+                        const tableHTML = '<table class="ql-table"><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></table>';
+                        
+                        // Insert at the current cursor position
+                        this.quill.clipboard.dangerouslyPasteHTML(range.index, tableHTML, 'user');
+                      }
+                    } catch (err) {
+                      console.error('Error inserting table:', err);
+                      alert('Failed to insert table. Please try again.');
+                    }
+                  },
+                  // Code block with language selection
+                  'code-block': function(this: any) {
+                    if (!this.quill) return;
+                    
+                    const range = this.quill.getSelection(true);
+                    if (!range) return;
+                    
+                    // Get any selected text if present
+                    let selectedText = '';
+                    if (range.length > 0) {
+                      selectedText = this.quill.getText(range.index, range.length);
+                    }
+                    
+                    // Create a proper language selection dialog instead of text prompt
+                    const languageDialog = document.createElement('div');
+                    languageDialog.style.position = 'fixed';
+                    languageDialog.style.top = '50%';
+                    languageDialog.style.left = '50%';
+                    languageDialog.style.transform = 'translate(-50%, -50%)';
+                    languageDialog.style.backgroundColor = 'white';
+                    languageDialog.style.padding = '20px';
+                    languageDialog.style.borderRadius = '8px';
+                    languageDialog.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                    languageDialog.style.zIndex = '9999';
+                    languageDialog.style.width = '400px';
+                    languageDialog.style.maxHeight = '80vh';
+                    languageDialog.style.overflowY = 'auto';
+                    
+                    const heading = document.createElement('h3');
+                    heading.textContent = 'Select Programming Language';
+                    heading.style.marginBottom = '15px';
+                    heading.style.borderBottom = '1px solid #e5e7eb';
+                    heading.style.paddingBottom = '10px';
+                    
+                    const languageList = document.createElement('div');
+                    languageList.style.display = 'grid';
+                    languageList.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                    languageList.style.gap = '8px';
+                    languageList.style.marginBottom = '15px';
+                    
+                    // Store important variables
+                    const quillInstance = this.quill;
+                    const selectionRange = { ...range }; // Create a copy of the range
+                    const selectedContent = selectedText;
+                    
+                    // Add language options as clickable buttons
+                    CODE_LANGUAGES.forEach(lang => {
+                      const langButton = document.createElement('button');
+                      langButton.textContent = lang.label;
+                      langButton.setAttribute('data-value', lang.value);
+                      langButton.style.padding = '8px 12px';
+                      langButton.style.border = '1px solid #e5e7eb';
+                      langButton.style.borderRadius = '4px';
+                      langButton.style.backgroundColor = '#f9fafb';
+                      langButton.style.cursor = 'pointer';
+                      langButton.style.textAlign = 'left';
+                      langButton.style.transition = 'all 0.2s';
+                      
+                      // Hover effect
+                      langButton.addEventListener('mouseover', () => {
+                        langButton.style.backgroundColor = '#f3f4f6';
+                        langButton.style.borderColor = '#d1d5db';
+                      });
+                      
+                      langButton.addEventListener('mouseout', () => {
+                        langButton.style.backgroundColor = '#f9fafb';
+                        langButton.style.borderColor = '#e5e7eb';
+                      });
+                      
+                      // Click handler
+                      langButton.addEventListener('click', () => {
+                        // Remove the dialog
+                        document.body.removeChild(languageDialog);
+                    
+                        // Get the selected language
+                        const language = lang.value;
+                        
+                        // If we have selected text, use it as the initial code content
+                        const initialCode = selectedContent || '';
+                        
+                        // Call the shared code input dialog function with the correct range and selected text
+                        showCodeInputDialog(quillInstance, language, selectionRange, initialCode);
+                      });
+                      
+                      languageList.appendChild(langButton);
+                    });
+                    
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.display = 'flex';
+                    buttonContainer.style.justifyContent = 'flex-end';
+                    
+                    const cancelButton = document.createElement('button');
+                    cancelButton.textContent = 'Cancel';
+                    cancelButton.style.padding = '8px 16px';
+                    cancelButton.style.border = '1px solid #e5e7eb';
+                    cancelButton.style.borderRadius = '4px';
+                    cancelButton.style.backgroundColor = '#f9fafb';
+                    cancelButton.style.cursor = 'pointer';
+                    
+                    // Cancel click handler
+                    cancelButton.addEventListener('click', () => {
+                      document.body.removeChild(languageDialog);
+                    });
+                    
+                    buttonContainer.appendChild(cancelButton);
+                    
+                    // Assemble the dialog
+                    languageDialog.appendChild(heading);
+                    languageDialog.appendChild(languageList);
+                    languageDialog.appendChild(buttonContainer);
+                    
+                    // Show the dialog
+                    document.body.appendChild(languageDialog);
+                  }
+                }
+              };
+            }
+            
+            // Define the shared code input dialog function
+            const showCodeInputDialog = (quill: any, language: string, range: any, initialCode: string = '') => {
+              // Log the current selection range for debugging
+              console.log('Current selection range:', range);
+              
+              // Store original index position in case we need to restore it
+              const originalIndex = range.index;
+              const originalLength = range.length;
+              
+              // Get current selection if any
+              let code = initialCode || '';
+              const currentText = initialCode || (range.length > 0 ? quill.getText(range.index, range.length) : '');
+              
+              if (currentText) {
+                code = currentText;
+              }
+              
+              // Create code input dialog
+              const codeInputContainer = document.createElement('div');
+              codeInputContainer.style.position = 'fixed';
+              codeInputContainer.style.top = '50%';
+              codeInputContainer.style.left = '50%';
+              codeInputContainer.style.transform = 'translate(-50%, -50%)';
+              codeInputContainer.style.backgroundColor = 'white';
+              codeInputContainer.style.padding = '20px';
+              codeInputContainer.style.borderRadius = '8px';
+              codeInputContainer.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+              codeInputContainer.style.zIndex = '9999';
+              codeInputContainer.style.width = '600px';
+              codeInputContainer.style.maxWidth = '90vw';
+              
+              const heading = document.createElement('h3');
+              heading.textContent = `Enter ${CODE_LANGUAGES.find(l => l.value === language)?.label || language} code:`;
+              heading.style.marginBottom = '10px';
+              heading.style.borderBottom = '1px solid #e5e7eb';
+              heading.style.paddingBottom = '10px';
+              
+              const textarea = document.createElement('textarea');
+              textarea.value = code; // Set initial value from selection if any
+              textarea.rows = 10;
+              textarea.style.width = '100%';
+              textarea.style.fontFamily = 'monospace';
+              textarea.style.marginBottom = '15px';
+              textarea.style.padding = '8px';
+              textarea.style.border = '1px solid #e5e7eb';
+              textarea.style.borderRadius = '4px';
+              
+              const buttonContainer = document.createElement('div');
+              buttonContainer.style.display = 'flex';
+              buttonContainer.style.justifyContent = 'flex-end';
+              buttonContainer.style.gap = '10px';
+              
+              const cancelButton = document.createElement('button');
+              cancelButton.textContent = 'Cancel';
+              cancelButton.style.padding = '8px 16px';
+              cancelButton.style.border = '1px solid #e5e7eb';
+              cancelButton.style.borderRadius = '4px';
+              cancelButton.style.backgroundColor = '#f9fafb';
+              cancelButton.style.cursor = 'pointer';
+              
+              const insertButton = document.createElement('button');
+              insertButton.textContent = 'Insert Code';
+              insertButton.style.padding = '8px 16px';
+              insertButton.style.backgroundColor = '#4f46e5';
+              insertButton.style.color = 'white';
+              insertButton.style.border = 'none';
+              insertButton.style.borderRadius = '4px';
+              insertButton.style.cursor = 'pointer';
+              
+              buttonContainer.appendChild(cancelButton);
+              buttonContainer.appendChild(insertButton);
+              
+              codeInputContainer.appendChild(heading);
+              codeInputContainer.appendChild(textarea);
+              codeInputContainer.appendChild(buttonContainer);
+              
+              document.body.appendChild(codeInputContainer);
+              
+              // Focus the textarea
+              textarea.focus();
+              
+              // Handle button clicks
+              cancelButton.onclick = () => {
+                document.body.removeChild(codeInputContainer);
+              };
+              
+              insertButton.onclick = () => {
+                const codeToInsert = textarea.value.trim();
+                document.body.removeChild(codeInputContainer);
+                
+                try {
+                  // Focus the editor
+                  quill.focus();
+                  
+                  // Ensure we're at the right position by restoring the selection
+                  console.log('Restoring selection at index:', originalIndex, 'with length:', originalLength);
+                  quill.setSelection(originalIndex, originalLength, 'silent');
+                  
+                  // Log quill contents before changes
+                  console.log('Quill contents before insertion:', quill.getText());
+                  
+                  // Get the current selection after restoring
+                  const curSelection = quill.getSelection(true);
+                  console.log('Current selection after restore:', curSelection);
+                  
+                  // Delete current selection if any
+                  if (originalLength > 0) {
+                    console.log('Deleting selected text at:', originalIndex, 'length:', originalLength);
+                    quill.deleteText(originalIndex, originalLength, 'user');
+                  }
+                  
+                  // USE DIRECT TEXT INSERTION APPROACH
+                  // First check if we need to add a newline before the code block
+                  let insertIndex = originalIndex;
+                  let needsNewlineBefore = false;
+                  
+                  if (insertIndex > 0) {
+                    const prevChar = quill.getText(insertIndex - 1, 1);
+                    needsNewlineBefore = prevChar !== '\n';
+                    
+                    if (needsNewlineBefore) {
+                      console.log('Inserting newline before code block');
+                      quill.insertText(insertIndex, '\n', 'user');
+                      insertIndex += 1; // Move index forward by 1 for the added newline
+                    }
+                  }
+                  
+                  // Insert the code as plain text first
+                  console.log('Inserting code at index:', insertIndex);
+                  quill.insertText(insertIndex, codeToInsert, 'user');
+                  
+                  // Then format it as a code block with the selected language
+                  console.log('Formatting as code block from index:', insertIndex, 'to:', insertIndex + codeToInsert.length);
+                  quill.formatText(insertIndex, codeToInsert.length, 'code-block', language, 'user');
+                  
+                  // Insert a newline after if needed to ensure the code block is properly separated
+                  const afterIndex = insertIndex + codeToInsert.length;
+                  quill.insertText(afterIndex, '\n', 'user');
+                  
+                  // Set cursor after the inserted block
+                  const finalPosition = afterIndex + 1; // +1 for the added newline
+                  console.log('Setting final cursor position to:', finalPosition);
+                  quill.setSelection(finalPosition, 0, 'silent');
+                  
+                  // Log the final contents for debugging
+                  console.log('Quill contents after insertion:', quill.getText());
+                  
+                } catch (error) {
+                  console.error('Error inserting code block:', error);
+                  // Fallback: Use clipboard paste as a last resort
+                  try {
+                    console.log('Trying fallback insertion method');
+                    quill.clipboard.dangerouslyPasteHTML(
+                      originalIndex,
+                      `<pre class="ql-syntax" data-language="${language}">${codeToInsert.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre><p><br></p>`,
+                      'user'
+                    );
+                  } catch (pasteError) {
+                    console.error('Fallback insertion also failed:', pasteError);
+                  }
+                }
+              };
+            };
+            
+            // Create the Quill instance
+            const quill = new Quill(wrapperRef.current, {
+              modules: customModules,
+              formats,
+              theme,
+              placeholder
+            });
+            
+            // Debug logging to help identify issues
+            console.log('Quill instance created:', quill);
+            console.log('Modules in customModules:', customModules);
+            console.log('Table module:', quill.getModule ? quill.getModule('table') : 'getModule not available');
+            
+            // Add event listener to fix table context menu
+            try {
+              // Wait for DOM to be fully loaded
+              setTimeout(() => {
+                // Find any .ql-table-operation-menu elements that might be created
+                const fixContextMenus = () => {
+                  // Try both possible menu class names
+                  const menuElements = document.querySelectorAll('.ql-table-operation-menu, .ql-table-menu');
+                  menuElements.forEach(menu => {
+                    // Ensure the menu has proper styling - cast to HTMLElement to access style
+                    const menuEl = menu as HTMLElement;
+                    menuEl.style.position = 'absolute';
+                    menuEl.style.background = 'white';
+                    menuEl.style.border = '1px solid #ccc';
+                    menuEl.style.borderRadius = '4px';
+                    menuEl.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+                    menuEl.style.padding = '5px 0';
+                    menuEl.style.minWidth = '180px';
+                    menuEl.style.zIndex = '9999';
+                    
+                    // Fix menu items - try both possible item class names
+                    const menuItems = menu.querySelectorAll('.ql-table-operation-item, .ql-table-menu__item, div, p, a');
+                    menuItems.forEach(item => {
+                      // Cast to HTMLElement to access style
+                      const itemEl = item as HTMLElement;
+                      itemEl.style.display = 'block';
+                      itemEl.style.padding = '8px 15px';
+                      itemEl.style.margin = '0';
+                      itemEl.style.color = '#333';
+                      itemEl.style.cursor = 'pointer';
+                      itemEl.style.fontSize = '14px';
+                      
+                      // Special handling for new menu item structure
+                      // Style the text and icon elements if they exist
+                      const textEl = itemEl.querySelector('.ql-table-menu__item-text');
+                      if (textEl && textEl instanceof HTMLElement) {
+                        textEl.style.display = 'inline-block';
+                        textEl.style.verticalAlign = 'middle';
+                        textEl.style.marginLeft = '8px';
+                        textEl.style.lineHeight = '1.5';
+                      }
+                      
+                      const iconEl = itemEl.querySelector('.ql-table-menu__item-icon');
+                      if (iconEl && iconEl instanceof HTMLElement) {
+                        iconEl.style.display = 'inline-block';
+                        iconEl.style.verticalAlign = 'middle';
+                      }
+                      
+                      // Add hover effect
+                      itemEl.addEventListener('mouseenter', () => {
+                        itemEl.style.backgroundColor = '#f3f4f6';
+                      });
+                      itemEl.addEventListener('mouseleave', () => {
+                        itemEl.style.backgroundColor = '';
+                      });
+                    });
+                  });
+                };
+                
+                // Run fix immediately
+                fixContextMenus();
+                
+                // Add a MutationObserver to watch for context menu being added to the DOM
+                try {
+                  const observer = new MutationObserver((mutations) => {
+                    for (const mutation of mutations) {
+                      if (mutation.type === 'childList' && mutation.addedNodes.length) {
+                        // Check if any added nodes or their children have the context menu class
+                        mutation.addedNodes.forEach((node) => {
+                          if (node instanceof HTMLElement) {
+                            // Check for both possible menu class names
+                            if (node.classList.contains('ql-table-operation-menu') || 
+                                node.classList.contains('ql-table-menu') || 
+                                node.querySelector('.ql-table-operation-menu') ||
+                                node.querySelector('.ql-table-menu')) {
+                              // Found a context menu, fix it
+                              fixContextMenus();
+                            }
+                          }
+                        });
+                      }
+                    }
+                  });
+                  
+                  // Start observing the document body for the context menu
+                  observer.observe(document.body, { 
+                    childList: true, 
+                    subtree: true 
+                  });
+                  
+                  console.log('Added MutationObserver for context menu');
+                } catch (err) {
+                  console.warn('Could not add MutationObserver:', err);
+                }
+              }, 500);
+            } catch (err) {
+              console.warn('Could not add context menu fixers:', err);
+            }
+            
+            // Set initial value - use a more direct approach for tables
+            if (value) {
+              try {
+                // First try to set content directly to preserve table structure
+                quill.root.innerHTML = value;
+                
+                // If that doesn't work well, fall back to dangerouslyPasteHTML
+                if (!quill.root.querySelector('table') && value.includes('<table')) {
+                  console.log('Table not properly rendered, using dangerouslyPasteHTML');
+                  quill.clipboard.dangerouslyPasteHTML(value);
+                }
+              } catch (err) {
+                console.warn('Error setting initial content:', err);
+                // Final fallback
+                quill.clipboard.dangerouslyPasteHTML(value);
+              }
+            }
+            
+            // Handle text-change event with special handling for tables
+            quill.on('text-change', () => {
+              // Get the HTML directly from the root element to preserve table structure
+              const html = quill.root.innerHTML;
+              
+              // Check if we have table content that might need special handling
+              const hasTables = html.includes('<table');
+              
+              if (onChange) {
+                // If we have tables, make sure we're passing the raw HTML
+                onChange(html);
+              }
+            });
+            
+            // Store the quill instance
+            setQuillInstance(quill);
+          }
+          
+          setMounted(true);
+        } catch (err: any) {
+          console.error('Error initializing Quill:', err);
+          setError(err.message || 'Failed to initialize the editor. Please try refreshing the page.');
+        }
+      }).catch(err => {
+        console.error('Failed to load Quill:', err);
+        setError('Failed to load the editor. Please try refreshing the page.');
+        setMounted(true); // Still set mounted to show error message
+      });
+    }
+  }, [modules, formats, theme, placeholder, value, onChange, quillInstance]);
+
+  // Cleanup effect
+  useEffect(() => {
+    return () => {
+      if (quillInstance) {
+        quillInstance.off('text-change');
+      }
+    };
+  }, [quillInstance]);
+
+  if (error) {
+    return (
+      <div className="border rounded-md p-4 h-[500px] flex flex-col items-center justify-center bg-gray-50 text-red-500">
+        <p className="mb-2 font-semibold">Editor Error</p>
+        <p className="text-sm text-center">{error}</p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+        >
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
+  if (!mounted) {
+    return (
+      <div className="border rounded-md p-4 h-[500px] flex items-center justify-center bg-gray-50">
+        Loading editor...
+      </div>
+    );
+  }
+
+// Removed QuillWrapper component completely
+
+// Removed ReactQuill wrapper - using DirectQuillEditor instead
+
+// Removed quillModules and quillFormats - DirectQuillEditor has its own configuration
+
+const ArticleEditor: React.FC<ArticleEditorProps> = ({
+  article,
+  onSave,
+  categories,
+  authors,
+}) => {
+  // Form state
+  const [formData, setFormData] = useState<Article>({
+    title: '',
+    slug: '',
+    content: '',
+    excerpt: '',
+    featured_image: null,
+    featured_image_alt: '',
+    status: 'draft',
+    category_id: null,
+    author_id: '',
+    tags: [],
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: '',
+    schema_json: '',
+  });
+  
+  // Media state
+  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [showMediaUrlInput, setShowMediaUrlInput] = useState<boolean>(false);
+  
+  // UI state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [tagInput, setTagInput] = useState<string>('');
+  
+  // Category state
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [categoryError, setCategoryError] = useState<string | null>(null);
+  const [categoriesList, setCategoriesList] = useState<Category[]>(categories);
+  
+  // Refs
+  const editorRef = useRef<any>(null);
+  
+  // Prevent unnecessary reloads when switching tabs
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [lastSaveTime, setLastSaveTime] = useState<number>(0);
+  
+  // Calculate stats
+  const calculateStats = (text: string) => {
+    // Strip HTML tags for word count
+    const cleanText = text.replace(/<[^>]*>/g, ' ');
+    const words = cleanText.trim().split(/\s+/).filter(Boolean).length;
+    // Average reading time: 200 words per minute
+    const readingTime = Math.max(1, Math.ceil(words / 200));
+    
+    return {
+      word_count: words,
+      estimated_reading_time: readingTime
+    };
+  };
+  
+  // Initialize form with article data if provided
+  useEffect(() => {
+    if (article) {
+      // Create a copy of the article - we'll handle category_id in a separate effect
+      const articleCopy = { ...article };
+      
+      // Set the form data
+      setFormData(articleCopy);
+      
+      // Log for debugging
+      console.log('Initial article load:', {
+        id: article.id,
+        title: article.title,
+        category_id: article.category_id,
+        type: typeof article.category_id
+      });
+      
+      // If the article has a featured image, set up the media state
+      if (article.featured_image) {
+        // If it's a URL (starts with http or https), set the imageUrl
+        if (article.featured_image.startsWith('http')) {
+          setImageUrl(article.featured_image);
+          setShowMediaUrlInput(true);
+        }
+      }
+    } else {
+      // Set default schema for new articles
+      const defaultSchema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "",
+        "description": "",
+        "image": "",
+        "author": {
+          "@type": "Person",
+          "name": "",
+          "url": "https://linuxconcept.com/about"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "LinuxConcept",
+          "url": "https://linuxconcept.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://linuxconcept.com/1000.png",
+            "width": 1000,
+            "height": 1000
+          },
+          "sameAs": [
+            "https://twitter.com/linuxconcept",
+            "https://linkedin.com/company/linuxconcept",
+            "https://github.com/linuxconcept"
+          ]
+        },
+        "datePublished": "",
+        "dateModified": "",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": ""
+        },
+        "articleSection": "Technology",
+        "keywords": "",
+        "wordCount": 0,
+        "timeRequired": "",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": true,
+        "articleBody": "",
+        "potentialAction": {
+          "@type": "ReadAction",
+          "target": ""
+        },
+        "mentions": [],
+        "about": [],
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Developers, System Administrators, Linux Users"
+        },
+        "educationalLevel": "Intermediate",
+        "learningResourceType": "Tutorial",
+        "teaches": []
+      };
+      
+      setFormData(prev => ({
+        ...prev,
+        schema_json: JSON.stringify(defaultSchema, null, 2)
+      }));
+    }
+    
+    // Mark as initialized
+    setIsInitialized(true);
+  }, [article]);
+  
+  // Handle tab visibility changes without reloading
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isInitialized) {
+        // Only refresh if it's been more than 10 minutes since last save
+        const timeSinceLastSave = Date.now() - lastSaveTime;
+        const tenMinutes = 10 * 60 * 1000;
+        
+        if (timeSinceLastSave > tenMinutes) {
+          console.log('Tab became visible, but no refresh needed for editor');
+        }
+      }
+    };
+
+    const handleFocus = () => {
+      if (isInitialized) {
+        // Only refresh if it's been more than 15 minutes since last save
+        const timeSinceLastSave = Date.now() - lastSaveTime;
+        const fifteenMinutes = 15 * 60 * 1000;
+        
+        if (timeSinceLastSave > fifteenMinutes) {
+          console.log('Window focused, but no refresh needed for editor');
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [isInitialized, lastSaveTime]);
+
+  // Update categories list when the prop changes
+  useEffect(() => {
+    setCategoriesList(categories);
+    
+    // If we have an article and categories loaded, ensure the category_id matches exactly
+    if (article && categories.length > 0 && formData.category_id) {
+      // Find the matching category by comparing IDs as strings
+      const matchingCategory = categories.find(
+        cat => String(cat.id) === String(formData.category_id)
+      );
+      
+      if (matchingCategory) {
+        // Force update the form data with the exact ID from categories list
+        setFormData(prev => ({
+          ...prev,
+          category_id: matchingCategory.id
+        }));
+        
+        console.log('Category matched:', matchingCategory.name, 
+                    'ID type in form:', typeof formData.category_id,
+                    'ID type in list:', typeof matchingCategory.id);
+      } else {
+        console.log('No category match found. Current ID:', formData.category_id, 
+                    'Available IDs:', categories.map(c => c.id));
+      }
+    }
+  }, [categories, article, formData.category_id]);
+  
+  // Update stats when content changes
+  useEffect(() => {
+    if (formData.content) {
+      const stats = calculateStats(formData.content);
+      setFormData(prev => ({
+        ...prev,
+        ...stats
+      }));
+    }
+  }, [formData.content]);
+  
+  // Handle media selection
+  const handleMediaSelect = (media: MediaItem | null) => {
+    setSelectedMedia(media);
+    setImageUrl('');
+    setShowMediaUrlInput(false);
+    setFormData(prev => ({
+      ...prev,
+      featured_image: media ? media.filepath : null,
+    }));
+  };
+  
+  // Handle setting image by URL
+  const handleImageUrlSet = () => {
+    if (imageUrl) {
+      setSelectedMedia(null);
+      setFormData(prev => ({
+        ...prev,
+        featured_image: imageUrl,
+      }));
+    }
+  };
+  
+  // Handle form input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    // Log category selection to debug
+    if (name === 'category_id') {
+      console.log(`Category selected: ${value}`);
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  
+  // Handle Quill editor change
+  const handleEditorChange = (content: string) => {
+    setFormData(prev => ({
+      ...prev,
+      content,
+    }));
+  };
+  
+  // Handle Schema JSON change
+  const handleSchemaChange = (schema: string) => {
+    setFormData(prev => ({
+      ...prev,
+      schema_json: schema,
+    }));
+  };
+  
+  // Auto-populate schema with article data
+  const populateSchemaWithArticleData = () => {
+    if (!formData.title && !formData.excerpt) {
+      toast.error('Please add title and excerpt first');
+      return;
+    }
+    
+    try {
+      const currentSchema = formData.schema_json ? JSON.parse(formData.schema_json) : {};
+      const updatedSchema = {
+        ...currentSchema,
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": formData.title || "",
+        "description": formData.excerpt || "",
+        "image": formData.featured_image || "",
+        "author": {
+          "@type": "Person",
+          "name": authors.find(a => a.id === formData.author_id)?.name || "",
+          "url": "https://linuxconcept.com/about"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "LinuxConcept",
+          "url": "https://linuxconcept.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://linuxconcept.com/1000.png",
+            "width": 1000,
+            "height": 1000
+          },
+          "sameAs": [
+            "https://twitter.com/linuxconcept",
+            "https://linkedin.com/company/linuxconcept",
+            "https://github.com/linuxconcept"
+          ]
+        },
+        "datePublished": formData.status === 'published' ? new Date().toISOString() : "",
+        "dateModified": new Date().toISOString(),
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": formData.slug ? `https://linuxconcept.com/articles/${formData.slug}` : ""
+        },
+        "articleSection": formData.category_id ? categories.find(c => c.id === formData.category_id)?.name : "Technology",
+        "keywords": formData.seo_keywords || formData.tags?.join(", ") || "",
+        "wordCount": formData.content ? formData.content.replace(/<[^>]*>/g, ' ').trim().split(/\s+/).filter(Boolean).length : 0,
+        "timeRequired": formData.estimated_reading_time ? `PT${formData.estimated_reading_time}M` : "",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": true,
+        "articleBody": formData.content ? formData.content.replace(/<[^>]*>/g, ' ').substring(0, 500) + "..." : "",
+        "potentialAction": {
+          "@type": "ReadAction",
+          "target": formData.slug ? `https://linuxconcept.com/articles/${formData.slug}` : ""
+        },
+        "mentions": formData.tags?.map(tag => ({
+          "@type": "Thing",
+          "name": tag
+        })) || [],
+        "about": formData.tags?.map(tag => ({
+          "@type": "Thing",
+          "name": tag
+        })) || [],
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Developers, System Administrators, Linux Users"
+        },
+        "educationalLevel": "Intermediate",
+        "learningResourceType": "Tutorial",
+        "teaches": formData.tags?.map(tag => ({
+          "@type": "DefinedTerm",
+          "name": tag
+        })) || []
+      };
+      
+      setFormData(prev => ({
+        ...prev,
+        schema_json: JSON.stringify(updatedSchema, null, 2)
+      }));
+      
+      toast.success('Schema populated with enhanced article data!');
+    } catch (error) {
+      console.error('Error populating schema:', error);
+      toast.error('Failed to populate schema');
+    }
+  };
+  
+  // Generate slug from title
+  const generateSlug = () => {
+    const slug = formData.title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+    
+    setFormData(prev => ({
+      ...prev,
+      slug,
+    }));
+  };
+  
+  // Handle adding a tag
+  const handleAddTag = () => {
+    if (tagInput.trim() && !formData.tags?.includes(tagInput.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...(prev.tags || []), tagInput.trim()]
+      }));
+      setTagInput('');
+    }
+  };
+  
+  // Handle removing a tag
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags?.filter(tag => tag !== tagToRemove)
+    }));
+  };
+  
+  // Handle tag input key press (add tag on Enter)
+  const handleTagKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddTag();
+    }
+  };
+  
+  // Handle form submission with special handling for table content
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      // Update stats before saving
+      const stats = calculateStats(formData.content);
+      
+      // Ensure category_id is properly formatted (as string, not null or undefined)
+      const category_id = formData.category_id || '';
+      
+      // Check if content contains tables and ensure they're properly preserved
+      let processedContent = formData.content;
+      if (formData.content && formData.content.includes('<table')) {
+        console.log('Content contains tables, ensuring proper preservation');
+        
+        // Create a temporary div to work with the HTML content
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = formData.content;
+        
+        // Check if tables are properly structured
+        const tables = tempDiv.querySelectorAll('table');
+        if (tables.length > 0) {
+          console.log(`Found ${tables.length} tables in content`);
+          
+          // Ensure each table has proper structure
+          tables.forEach((table, index) => {
+            // Make sure table has tbody
+            if (!table.querySelector('tbody')) {
+              console.log(`Adding tbody to table ${index}`);
+              const tbody = document.createElement('tbody');
+              // Move all rows to tbody
+              while (table.querySelector('tr')) {
+                tbody.appendChild(table.querySelector('tr')!);
+              }
+              table.appendChild(tbody);
+            }
+            
+            // Ensure table has proper styling
+            if (!table.style.borderCollapse) {
+              table.style.borderCollapse = 'collapse';
+              table.style.width = '100%';
+              table.style.margin = '15px 0';
+              table.style.border = '1px solid #ddd';
+            }
+            
+            // Ensure cells have proper styling
+            const cells = table.querySelectorAll('td, th');
+            cells.forEach(cell => {
+              if (cell instanceof HTMLElement && !cell.style.border) {
+                cell.style.border = '1px solid #ddd';
+                cell.style.padding = '8px';
+                cell.style.textAlign = 'left';
+              }
+            });
+          });
+          
+          // Update content with fixed tables
+          processedContent = tempDiv.innerHTML;
+        }
+      }
+      
+      // Log one final time for debugging
+      console.log('FINAL SUBMISSION:');
+      console.log('- Category ID being submitted:', category_id);
+      console.log('- Form category_id before submission:', formData.category_id, 'type:', typeof formData.category_id);
+      console.log('- SEO Keywords being submitted:', formData.seo_keywords);
+      console.log('- Schema JSON being submitted:', formData.schema_json);
+      
+      const updatedFormData = {
+        ...formData,
+        content: processedContent, // Use the processed content with fixed tables
+        ...stats,
+        category_id
+      };
+      
+      // Call the parent component's save function
+      await onSave(updatedFormData);
+      setLastSaveTime(Date.now());
+      toast.success('Article saved successfully!');
+    } catch (error) {
+      console.error('Error saving article:', error);
+      toast.error('Failed to save article. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  // Insert image handler for Quill
+  const handleImageUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target?.result as string;
+      setFormData(prev => ({
+        ...prev,
+        featured_image: base64,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handle opening the add category modal
+  const handleAddCategoryClick = () => {
+    setNewCategoryName('');
+    setCategoryError(null);
+    setShowCategoryModal(true);
+  };
+
+  // Handle adding a new category
+  const handleAddCategory = async () => {
+    // Validate category name
+    if (!newCategoryName.trim()) {
+      setCategoryError('Category name is required');
+      return;
+    }
+
+    setIsAddingCategory(true);
+    setCategoryError(null);
+
+    try {
+      const response = await fetch('/api/admin/categories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newCategoryName.trim() }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create category');
+      }
+
+      const data = await response.json();
+      
+      // Add the new category to the list
+      const newCategory = data.category;
+      setCategoriesList(prev => [...prev, newCategory]);
+      
+      // Auto-select the new category
+      setFormData(prev => ({
+        ...prev,
+        category_id: newCategory.id
+      }));
+      
+      // Close the modal
+      setShowCategoryModal(false);
+      toast.success('Category created successfully!');
+    } catch (error) {
+      console.error('Error creating category:', error);
+      setCategoryError(error instanceof Error ? error.message : 'Failed to create category');
+    } finally {
+      setIsAddingCategory(false);
+    }
+  };
+
+  // Add a dedicated effect to handle category selection
+  useEffect(() => {
+    // Only run this effect when editing an existing article and categories are loaded
+    if (article && article.id && categoriesList.length > 0) {
+      console.log('CATEGORY DEBUG:');
+      console.log('- Article category ID:', article.category_id, 'type:', typeof article.category_id);
+      console.log('- Available categories:', categoriesList.map(c => ({ id: c.id, name: c.name, idType: typeof c.id })));
+      
+      // If the article has a category ID, find the matching category
+      if (article.category_id) {
+        // First, try to find an exact match
+        let matchingCategory = categoriesList.find(cat => cat.id === article.category_id);
+        
+        // If no match, try string comparison
+        if (!matchingCategory) {
+          matchingCategory = categoriesList.find(cat => String(cat.id) === String(article.category_id));
+        }
+        
+        if (matchingCategory) {
+          console.log('- Found matching category:', matchingCategory.name, 'with ID:', matchingCategory.id);
+          
+          // Force the category selection by directly updating the form data
+          setTimeout(() => {
+            setFormData(prev => {
+              const updated = {
+                ...prev,
+                category_id: String(matchingCategory!.id)
+              };
+              console.log('- Setting category_id in form to:', updated.category_id, 'type:', typeof updated.category_id);
+              return updated;
+            });
+          }, 100); // Short delay to ensure React has processed other state updates
+        } else {
+          console.warn('- No matching category found for ID:', article.category_id);
+        }
+      }
+    }
+  }, [article, categoriesList]);
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <Toaster />
+      
+      {/* Basic Information Section */}
+      <div className="space-y-6">
+        <div className="pb-2 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-800">Basic Information</h2>
+        </div>
+        
+        {/* Title Input */}
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+            Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Add a title..."
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            required
+          />
+        </div>
+        
+        {/* Slug Input with Generator */}
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
+              Slug
+            </label>
+            <button
+              type="button"
+              onClick={generateSlug}
+              className="text-xs text-indigo-600 hover:text-indigo-800"
+            >
+              Generate from title
+            </button>
+          </div>
+          <div className="flex">
+            <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+              {'/articles/'}
+            </span>
+            <input
+              type="text"
+              id="slug"
+              name="slug"
+              value={formData.slug}
+              onChange={handleChange}
+              placeholder="url-friendly-name"
+              className="flex-1 min-w-0 block w-full px-3 py-2 border border-gray-300 rounded-none rounded-r-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              required
+            />
+          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            This will be the URL: /articles/{formData.slug || 'url-friendly-name'}
+          </p>
+        </div>
+      </div>
+      
+      {/* Content Section */}
+      <div className="space-y-6 pt-4">
+        <div className="pb-2 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-800">Content</h2>
+        </div>
+        
+        {/* Rich Text Editor */}
+        <div>
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+            Content
+          </label>
+          <div className="border border-gray-300 rounded-md">
+            <DirectQuillEditor
+              value={formData.content}
+              onChange={handleEditorChange}
+              placeholder="Write your article content here..."
+              advanced={true}
+              id="article-content-editor"
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            <p className="text-xs text-gray-500">
+              Supports formatting, links, images, code blocks, and mathematical formulas.
+            </p>
+            <div className="text-xs text-gray-500">
+              {formData.word_count || 0} words · {formData.estimated_reading_time || 0} min read
+            </div>
+          </div>
+        </div>
+        
+        {/* Excerpt Field */}
+        <div>
+          <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
+            Excerpt
+          </label>
+          <textarea
+            id="excerpt"
+            name="excerpt"
+            rows={3}
+            value={formData.excerpt}
+            onChange={handleChange}
+            placeholder="Brief summary of the article (used in search results and previews)"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Short description that appears in previews and search results (max 160 characters recommended).
+          </p>
+        </div>
+        
+        {/* Tags Input */}
+        <div>
+          <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+            Tags
+          </label>
+          <div className="mb-2">
+            <div className="flex flex-wrap gap-2">
+              {formData.tags?.map((tag, index) => (
+                <div key={index} className="flex items-center bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
+                  <span>{tag}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    className="ml-2 text-indigo-500 hover:text-indigo-700"
+                  >
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex">
+            <input
+              type="text"
+              id="tagInput"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyPress={handleTagKeyPress}
+              placeholder="Add a tag and press Enter"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            />
+            <button
+              type="button"
+              onClick={handleAddTag}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Add
+            </button>
+          </div>
+          <p className="mt-1 text-xs text-gray-500">
+            Tags help categorize your article and improve discoverability.
+          </p>
+        </div>
+        
+        {/* Featured Image */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Featured Image
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 space-y-4">
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowMediaUrlInput(false)}
+                  className={`px-3 py-1 text-sm rounded-md ${!showMediaUrlInput ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'}`}
+                >
+                  Media Library
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowMediaUrlInput(true)}
+                  className={`px-3 py-1 text-sm rounded-md ${showMediaUrlInput ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-700'}`}
+                >
+                  Image URL
+                </button>
+              </div>
+              
+              {showMediaUrlInput ? (
+                <div className="space-y-2">
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleImageUrlSet}
+                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                  >
+                    Set Image
+                  </button>
+                </div>
+              ) : (
+                <MediaPicker onSelect={handleMediaSelect} selectedMedia={selectedMedia} />
+              )}
+              
+              <div>
+                <label htmlFor="featuredImageAlt" className="block text-sm font-medium text-gray-700 mb-1">
+                  Alt Text
+                </label>
+                <input
+                  type="text"
+                  id="featuredImageAlt"
+                  name="featured_image_alt"
+                  value={formData.featured_image_alt || ''}
+                  onChange={handleChange}
+                  placeholder="Descriptive text for the image"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Important for accessibility and SEO.
+                </p>
+              </div>
+            </div>
+            
+            <div className="border rounded-md overflow-hidden bg-gray-50 flex items-center justify-center">
+              {formData.featured_image ? (
+                <div className="relative w-full h-full min-h-[200px]">
+                  <Image
+                    src={formData.featured_image}
+                    alt={formData.featured_image_alt || 'Featured image'}
+                    fill
+                    style={{objectFit: 'contain'}}
+                    className="p-2"
+                  />
+                </div>
+              ) : (
+                <div className="text-gray-400 p-4 text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12 mx-auto mb-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <p className="text-sm">No image selected</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Category Dropdown with Add Category Button */}
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              Category
+            </label>
+            <button
+              type="button"
+              onClick={handleAddCategoryClick}
+              className="text-xs text-indigo-600 hover:text-indigo-800"
+            >
+              + Add New Category
+            </button>
+          </div>
+          <select
+            id="category"
+            name="category_id"
+            value={String(formData.category_id || '')}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            data-testid="category-selector"
+          >
+            <option value="">-- Select Category --</option>
+            {categoriesList.map((category) => (
+              <option 
+                key={category.id} 
+                value={String(category.id)}
+              >
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <p className="mt-1 text-xs text-gray-500">
+            Current category_id: {formData.category_id || 'none'} (This help text can be removed after debugging)
+          </p>
+        </div>
+        
+        {/* Author Dropdown */}
+        <div>
+          <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-1">
+            Author
+          </label>
+          <select
+            id="author"
+            name="author_id"
+            value={formData.author_id || ''}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          >
+            <option value="">-- Select Author --</option>
+            {authors.map((author) => (
+              <option key={author.id} value={author.id}>
+                {author.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        {/* Publishing Options */}
+        <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Publishing Options</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              >
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="scheduled">Scheduled</option>
+              </select>
+            </div>
+            
+            {formData.status === 'scheduled' && (
+              <div>
+                <label htmlFor="scheduleDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  Schedule Date
+                </label>
+                <input
+                  type="datetime-local"
+                  id="scheduleDate"
+                  name="schedule_date"
+                  value={formData.schedule_date || ''}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  required={formData.status === 'scheduled'}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      {/* SEO Section */}
+      <div className="space-y-6 pt-4">
+        <div className="pb-2 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-800">SEO Settings</h2>
+        </div>
+        
+        <div>
+          <label htmlFor="seoTitle" className="block text-sm font-medium text-gray-700 mb-1">
+            SEO Title
+          </label>
+          <input
+            type="text"
+            id="seoTitle"
+            name="seo_title"
+            value={formData.seo_title || ''}
+            onChange={handleChange}
+            placeholder="SEO-optimized title (if different from main title)"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="seoDescription" className="block text-sm font-medium text-gray-700 mb-1">
+            Meta Description
+          </label>
+          <textarea
+            id="seoDescription"
+            name="seo_description"
+            rows={3}
+            value={formData.seo_description || ''}
+            onChange={handleChange}
+            placeholder="Brief description for search engines (max 160 characters)"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            {(formData.seo_description?.length || 0)}/160 characters
+          </p>
+        </div>
+        
+        <div>
+          <label htmlFor="seoKeywords" className="block text-sm font-medium text-gray-700 mb-1">
+            Meta Keywords
+          </label>
+          <input
+            type="text"
+            id="seoKeywords"
+            name="seo_keywords"
+            value={formData.seo_keywords || ''}
+            onChange={handleChange}
+            placeholder="keyword1, keyword2, keyword3"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          />
+          {/* Debug display */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-1 text-xs text-gray-500">
+              Debug: Current value: "{formData.seo_keywords || 'undefined'}"
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Schema Data Section */}
+      <div className="space-y-6 pt-4">
+        <div className="pb-2 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-800">Schema Structured Data</h2>
+        </div>
+        
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-sm text-gray-600">
+            Add structured data in JSON-LD format to help search engines understand your content. 
+            This data appears in rich search results and improves SEO.
+          </p>
+            <button
+              type="button"
+              onClick={populateSchemaWithArticleData}
+              className="px-3 py-2 bg-green-50 text-green-600 text-sm rounded-md hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              title="Auto-populate schema with current article data"
+            >
+              <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Auto-Populate Schema
+            </button>
+          </div>
+          <JsonEditor 
+            value={formData.schema_json || ''} 
+            onChange={handleSchemaChange} 
+          />
+          
+          {/* Manual Schema Builder */}
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Manual Schema Builder</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Article Section
+                </label>
+                <input
+                  type="text"
+                  value={(() => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      return schema.articleSection || '';
+                    } catch {
+                      return '';
+                    }
+                  })()}
+                  onChange={(e) => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      schema.articleSection = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        schema_json: JSON.stringify(schema, null, 2)
+                      }));
+                    } catch (error) {
+                      console.error('Error updating schema:', error);
+                    }
+                  }}
+                  placeholder="e.g., Technology, Linux, DevOps"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Educational Level
+                </label>
+                <select
+                  value={(() => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      return schema.educationalLevel || 'Intermediate';
+                    } catch {
+                      return 'Intermediate';
+                    }
+                  })()}
+                  onChange={(e) => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      schema.educationalLevel = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        schema_json: JSON.stringify(schema, null, 2)
+                      }));
+                    } catch (error) {
+                      console.error('Error updating schema:', error);
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Learning Resource Type
+                </label>
+                <select
+                  value={(() => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      return schema.learningResourceType || 'Tutorial';
+                    } catch {
+                      return 'Tutorial';
+                    }
+                  })()}
+                  onChange={(e) => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      schema.learningResourceType = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        schema_json: JSON.stringify(schema, null, 2)
+                      }));
+                    } catch (error) {
+                      console.error('Error updating schema:', error);
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="Tutorial">Tutorial</option>
+                  <option value="Guide">Guide</option>
+                  <option value="How-to">How-to</option>
+                  <option value="Reference">Reference</option>
+                  <option value="Case Study">Case Study</option>
+                  <option value="Best Practices">Best Practices</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Audience Type
+                </label>
+                <input
+                  type="text"
+                  value={(() => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      return schema.audience?.audienceType || 'Developers, System Administrators, Linux Users';
+                    } catch {
+                      return 'Developers, System Administrators, Linux Users';
+                    }
+                  })()}
+                  onChange={(e) => {
+                    try {
+                      const schema = JSON.parse(formData.schema_json || '{}');
+                      if (!schema.audience) schema.audience = { "@type": "Audience" };
+                      schema.audience.audienceType = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        schema_json: JSON.stringify(schema, null, 2)
+                      }));
+                    } catch (error) {
+                      console.error('Error updating schema:', error);
+                    }
+                  }}
+                  placeholder="e.g., Developers, System Administrators, Linux Users"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const schema = JSON.parse(formData.schema_json || '{}');
+                    // Add social media links
+                    if (!schema.publisher.sameAs) {
+                      schema.publisher.sameAs = [];
+                    }
+                    if (!schema.publisher.sameAs.includes('https://twitter.com/linuxconcept')) {
+                      schema.publisher.sameAs.push('https://twitter.com/linuxconcept');
+                    }
+                    if (!schema.publisher.sameAs.includes('https://linkedin.com/company/linuxconcept')) {
+                      schema.publisher.sameAs.push('https://linkedin.com/company/linuxconcept');
+                    }
+                    if (!schema.publisher.sameAs.includes('https://github.com/linuxconcept')) {
+                      schema.publisher.sameAs.push('https://github.com/linuxconcept');
+                    }
+                    
+                    setFormData(prev => ({
+                      ...prev,
+                      schema_json: JSON.stringify(schema, null, 2)
+                    }));
+                    
+                    toast.success('Social media links added to schema!');
+                  } catch (error) {
+                    console.error('Error updating schema:', error);
+                    toast.error('Failed to update schema');
+                  }
+                }}
+                className="px-4 py-2 bg-blue-50 text-blue-600 text-sm rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Add Social Media Links
+              </button>
+            </div>
+          </div>
+          
+          {/* Debug display */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-2 text-xs text-gray-500">
+              Debug: Schema length: {formData.schema_json?.length || 0} characters
+            </div>
+          )}
+        </div>
+        
+        {/* Schema Validation & Preview */}
+        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+          <h3 className="text-lg font-medium text-blue-800 mb-4">Schema Validation & Preview</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-blue-700">Schema Status:</span>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                (() => {
+                  try {
+                    JSON.parse(formData.schema_json || '{}');
+                    return 'bg-green-100 text-green-800';
+                  } catch {
+                    return 'bg-red-100 text-red-800';
+                  }
+                })()
+              }`}>
+                {(() => {
+                  try {
+                    JSON.parse(formData.schema_json || '{}');
+                    return '✓ Valid JSON';
+                  } catch {
+                    return '✗ Invalid JSON';
+                  }
+                })()}
+              </span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-blue-700">Required Fields:</span>
+              <span className="text-xs text-blue-600">
+                {(() => {
+                  try {
+                    const schema = JSON.parse(formData.schema_json || '{}');
+                    const required = ['@context', '@type', 'headline', 'description'];
+                    const missing = required.filter(field => !schema[field]);
+                    return missing.length === 0 ? '✓ Complete' : `Missing: ${missing.join(', ')}`;
+                  } catch {
+                    return '✗ Invalid Schema';
+                  }
+                })()}
+              </span>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-blue-700">SEO Score:</span>
+              <span className="text-xs text-blue-600">
+                {(() => {
+                  try {
+                    const schema = JSON.parse(formData.schema_json || '{}');
+                    let score = 0;
+                    if (schema.headline) score += 20;
+                    if (schema.description) score += 20;
+                    if (schema.image) score += 15;
+                    if (schema.author?.name) score += 15;
+                    if (schema.keywords) score += 10;
+                    if (schema.articleSection) score += 10;
+                    if (schema.audience) score += 10;
+                    return `${score}/100`;
+                  } catch {
+                    return '0/100';
+                  }
+                })()}
+              </span>
+            </div>
+            
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const schema = JSON.parse(formData.schema_json || '{}');
+                    const formatted = JSON.stringify(schema, null, 2);
+                    navigator.clipboard.writeText(formatted);
+                    toast.success('Schema copied to clipboard!');
+                  } catch (error) {
+                    toast.error('Invalid schema - cannot copy');
+                  }
+                }}
+                className="px-3 py-2 bg-blue-100 text-blue-700 text-sm rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy Schema
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const schema = JSON.parse(formData.schema_json || '{}');
+                    const testUrl = 'https://search.google.com/test/rich-results';
+                    window.open(testUrl, '_blank');
+                  } catch (error) {
+                    toast.error('Invalid schema - cannot copy');
+                  }
+                }}
+                className="px-3 py-2 bg-green-100 text-green-700 text-sm rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Test Schema
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Category Modal */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Category</h3>
+            
+            {categoryError && (
+              <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-3 rounded-md">
+                <p className="text-sm text-red-700">{categoryError}</p>
+              </div>
+            )}
+            
+            <div className="mb-4">
+              <label htmlFor="newCategory" className="block text-sm font-medium text-gray-700 mb-1">
+                Category Name
+              </label>
+              <input
+                type="text"
+                id="newCategory"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                placeholder="Enter category name"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <button
+                type="button"
+                onClick={() => setShowCategoryModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleAddCategory}
+                disabled={isAddingCategory}
+                className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  isAddingCategory ? 'opacity-75 cursor-not-allowed' : ''
+                }`}
+              >
+                {isAddingCategory ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Adding...
+                  </>
+                ) : (
+                  'Add Category'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Action Buttons */}
+      <div className="flex justify-end space-x-2 pt-6 border-t border-gray-200">
+        <button
+          type="button"
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          onClick={() => window.history.back()}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+            isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+          }`}
+        >
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </>
+          ) : (
+            'Save Article'
+          )}
+        </button>
+      </div>
+    </form>
+  );
+};
+
+export default ArticleEditor;
