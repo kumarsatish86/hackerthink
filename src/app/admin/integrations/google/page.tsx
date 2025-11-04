@@ -119,7 +119,7 @@ export default function GoogleIntegrationsPage() {
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Google Integrations</h1>
         <div className="flex justify-center mt-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         </div>
       </div>
     );
@@ -188,7 +188,7 @@ export default function GoogleIntegrationsPage() {
                           placeholder="UA-XXXXXXXXX-X or G-XXXXXXXXXX"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'trackingId', integration.config.trackingId)}
                           disabled={saving}
                         >
@@ -206,7 +206,7 @@ export default function GoogleIntegrationsPage() {
                         id={`anonymize-ip-${integration.id}`}
                         checked={integration.config.anonymizeIp || false}
                         onChange={() => handleUpdateConfig(integration, 'anonymizeIp', !integration.config.anonymizeIp)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`anonymize-ip-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Anonymize IP addresses
@@ -219,7 +219,7 @@ export default function GoogleIntegrationsPage() {
                         id={`send-pageviews-${integration.id}`}
                         checked={integration.config.sendPageViews || false}
                         onChange={() => handleUpdateConfig(integration, 'sendPageViews', !integration.config.sendPageViews)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`send-pageviews-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Automatically send page views
@@ -248,7 +248,7 @@ export default function GoogleIntegrationsPage() {
                         placeholder="GTM-XXXXXXX"
                       />
                       <button
-                        className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                        className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                         onClick={() => handleUpdateConfig(integration, 'containerId', integration.config.containerId)}
                         disabled={saving}
                       >
@@ -281,7 +281,7 @@ export default function GoogleIntegrationsPage() {
                         placeholder="<meta name='google-site-verification' content='XXXXX'>"
                       />
                       <button
-                        className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                        className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                         onClick={() => handleUpdateConfig(integration, 'verificationCode', integration.config.verificationCode)}
                         disabled={saving}
                       >
@@ -315,7 +315,7 @@ export default function GoogleIntegrationsPage() {
                           placeholder="ca-pub-XXXXXXXXXX"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'clientId', integration.config.clientId)}
                           disabled={saving}
                         >
@@ -346,7 +346,7 @@ export default function GoogleIntegrationsPage() {
                           placeholder="XXXXXXXXXX"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'slotId', integration.config.slotId)}
                           disabled={saving}
                         >

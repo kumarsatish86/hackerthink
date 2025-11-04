@@ -12,7 +12,7 @@ export async function POST() {
     console.log('[Admin] Manually refreshing redirects cache...');
     
     // Force fetch from redirects-cache endpoint
-    const response = await fetch('http://localhost:3000/api/redirects-cache', {
+    const response = await fetch('http://localhost:3007/api/redirects-cache', {
       cache: 'no-store', // Force fresh data
       headers: {
         'Cache-Control': 'no-cache'

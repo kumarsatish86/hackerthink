@@ -4,7 +4,7 @@ import { Pool } from 'pg';
 export const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
   password: process.env.DB_PASSWORD || 'Admin1234',
   port: parseInt(process.env.DB_PORT || '5432'),
 });

@@ -94,12 +94,12 @@ const LessonMetaTags: React.FC<LessonMetaTagsProps> = ({
         "image": ogImage,
         "author": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl
         },
         "publisher": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl,
           "logo": {
             "@type": "ImageObject",
@@ -143,7 +143,7 @@ const LessonMetaTags: React.FC<LessonMetaTagsProps> = ({
         "description": metaDescription,
         "provider": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl
         },
         "courseCode": lesson.slug,
@@ -228,7 +228,7 @@ const LessonMetaTags: React.FC<LessonMetaTagsProps> = ({
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
       <meta name="keywords" content={metaKeywords} />
-      <meta name="author" content="LinuxConcept" />
+      <meta name="author" content="HackerThink" />
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={canonicalUrl} />
       
@@ -238,7 +238,7 @@ const LessonMetaTags: React.FC<LessonMetaTagsProps> = ({
       <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:site_name" content="LinuxConcept" />
+      <meta property="og:site_name" content="HackerThink" />
       <meta property="og:locale" content="en_US" />
       
       {/* Twitter Card Meta Tags */}

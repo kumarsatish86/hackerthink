@@ -76,12 +76,12 @@ const LessonSEOForm: React.FC<LessonSEOFormProps> = ({
         "image": ogImage,
         "author": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl
         },
         "publisher": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl,
           "logo": {
             "@type": "ImageObject",
@@ -125,7 +125,7 @@ const LessonSEOForm: React.FC<LessonSEOFormProps> = ({
         "description": metaDescription,
         "provider": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": baseUrl
         },
         "courseCode": lessonData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),

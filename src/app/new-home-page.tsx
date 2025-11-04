@@ -568,7 +568,7 @@ export default function NewHomePage() {
               Ready to accelerate your IT career?
             </h2>
             <p className="mt-4 text-xl text-indigo-100">
-              Join thousands of IT professionals who are advancing their careers with LinuxConcept.
+              Join thousands of IT professionals who are advancing their careers with HackerThink.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4">

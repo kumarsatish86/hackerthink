@@ -146,12 +146,12 @@ export default function CreateLessonPage() {
           "image": ogImage,
           "author": {
             "@type": "Organization",
-            "name": "LinuxConcept",
+            "name": "HackerThink",
             "url": baseUrl
           },
           "publisher": {
             "@type": "Organization",
-            "name": "LinuxConcept",
+            "name": "HackerThink",
             "url": baseUrl,
             "logo": {
               "@type": "ImageObject",
@@ -195,7 +195,7 @@ export default function CreateLessonPage() {
           "description": metaDescription,
           "provider": {
             "@type": "Organization",
-            "name": "LinuxConcept",
+            "name": "HackerThink",
             "url": baseUrl
           },
           "courseCode": formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),

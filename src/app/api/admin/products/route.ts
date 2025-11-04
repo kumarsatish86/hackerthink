@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import db from '@/lib/db';
 
 // GET /api/admin/products - Get all products with pagination and filtering
 export async function GET(request: NextRequest) {

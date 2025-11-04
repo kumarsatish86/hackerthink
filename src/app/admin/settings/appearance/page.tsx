@@ -9,7 +9,7 @@ export default function AppearanceSettings() {
     favicon: '/images/favicon.ico',
     primaryColor: '#3b82f6',
     secondaryColor: '#6366f1',
-    footerText: '© 2023 LinuxConcept. All rights reserved.'
+    footerText: '© 2023 HackerThink. All rights reserved.'
   });
 
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -42,7 +42,7 @@ export default function AppearanceSettings() {
             favicon: data.settings.favicon_path || '/images/favicon.ico',
             primaryColor: data.settings.primary_color || '#3b82f6',
             secondaryColor: data.settings.secondary_color || '#6366f1',
-            footerText: data.settings.footer_text || '© 2023 LinuxConcept. All rights reserved.'
+            footerText: data.settings.footer_text || '© 2023 HackerThink. All rights reserved.'
           });
           
           // Set previews for existing images
@@ -193,7 +193,7 @@ export default function AppearanceSettings() {
       
       {isLoading ? (
         <div className="flex justify-center items-center p-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
           <span className="ml-3 text-lg text-gray-700">Loading settings...</span>
         </div>
       ) : (
@@ -232,7 +232,7 @@ export default function AppearanceSettings() {
                     ref={logoInputRef}
                     onChange={handleLogoChange}
                     accept="image/png, image/jpeg, image/svg+xml, image/gif"
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
                     Recommended size: 200x50 pixels. Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
@@ -275,7 +275,7 @@ export default function AppearanceSettings() {
                     ref={faviconInputRef}
                     onChange={handleFaviconChange}
                     accept="image/x-icon, image/png, image/svg+xml"
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
                     Recommended size: 32x32 pixels. Max file size: 1MB. Supported formats: ICO, PNG, SVG.
@@ -311,7 +311,7 @@ export default function AppearanceSettings() {
                     value={settings.primaryColor}
                     onChange={handleInputChange}
                     name="primaryColor"
-                    className="flex-grow px-3 py-2 border border-l-0 border-gray-300 rounded-r-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="flex-grow px-3 py-2 border border-l-0 border-gray-300 rounded-r-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function AppearanceSettings() {
                     value={settings.secondaryColor}
                     onChange={handleInputChange}
                     name="secondaryColor"
-                    className="flex-grow px-3 py-2 border border-l-0 border-gray-300 rounded-r-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="flex-grow px-3 py-2 border border-l-0 border-gray-300 rounded-r-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
@@ -355,7 +355,7 @@ export default function AppearanceSettings() {
                 name="footerText"
                 value={settings.footerText}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
@@ -365,7 +365,7 @@ export default function AppearanceSettings() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
               {isSubmitting ? 'Saving...' : 'Save Settings'}
             </button>

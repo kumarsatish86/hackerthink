@@ -7,7 +7,7 @@ import { TermData, RelatedTerm, TermPageProps } from '@/types/term';
 // Fetch term data for metadata generation
 async function getTermData(slug: string): Promise<{ term: TermData | null; relatedTerms: RelatedTerm[] }> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/term/${slug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/term/${slug}`, {
       cache: 'no-store'
     });
     
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
   
   if (!term) {
     return {
-      title: 'Term Not Found | LinuxConcept Glossary',
+      title: 'Term Not Found | HackerThink Glossary',
       description: 'The requested term could not be found in our IT glossary.',
     };
   }
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com';
   const termUrl = `${baseUrl}/term/${term.slug}`;
   
-  const title = `${term.term} - ${term.category} | LinuxConcept Glossary`;
+  const title = `${term.term} - ${term.category} | HackerThink Glossary`;
   const description = term.definition.length > 160 
     ? `${term.definition.substring(0, 157)}...` 
     : term.definition;
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
     title,
     description,
     keywords,
-    authors: [{ name: "LinuxConcept Team" }],
+    authors: [{ name: "HackerThink Team" }],
     openGraph: {
       type: 'article',
       title,
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
           alt: `${term.term} - ${term.category} Definition`,
         },
       ],
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       locale: 'en_US',
       publishedTime: term.created_at,
       modifiedTime: term.updated_at,

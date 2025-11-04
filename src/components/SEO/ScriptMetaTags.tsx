@@ -42,7 +42,7 @@ export default function ScriptMetaTags({ script }: ScriptMetaTagsProps) {
   const imageUrl = script.featured_image || `${baseUrl}/images/script-default.png`;
   
   // Generate title and description
-  const title = script.meta_title || `${script.title} - ${script.language} Script | LinuxConcept`;
+  const title = script.meta_title || `${script.title} - ${script.language} Script | HackerThink`;
   const description = script.meta_description || script.description || 
     `Download and use this ${script.language} script for ${script.script_type.toLowerCase()}. ${script.difficulty} level script compatible with ${script.os_compatibility}.`;
 
@@ -67,7 +67,7 @@ export default function ScriptMetaTags({ script }: ScriptMetaTagsProps) {
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content={script.author_name || "LinuxConcept Team"} />
+      <meta name="author" content={script.author_name || "HackerThink Team"} />
       <meta name="robots" content="index, follow" />
       <meta name="language" content="en" />
       <meta name="revisit-after" content="7 days" />
@@ -84,9 +84,9 @@ export default function ScriptMetaTags({ script }: ScriptMetaTagsProps) {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={`${script.title} - ${script.language} Script`} />
-      <meta property="og:site_name" content="LinuxConcept" />
+      <meta property="og:site_name" content="HackerThink" />
       <meta property="og:locale" content="en_US" />
-      <meta property="article:author" content={script.author_name || "LinuxConcept Team"} />
+      <meta property="article:author" content={script.author_name || "HackerThink Team"} />
       <meta property="article:published_time" content={script.created_at} />
       <meta property="article:modified_time" content={script.updated_at} />
       <meta property="article:section" content="Scripts" />
@@ -104,7 +104,7 @@ export default function ScriptMetaTags({ script }: ScriptMetaTagsProps) {
       {/* Additional SEO Meta Tags */}
       <meta name="theme-color" content="#4F46E5" />
       <meta name="msapplication-TileColor" content="#4F46E5" />
-      <meta name="application-name" content="LinuxConcept Scripts" />
+      <meta name="application-name" content="HackerThink Scripts" />
       
       {/* Language and Region */}
       <meta name="geo.region" content="US" />
@@ -139,11 +139,11 @@ export default function ScriptMetaTags({ script }: ScriptMetaTagsProps) {
             "image": imageUrl,
             "author": {
               "@type": "Person",
-              "name": script.author_name || "LinuxConcept Team"
+              "name": script.author_name || "HackerThink Team"
             },
             "publisher": {
               "@type": "Organization",
-              "name": "LinuxConcept",
+              "name": "HackerThink",
               "url": baseUrl
             },
             "dateCreated": script.created_at,

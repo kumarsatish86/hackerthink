@@ -40,7 +40,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -62,7 +62,7 @@ export default function Dashboard() {
                 {course.image ? (
                   <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-500">
+                  <div className="w-full h-full flex items-center justify-center bg-red-100 text-red-500">
                     <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
@@ -75,21 +75,21 @@ export default function Dashboard() {
                 <div className="relative pt-1">
                   <div className="flex mb-2 items-center justify-between">
                     <div>
-                      <span className="text-xs font-semibold inline-block text-indigo-600">
+                      <span className="text-xs font-semibold inline-block text-red-600">
                         {course.progress}% Complete
                       </span>
                     </div>
                   </div>
-                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-indigo-200">
+                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-red-200">
                     <div
                       style={{ width: `${course.progress}%` }}
-                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"
                     ></div>
                   </div>
                 </div>
                 <Link
                   href={`/courses/${course.id}`}
-                  className="block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded"
+                  className="block text-center bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
                 >
                   Continue Learning
                 </Link>
@@ -107,7 +107,7 @@ export default function Dashboard() {
             {mockActivities.map((activity) => (
               <li key={activity.id} className="px-4 py-3 hover:bg-gray-50">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-500">
+                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-500">
                     {activity.type === 'course_progress' && (
                       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -137,7 +137,7 @@ export default function Dashboard() {
             ))}
           </ul>
           <div className="bg-gray-50 px-4 py-3 text-center">
-            <Link href="/dashboard/activity" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+            <Link href="/dashboard/activity" className="text-sm font-medium text-red-600 hover:text-red-500">
               View all activity
             </Link>
           </div>
@@ -154,14 +154,14 @@ export default function Dashboard() {
                 {course.image ? (
                   <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-500">
+                  <div className="w-full h-full flex items-center justify-center bg-red-100 text-red-500">
                     <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
                   {course.category}
                 </div>
               </div>
@@ -169,7 +169,7 @@ export default function Dashboard() {
                 <h3 className="font-semibold text-lg mb-2">{course.title}</h3>
                 <Link
                   href={`/courses/${course.id}`}
-                  className="block text-center bg-white border border-indigo-600 hover:bg-indigo-50 text-indigo-600 font-medium py-2 px-4 rounded"
+                  className="block text-center bg-white border border-red-600 hover:bg-red-50 text-red-600 font-medium py-2 px-4 rounded"
                 >
                   View Course
                 </Link>

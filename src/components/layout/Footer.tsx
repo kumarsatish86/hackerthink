@@ -18,7 +18,7 @@ export function Footer() {
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h3 className="text-4xl font-bold bg-gradient-to-r from-white to-red-200 bg-clip-text text-transparent mb-6">
-                AIWeb
+                HackerThink
               </h3>
               <p className="text-gray-300 text-lg leading-relaxed max-w-md">
                 Your trusted source for breaking AI news, cutting-edge research, and industry insights. 
@@ -100,6 +100,7 @@ export function Footer() {
               {[
                 { name: 'AI Tools', href: '/tools', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
                 { name: 'AI Courses', href: '/courses', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253' },
+                { name: 'Quizzes', href: '/quizzes', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4' },
                 { name: 'Tutorials', href: '/tutorials', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
                 { name: 'AI Models', href: '/models', icon: 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z' },
                 { name: 'Datasets', href: '/datasets', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4' },
@@ -190,12 +191,8 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-8">
               <p className="text-sm text-gray-300">
-                &copy; {new Date().getFullYear()} AIWeb. All rights reserved.
+                &copy; {new Date().getFullYear()} HackerThink. All rights reserved.
               </p>
-              <div className="flex items-center space-x-2 text-sm text-gray-300">
-                <span>Powered by</span>
-                <span className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent font-bold">AI</span>
-              </div>
             </div>
             
             <div className="flex flex-wrap justify-center md:justify-end space-x-8 mt-4 md:mt-0">
@@ -251,12 +248,12 @@ export function Footer() {
           <div className="mt-6 pt-6 border-t border-white/10 text-center">
             <p className="text-sm text-gray-300">
               Contact us: 
-              <a href="mailto:news@aiweb.com" className="text-red-400 hover:text-red-300 transition-colors ml-1 font-medium">
-                news@aiweb.com
+              <a href="mailto:news@hackerthink.com" className="text-red-400 hover:text-red-300 transition-colors ml-1 font-medium">
+                news@hackerthink.com
               </a> 
               <span className="mx-2">|</span>
-              <a href="mailto:editor@aiweb.com" className="text-red-400 hover:text-red-300 transition-colors font-medium">
-                editor@aiweb.com
+              <a href="mailto:editor@hackerthink.com" className="text-red-400 hover:text-red-300 transition-colors font-medium">
+                editor@hackerthink.com
               </a>
             </p>
           </div>

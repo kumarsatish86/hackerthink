@@ -395,7 +395,7 @@ export default function MediaManagement() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -411,7 +411,7 @@ export default function MediaManagement() {
         </div>
         <button
           onClick={handleUploadClick}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
         >
           <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -450,7 +450,7 @@ export default function MediaManagement() {
             <button
               onClick={handleUpload}
               disabled={isUploading}
-              className={`px-4 py-2 rounded-md text-sm font-medium text-white ${isUploading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white ${isUploading ? 'bg-red-400' : 'bg-red-600 hover:bg-red-700'}`}
             >
               {isUploading ? 'Uploading...' : 'Start Upload'}
             </button>
@@ -464,7 +464,7 @@ export default function MediaManagement() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div 
-                    className="bg-indigo-600 h-2.5 rounded-full" 
+                    className="bg-red-600 h-2.5 rounded-full" 
                     style={{ width: `${uploadProgress[file.name] || 0}%` }}
                   ></div>
                 </div>
@@ -488,7 +488,7 @@ export default function MediaManagement() {
                   placeholder="Search media files..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500"
                 />
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -502,7 +502,7 @@ export default function MediaManagement() {
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value as MediaType | 'all')}
-                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="all">All Types</option>
                 <option value="image">Images</option>
@@ -517,7 +517,7 @@ export default function MediaManagement() {
                   setSortBy(newSortBy as 'date' | 'name' | 'size');
                   setSortOrder(newSortOrder as 'asc' | 'desc');
                 }}
-                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="rounded-md border border-gray-300 py-2 pl-3 pr-10 text-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="date-desc">Newest First</option>
                 <option value="date-asc">Oldest First</option>
@@ -558,7 +558,7 @@ export default function MediaManagement() {
             <div className="mt-6">
               <button
                 onClick={handleUploadClick}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
               >
                 <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -572,7 +572,7 @@ export default function MediaManagement() {
             {sortedMediaItems.map((item) => (
               <div 
                 key={item.id} 
-                className={`border rounded-md overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${selectedItems.includes(item.id) ? 'ring-2 ring-indigo-500' : ''}`}
+                className={`border rounded-md overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${selectedItems.includes(item.id) ? 'ring-2 ring-red-500' : ''}`}
                 onClick={() => handleItemSelect(item.id)}
                 onDoubleClick={() => handlePreview(item)}
               >
@@ -643,7 +643,7 @@ export default function MediaManagement() {
                   
                   {/* Selection indicator */}
                   {selectedItems.includes(item.id) && (
-                    <div className="absolute top-2 right-2 h-6 w-6 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <div className="absolute top-2 right-2 h-6 w-6 bg-red-600 rounded-full flex items-center justify-center">
                       <svg className="h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
@@ -740,7 +740,7 @@ export default function MediaManagement() {
                   type="text"
                   value={editFormData.title}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   placeholder="Enter title..."
                 />
               </div>
@@ -753,7 +753,7 @@ export default function MediaManagement() {
                   type="text"
                   value={editFormData.alt_text}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, alt_text: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   placeholder="Describe the image for accessibility..."
                   required
                 />
@@ -770,7 +770,7 @@ export default function MediaManagement() {
                   value={editFormData.description}
                   onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   placeholder="Optional description..."
                 />
               </div>
@@ -785,7 +785,7 @@ export default function MediaManagement() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                 >
                   Save Changes
                 </button>

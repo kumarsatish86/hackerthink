@@ -44,11 +44,11 @@ export default function ToolStructuredData({ tool }: ToolStructuredDataProps) {
     "dateModified": tool.updated_at,
     "author": {
       "@type": "Person",
-      "name": "LinuxConcept Team"
+      "name": "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl
     },
     "offers": {
@@ -89,11 +89,11 @@ export default function ToolStructuredData({ tool }: ToolStructuredDataProps) {
     "image": imageUrl,
     "author": {
       "@type": "Person",
-      "name": "LinuxConcept Team"
+      "name": "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl
     },
     "dateCreated": tool.created_at,
@@ -158,11 +158,11 @@ export default function ToolStructuredData({ tool }: ToolStructuredDataProps) {
     "url": toolUrl,
     "author": {
       "@type": "Person",
-      "name": "LinuxConcept Team"
+      "name": "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl
     },
     "dateCreated": tool.created_at,
@@ -226,11 +226,11 @@ export default function ToolStructuredData({ tool }: ToolStructuredDataProps) {
     "dateModified": tool.updated_at,
     "author": {
       "@type": "Person",
-      "name": "LinuxConcept Team"
+      "name": "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl
     },
     "offers": {

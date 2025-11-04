@@ -7,7 +7,7 @@ const testPool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
   max: 1, // Use only one connection
   idleTimeoutMillis: 10000, // Close idle connections after 10 seconds
   connectionTimeoutMillis: 5000, // Timeout after 5 seconds
@@ -22,7 +22,7 @@ export async function GET() {
       status: 'ok',
       message: 'Database connection successful',
       time: result.rows[0].time,
-      connectionString: `postgres://${process.env.DB_USER || 'postgres'}:***@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'ainews'}`
+      connectionString: `postgres://${process.env.DB_USER || 'postgres'}:***@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || '5432'}/${process.env.DB_NAME || 'hackerthink'}`
     });
   } catch (error) {
     console.error('Database connection error:', error);

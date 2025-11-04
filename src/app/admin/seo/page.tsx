@@ -62,7 +62,7 @@ export default function SEODashboardPage() {
         
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
           </div>
         ) : error ? (
           <div className="text-red-500 mb-4">{error}</div>
@@ -89,7 +89,7 @@ export default function SEODashboardPage() {
             
             <div className="flex justify-end mt-4">
               <button 
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
                 onClick={() => {
                   // Implement settings edit functionality or navigation to edit page
                   alert('Edit functionality will be implemented here');

@@ -98,7 +98,7 @@ export default function UsersPage() {
             <input
               type="text"
               id="search"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
               placeholder="Search by name or email"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -111,7 +111,7 @@ export default function UsersPage() {
             </label>
             <select
               id="role"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
             >
@@ -128,7 +128,7 @@ export default function UsersPage() {
             </label>
             <select
               id="status"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -141,7 +141,7 @@ export default function UsersPage() {
           <div className="w-full md:w-48 flex items-end">
             <Link 
               href="/admin/users/create" 
-              className="bg-indigo-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full text-center"
+              className="bg-red-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 w-full text-center"
             >
               Add User
             </Link>
@@ -152,7 +152,7 @@ export default function UsersPage() {
       {/* Loading state */}
       {loading && (
         <div className="text-center py-10">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-600 mb-2"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-600 mb-2"></div>
           <p className="text-gray-500">Loading users...</p>
         </div>
       )}
@@ -205,7 +205,7 @@ export default function UsersPage() {
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">
                           {user.name.charAt(0)}
                         </div>
                         <div className="ml-4">
@@ -218,7 +218,7 @@ export default function UsersPage() {
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                         ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
                           user.role === 'author' ? 'bg-blue-100 text-blue-800' : 
-                          'bg-indigo-100 text-indigo-800'}`}>
+                          'bg-red-100 text-red-800'}`}>
                         {user.role}
                       </span>
                     </td>
@@ -235,10 +235,10 @@ export default function UsersPage() {
                       {user.lastActive}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link href={`/admin/users/${user.id}`} className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <Link href={`/admin/users/${user.id}`} className="text-red-600 hover:text-red-900 mr-4">
                         View
                       </Link>
-                      <Link href={`/admin/users/${user.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <Link href={`/admin/users/${user.id}/edit`} className="text-red-600 hover:text-red-900 mr-4">
                         Edit
                       </Link>
                       <button 

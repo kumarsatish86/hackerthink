@@ -5,7 +5,7 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
 async function runMigration() {
@@ -77,7 +77,7 @@ async function runMigration() {
         },
         {
           key: 'footer_text',
-          value: '© 2023 LinuxConcept. All rights reserved.',
+          value: '© 2023 HackerThink. All rights reserved.',
           group: 'appearance',
           description: 'Text displayed in the footer'
         }

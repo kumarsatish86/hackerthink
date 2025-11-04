@@ -38,7 +38,7 @@ const formats = [
 
 // Metadata should be in a separate layout file, not in a client component
 // export const metadata = {
-//   title: 'Edit Tool - Admin - LinuxConcept',
+//   title: 'Edit Tool - Admin - HackerThink',
 // };
 
 // Define tool type

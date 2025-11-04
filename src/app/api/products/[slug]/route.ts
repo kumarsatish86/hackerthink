@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import db from '@/lib/db';
 
 // GET /api/products/[slug] - Get single product by slug for frontend
 export async function GET(

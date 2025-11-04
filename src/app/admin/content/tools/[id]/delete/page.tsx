@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Delete Tool - Admin - LinuxConcept',
+  title: 'Delete Tool - Admin - HackerThink',
 };
 
 // Define tool type

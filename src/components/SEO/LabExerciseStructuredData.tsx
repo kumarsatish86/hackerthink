@@ -45,7 +45,7 @@ export default function LabExerciseStructuredData({ exercise }: LabExerciseStruc
     }),
     "provider": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     ...(exercise.author_name && {
@@ -83,7 +83,7 @@ export default function LabExerciseStructuredData({ exercise }: LabExerciseStruc
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     ...(exercise.author_name && {
@@ -145,7 +145,7 @@ export default function LabExerciseStructuredData({ exercise }: LabExerciseStruc
     ],
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     ...(exercise.author_name && {

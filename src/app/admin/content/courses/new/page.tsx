@@ -97,7 +97,7 @@ export default function CreateCoursePage() {
   if (status === 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -118,7 +118,7 @@ export default function CreateCoursePage() {
         <h1 className="text-2xl font-bold text-gray-900">Create New Course</h1>
         <Link
           href="/admin/content/courses"
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           Cancel
         </Link>
@@ -155,7 +155,7 @@ export default function CreateCoursePage() {
                   value={formData.title}
                   onChange={handleChange}
                   onBlur={formData.slug ? undefined : generateSlug}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   required
                 />
               </div>
@@ -173,13 +173,13 @@ export default function CreateCoursePage() {
                   id="slug"
                   value={formData.slug}
                   onChange={handleChange}
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 sm:text-sm border-gray-300 rounded-md"
+                  className="flex-1 focus:ring-red-500 focus:border-red-500 block w-full min-w-0 sm:text-sm border-gray-300 rounded-md"
                   required
                 />
                 <button
                   type="button"
                   onClick={generateSlug}
-                  className="ml-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="ml-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   Generate
                 </button>
@@ -211,7 +211,7 @@ export default function CreateCoursePage() {
                   rows={3}
                   value={formData.short_description}
                   onChange={handleChange}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 ></textarea>
               </div>
               <p className="mt-1 text-xs text-gray-500">
@@ -231,7 +231,7 @@ export default function CreateCoursePage() {
                   rows={10}
                   value={formData.content}
                   onChange={handleChange}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 ></textarea>
               </div>
               <p className="mt-1 text-xs text-gray-500">
@@ -250,7 +250,7 @@ export default function CreateCoursePage() {
                   name="level"
                   value={formData.level}
                   onChange={handleChange}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
                 >
                   <option value="Beginner">Beginner</option>
                   <option value="Intermediate">Intermediate</option>
@@ -276,7 +276,7 @@ export default function CreateCoursePage() {
                   step="0.01"
                   value={formData.price}
                   onChange={handleChange}
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-red-500 focus:border-red-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
             </div>
@@ -298,7 +298,7 @@ export default function CreateCoursePage() {
                   step="0.01"
                   value={formData.discount_price}
                   onChange={handleChange}
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
+                  className="focus:ring-red-500 focus:border-red-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <p className="mt-1 text-xs text-gray-500">
@@ -311,14 +311,14 @@ export default function CreateCoursePage() {
             <div className="flex justify-end">
               <Link
                 href="/admin/content/courses"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={loading}
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
               >
                 {loading ? 'Creating...' : 'Create Course'}
               </button>

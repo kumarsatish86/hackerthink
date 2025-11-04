@@ -147,7 +147,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -203,7 +203,7 @@ export default function AdminDashboard() {
               className={`px-4 py-2 rounded-md ${
                 isInitializingDb
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  : 'bg-red-600 text-white hover:bg-red-700'
               }`}
             >
               {isInitializingDb ? 'Initializing...' : 'Initialize Database'}
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
           {mockStats.map((item) => (
             <div key={item.id} className="bg-white rounded-lg shadow p-5">
               <div className="flex items-center">
-                <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+                <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
                   {item.icon === 'users' && (
                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -294,7 +294,7 @@ export default function AdminDashboard() {
               <button
                 onClick={runMigrations}
                 disabled={migrationStatus.running}
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
               >
                 {migrationStatus.running ? (
                   <>
@@ -329,7 +329,7 @@ export default function AdminDashboard() {
             href="/admin/users"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
@@ -343,7 +343,7 @@ export default function AdminDashboard() {
             href="/admin/content/articles"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
             href="/admin/content/courses"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
@@ -371,7 +371,7 @@ export default function AdminDashboard() {
             href="/admin/content/glossary"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
@@ -385,7 +385,7 @@ export default function AdminDashboard() {
             href="/admin/content/roadmaps"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
               </svg>
@@ -399,7 +399,7 @@ export default function AdminDashboard() {
             href="/admin/settings"
             className="bg-white hover:bg-gray-50 rounded-lg shadow p-5 flex items-center"
           >
-            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-indigo-600 flex items-center justify-center">
+            <div className="flex-shrink-0 h-10 w-10 rounded-md bg-red-600 flex items-center justify-center">
               <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
                     <div className="px-4 py-4 sm:px-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">
                             {user.name.charAt(0)}
                           </div>
                           <div className="ml-4">
@@ -434,7 +434,7 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-2 flex-shrink-0 flex">
-                          <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                          <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                             {user.role}
                           </p>
                         </div>
@@ -461,7 +461,7 @@ export default function AdminDashboard() {
               ))}
             </ul>
             <div className="bg-gray-50 px-4 py-3 text-center">
-              <Link href="/admin/users" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+              <Link href="/admin/users" className="text-sm font-medium text-red-600 hover:text-red-500">
                 View all users
               </Link>
             </div>

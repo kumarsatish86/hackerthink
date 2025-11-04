@@ -23,7 +23,7 @@ interface RoadmapData {
 }
 
 export function generateRoadmapMetadata(roadmap: RoadmapData): Metadata {
-  const title = roadmap.seo_title || `${roadmap.title} Learning Roadmap | LinuxConcept`;
+  const title = roadmap.seo_title || `${roadmap.title} Learning Roadmap | HackerThink`;
   const description = roadmap.seo_description || roadmap.description;
   const keywords = roadmap.seo_keywords || `${roadmap.title}, learning roadmap, ${roadmap.level || 'intermediate'} level, Linux system administration, DevOps, cloud computing`;
   const image = roadmap.featured_image || 'https://ainews.com/images/roadmap-default.png';
@@ -48,7 +48,7 @@ export function generateRoadmapMetadata(roadmap: RoadmapData): Metadata {
       ],
       publishedTime: roadmap.created_at,
       modifiedTime: roadmap.updated_at,
-      authors: ['LinuxConcept Team'],
+      authors: ['HackerThink Team'],
       section: 'Learning Roadmaps',
       tags: keywords.split(', ').map(tag => tag.trim())
     },
@@ -75,12 +75,12 @@ export function generateRoadmapMetadata(roadmap: RoadmapData): Metadata {
       },
     },
     other: {
-      'article:author': 'LinuxConcept Team',
+      'article:author': 'HackerThink Team',
       'article:section': 'Learning Roadmaps',
       'article:tag': keywords,
       'article:published_time': roadmap.created_at,
       'article:modified_time': roadmap.updated_at,
-      'og:site_name': 'LinuxConcept',
+      'og:site_name': 'HackerThink',
       'og:type': 'article',
       'og:locale': 'en_US',
       'og:updated_time': roadmap.updated_at,

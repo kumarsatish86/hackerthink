@@ -9,7 +9,7 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
   max: 20, // Set max pool size
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection not established

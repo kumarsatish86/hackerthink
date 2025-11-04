@@ -9,7 +9,7 @@ const getPool = () => new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
 // Unified database initialization function with consistent ID types

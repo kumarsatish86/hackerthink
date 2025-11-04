@@ -322,7 +322,7 @@ export default function StoryPage() {
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-50">
         <div className="text-center text-white/60 text-xs bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">
           <div className="flex items-center justify-center gap-4">
-            <span>LinuxConcept</span>
+            <span>HackerThink</span>
             <span>•</span>
             <span>{new Date(story.created_at).toLocaleDateString()}</span>
           </div>

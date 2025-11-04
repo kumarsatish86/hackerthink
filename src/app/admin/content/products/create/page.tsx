@@ -269,7 +269,7 @@ const CreateProductPage = () => {
             type="submit"
             form="product-form"
             disabled={loading}
-            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             <FaSave className="mr-2 h-4 w-4" />
             {loading ? 'Creating...' : 'Create Product'}
@@ -310,7 +310,7 @@ const CreateProductPage = () => {
                     required
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Enter product name"
                   />
                 </div>
@@ -325,7 +325,7 @@ const CreateProductPage = () => {
                     required
                     value={formData.slug}
                     onChange={(e) => handleInputChange('slug', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="product-url-slug"
                   />
                 </div>
@@ -339,7 +339,7 @@ const CreateProductPage = () => {
                     id="logo_url"
                     value={formData.logo_url}
                     onChange={(e) => handleInputChange('logo_url', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="https://example.com/logo.png"
                   />
                 </div>
@@ -353,7 +353,7 @@ const CreateProductPage = () => {
                     id="logo_alt"
                     value={formData.logo_alt}
                     onChange={(e) => handleInputChange('logo_alt', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Product logo"
                   />
                 </div>
@@ -368,7 +368,7 @@ const CreateProductPage = () => {
                     rows={3}
                     value={formData.short_description}
                     onChange={(e) => handleInputChange('short_description', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Brief description of the product"
                   />
                 </div>
@@ -404,7 +404,7 @@ const CreateProductPage = () => {
                     required
                     value={formData.pricing_type}
                     onChange={(e) => handleInputChange('pricing_type', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                   >
                     {pricingTypes.map(type => (
                       <option key={type.value} value={type.value}>{type.label}</option>
@@ -421,7 +421,7 @@ const CreateProductPage = () => {
                     id="launch_date"
                     value={formData.launch_date}
                     onChange={(e) => handleInputChange('launch_date', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
                 
@@ -434,7 +434,7 @@ const CreateProductPage = () => {
                     rows={3}
                     value={formData.pricing_details}
                     onChange={(e) => handleInputChange('pricing_details', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Detailed pricing information"
                   />
                 </div>
@@ -454,7 +454,7 @@ const CreateProductPage = () => {
                     id="website_url"
                     value={formData.website_url}
                     onChange={(e) => handleInputChange('website_url', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="https://example.com"
                   />
                 </div>
@@ -468,7 +468,7 @@ const CreateProductPage = () => {
                     id="demo_url"
                     value={formData.demo_url}
                     onChange={(e) => handleInputChange('demo_url', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="https://demo.example.com"
                   />
                 </div>
@@ -482,7 +482,7 @@ const CreateProductPage = () => {
                     id="documentation_url"
                     value={formData.documentation_url}
                     onChange={(e) => handleInputChange('documentation_url', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="https://docs.example.com"
                   />
                 </div>
@@ -496,7 +496,7 @@ const CreateProductPage = () => {
                     id="github_url"
                     value={formData.github_url}
                     onChange={(e) => handleInputChange('github_url', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="https://github.com/example"
                   />
                 </div>
@@ -535,7 +535,7 @@ const CreateProductPage = () => {
                           setNewFeature('');
                         }
                       }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                       placeholder="Add a feature"
                     />
                     <button
@@ -544,7 +544,7 @@ const CreateProductPage = () => {
                         addArrayItem('features', newFeature);
                         setNewFeature('');
                       }}
-                      className="p-2 text-indigo-600 hover:text-indigo-800"
+                      className="p-2 text-red-600 hover:text-red-800"
                     >
                       <FaPlus className="h-4 w-4" />
                     </button>
@@ -580,7 +580,7 @@ const CreateProductPage = () => {
                           setNewPro('');
                         }
                       }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                       placeholder="Add a pro"
                     />
                     <button
@@ -589,7 +589,7 @@ const CreateProductPage = () => {
                         addArrayItem('pros', newPro);
                         setNewPro('');
                       }}
-                      className="p-2 text-indigo-600 hover:text-indigo-800"
+                      className="p-2 text-red-600 hover:text-red-800"
                     >
                       <FaPlus className="h-4 w-4" />
                     </button>
@@ -625,7 +625,7 @@ const CreateProductPage = () => {
                           setNewCon('');
                         }
                       }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                       placeholder="Add a con"
                     />
                     <button
@@ -634,7 +634,7 @@ const CreateProductPage = () => {
                         addArrayItem('cons', newCon);
                         setNewCon('');
                       }}
-                      className="p-2 text-indigo-600 hover:text-indigo-800"
+                      className="p-2 text-red-600 hover:text-red-800"
                     >
                       <FaPlus className="h-4 w-4" />
                     </button>
@@ -670,7 +670,7 @@ const CreateProductPage = () => {
                           setNewIntegration('');
                         }
                       }}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                       placeholder="Add an integration"
                     />
                     <button
@@ -679,7 +679,7 @@ const CreateProductPage = () => {
                         addArrayItem('integrations', newIntegration);
                         setNewIntegration('');
                       }}
-                      className="p-2 text-indigo-600 hover:text-indigo-800"
+                      className="p-2 text-red-600 hover:text-red-800"
                     >
                       <FaPlus className="h-4 w-4" />
                     </button>
@@ -703,7 +703,7 @@ const CreateProductPage = () => {
                     id="status"
                     value={formData.status}
                     onChange={(e) => handleInputChange('status', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                   >
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
@@ -717,7 +717,7 @@ const CreateProductPage = () => {
                     id="featured"
                     checked={formData.featured}
                     onChange={(e) => handleInputChange('featured', e.target.checked)}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
                   <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
                     Featured Product
@@ -749,7 +749,7 @@ const CreateProductPage = () => {
                           }));
                         }
                       }}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                     />
                     <label htmlFor={`category-${category.id}`} className="ml-2 block text-sm text-gray-900 flex items-center">
                       <category.icon className="mr-2 h-4 w-4" />
@@ -788,7 +788,7 @@ const CreateProductPage = () => {
                         setNewTag('');
                       }
                     }}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm"
                     placeholder="Add a tag"
                   />
                   <button
@@ -797,7 +797,7 @@ const CreateProductPage = () => {
                       addArrayItem('tags', newTag);
                       setNewTag('');
                     }}
-                    className="p-2 text-indigo-600 hover:text-indigo-800"
+                    className="p-2 text-red-600 hover:text-red-800"
                   >
                     <FaPlus className="h-4 w-4" />
                   </button>
@@ -818,7 +818,7 @@ const CreateProductPage = () => {
                     id="company_name"
                     value={formData.company_name}
                     onChange={(e) => handleInputChange('company_name', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Company name"
                   />
                 </div>
@@ -832,7 +832,7 @@ const CreateProductPage = () => {
                     id="company_size"
                     value={formData.company_size}
                     onChange={(e) => handleInputChange('company_size', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="e.g., 1-10, 11-50, 51-200"
                   />
                 </div>
@@ -846,7 +846,7 @@ const CreateProductPage = () => {
                     id="founded_year"
                     value={formData.founded_year}
                     onChange={(e) => handleInputChange('founded_year', parseInt(e.target.value))}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="2020"
                   />
                 </div>
@@ -860,7 +860,7 @@ const CreateProductPage = () => {
                     id="headquarters"
                     value={formData.headquarters}
                     onChange={(e) => handleInputChange('headquarters', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="San Francisco, CA"
                   />
                 </div>
@@ -874,7 +874,7 @@ const CreateProductPage = () => {
                 <button
                   type="button"
                   onClick={generateSEOData}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   title="Auto-generate SEO data based on product information"
                 >
                   <FaMagic className="mr-2 h-4 w-4" />
@@ -891,7 +891,7 @@ const CreateProductPage = () => {
                     id="seo_title"
                     value={formData.seo_title}
                     onChange={(e) => handleInputChange('seo_title', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="SEO optimized title"
                   />
                 </div>
@@ -905,7 +905,7 @@ const CreateProductPage = () => {
                     rows={3}
                     value={formData.seo_description}
                     onChange={(e) => handleInputChange('seo_description', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="SEO meta description"
                   />
                 </div>
@@ -919,7 +919,7 @@ const CreateProductPage = () => {
                     id="seo_keywords"
                     value={formData.seo_keywords}
                     onChange={(e) => handleInputChange('seo_keywords', e.target.value)}
-                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="keyword1, keyword2, keyword3"
                   />
                 </div>
@@ -933,3 +933,4 @@ const CreateProductPage = () => {
 };
 
 export default CreateProductPage;
+

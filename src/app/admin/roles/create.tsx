@@ -82,7 +82,7 @@ export default function CreateRolePage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-8 px-4">
       <div className="w-full max-w-xl bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold mb-6 text-indigo-700">Create New Role</h1>
+        <h1 className="text-2xl font-bold mb-6 text-red-700">Create New Role</h1>
         {success ? (
           <div className="text-green-600 text-center font-semibold py-8">
             Role created successfully! Redirecting...
@@ -96,7 +96,7 @@ export default function CreateRolePage() {
                 value={roleData.name}
                 onChange={(e) => setRoleData({ ...roleData, name: e.target.value })}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
             <div>
@@ -105,7 +105,7 @@ export default function CreateRolePage() {
                 value={roleData.description}
                 onChange={(e) => setRoleData({ ...roleData, description: e.target.value })}
                 rows={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
             <div>
@@ -122,7 +122,7 @@ export default function CreateRolePage() {
                           id={`module-${module}`}
                           checked={perms.every((p) => roleData.permissions.includes(p.id))}
                           onChange={(e) => handleModulePermissionsChange(module, e.target.checked)}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+                          className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded cursor-pointer"
                         />
                         <label htmlFor={`module-${module}`} className="ml-2 text-sm font-semibold text-gray-700 cursor-pointer">
                           {module}
@@ -136,7 +136,7 @@ export default function CreateRolePage() {
                               id={`perm-${permission.id}`}
                               checked={roleData.permissions.includes(permission.id)}
                               onChange={() => handlePermissionChange(permission.id)}
-                              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+                              className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded cursor-pointer"
                             />
                             <label htmlFor={`perm-${permission.id}`} className="ml-2 text-sm text-gray-700 cursor-pointer">
                               {permission.name} <span className="text-gray-400 text-xs">({permission.key})</span>
@@ -153,7 +153,7 @@ export default function CreateRolePage() {
               <Link href="/admin/roles" className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">Cancel</Link>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-4 py-2 rounded-md bg-red-600 text-white font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                 disabled={loading}
               >
                 Create Role

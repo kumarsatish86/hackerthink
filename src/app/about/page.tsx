@@ -47,7 +47,7 @@ export default function AboutUs() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              About LinuxConcept
+              About HackerThink
             </motion.h1>
             <motion.p 
               className="text-xl md:text-2xl max-w-3xl mx-auto font-light"
@@ -108,7 +108,7 @@ export default function AboutUs() {
           <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">Our Story</h2>
           <div className="max-w-3xl mx-auto">
             <p className="text-xl text-gray-600 leading-relaxed">
-              LinuxConcept was founded in 2018 with a simple mission: to make Linux and IT education accessible, engaging, and effective for everyone.
+              HackerThink was founded in 2018 with a simple mission: to make Linux and IT education accessible, engaging, and effective for everyone.
             </p>
           </div>
         </motion.div>
@@ -152,7 +152,7 @@ export default function AboutUs() {
             <motion.div variants={fadeInUp} className="space-y-4">
               <h3 className="text-2xl font-bold text-gray-900">Today and Beyond</h3>
               <p className="text-gray-600">
-                Today, LinuxConcept is at the forefront of IT education, combining theoretical knowledge with practical, hands-on experience. We're continually innovating to create better learning experiences and preparing our users for the ever-evolving technology landscape.
+                Today, HackerThink is at the forefront of IT education, combining theoretical knowledge with practical, hands-on experience. We're continually innovating to create better learning experiences and preparing our users for the ever-evolving technology landscape.
               </p>
             </motion.div>
           </motion.div>
@@ -273,7 +273,7 @@ export default function AboutUs() {
             </div>
             <div className="p-4">
               <p className="text-gray-600 text-sm">
-                With over 15 years of experience in Linux systems administration, Alex founded LinuxConcept to share his passion for open-source technology.
+                With over 15 years of experience in Linux systems administration, Alex founded HackerThink to share his passion for open-source technology.
               </p>
               <div className="mt-4 flex space-x-2">
                 <a href="#" className="text-gray-400 hover:text-teal-600 transition-colors">
@@ -469,7 +469,7 @@ export default function AboutUs() {
               >
                 <h2 className="text-3xl font-bold text-gray-900">Get in Touch</h2>
                 <p className="text-gray-600">
-                  Have questions about LinuxConcept? Want to partner with us or join our team? We'd love to hear from you!
+                  Have questions about HackerThink? Want to partner with us or join our team? We'd love to hear from you!
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-start">

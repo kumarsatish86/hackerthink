@@ -62,11 +62,11 @@ export default function FixPermissions() {
         
         {status === 'loading' ? (
           <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
           </div>
         ) : status === 'unauthenticated' ? (
           <div className="mb-4 text-red-600">
-            <p>You are not signed in. Please <Link href="/auth/signin" className="text-indigo-600 underline">sign in</Link> to continue.</p>
+            <p>You are not signed in. Please <Link href="/auth/signin" className="text-red-600 underline">sign in</Link> to continue.</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -89,7 +89,7 @@ export default function FixPermissions() {
               id="role"
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
             >
               {roles.map(role => (
                 <option key={role} value={role}>{role.charAt(0).toUpperCase() + role.slice(1)}</option>
@@ -100,7 +100,7 @@ export default function FixPermissions() {
           <button
             onClick={handleUpdateRole}
             disabled={loading}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             {loading ? 'Updating...' : 'Update Role'}
           </button>

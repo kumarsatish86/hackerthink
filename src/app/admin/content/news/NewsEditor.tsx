@@ -300,7 +300,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="title"
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="Enter news title"
                       required
                     />
@@ -316,7 +316,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="slug"
                       value={formData.slug}
                       onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="news-item-slug"
                       required
                     />
@@ -332,7 +332,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       rows={3}
                       value={formData.excerpt}
                       onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="Brief summary of the news item"
                     />
                   </div>
@@ -364,7 +364,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="imageUrl"
                       value={imageUrl}
                       onChange={(e) => setImageUrl(e.target.value)}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="https://example.com/image.jpg"
                     />
                   </div>
@@ -390,7 +390,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="altText"
                       value={formData.featured_image_alt}
                       onChange={(e) => setFormData(prev => ({ ...prev, featured_image_alt: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="Describe the image for accessibility"
                     />
                   </div>
@@ -413,7 +413,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       value={tagInput}
                       onChange={(e) => setTagInput(e.target.value)}
                       onKeyPress={handleAddTag}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="Type a tag and press Enter"
                     />
                   </div>
@@ -424,13 +424,13 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       {formData.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800"
+                          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"
                         >
                           {tag}
                           <button
                             type="button"
                             onClick={() => handleRemoveTag(tag)}
-                            className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500"
+                            className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full text-red-400 hover:bg-red-200 hover:text-red-500"
                           >
                             <span className="sr-only">Remove</span>
                             <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 8 8">
@@ -462,7 +462,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="status"
                       value={formData.status}
                       onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as any }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                     >
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
@@ -481,7 +481,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                         id="scheduleDate"
                         value={formData.schedule_date}
                         onChange={(e) => setFormData(prev => ({ ...prev, schedule_date: e.target.value }))}
-                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       />
                     </div>
                   )}
@@ -501,7 +501,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="category"
                       value={formData.category_id || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, category_id: e.target.value || null }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                     >
                       <option value="">No Category</option>
                       {categoriesList.map(category => (
@@ -515,7 +515,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowCategoryModal(true)}
-                    className="text-sm text-indigo-600 hover:text-indigo-800"
+                    className="text-sm text-red-600 hover:text-red-800"
                   >
                     + Add New Category
                   </button>
@@ -534,7 +534,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                     id="author"
                     value={formData.author_id || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, author_id: e.target.value }))}
-                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                   >
                     <option value="">Select Author</option>
                     {authors.map(author => (
@@ -553,7 +553,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                   <button
                     type="button"
                     onClick={autoGenerateSEO}
-                    className="text-sm text-indigo-600 hover:text-indigo-800"
+                    className="text-sm text-red-600 hover:text-red-800"
                   >
                     Auto Generate
                   </button>
@@ -570,7 +570,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="seoTitle"
                       value={formData.seo_title}
                       onChange={(e) => setFormData(prev => ({ ...prev, seo_title: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="SEO optimized title"
                     />
                   </div>
@@ -585,7 +585,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       rows={3}
                       value={formData.seo_description}
                       onChange={(e) => setFormData(prev => ({ ...prev, seo_description: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="SEO meta description"
                     />
                   </div>
@@ -600,7 +600,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       id="seoKeywords"
                       value={formData.seo_keywords}
                       onChange={(e) => setFormData(prev => ({ ...prev, seo_keywords: e.target.value }))}
-                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       placeholder="keyword1, keyword2, keyword3"
                     />
                   </div>
@@ -629,14 +629,14 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
           <div className="mt-8 flex justify-end space-x-4">
             <button
               type="button"
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
             >
               {isSubmitting ? 'Saving...' : (newsItem ? 'Update News Item' : 'Create News Item')}
             </button>
@@ -661,7 +661,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                     id="newCategoryName"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
-                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
                     placeholder="Enter category name"
                   />
                   {categoryError && (
@@ -685,7 +685,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                     type="button"
                     onClick={handleAddCategory}
                     disabled={isAddingCategory}
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
                   >
                     {isAddingCategory ? 'Adding...' : 'Add Category'}
                   </button>
@@ -700,3 +700,4 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
 };
 
 export default NewsEditor;
+

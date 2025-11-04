@@ -1300,6 +1300,1518 @@ const COMMAND_USE_CASES: Record<string, UseCase[]> = {
     { title: 'Path management', description: 'Modify PATH and other search path variables for command lookup' },
     { title: 'Shell customization', description: 'Set persistent variables for shell behavior and appearance' }
   ],
+  'nvidia-smi': [
+    { title: 'AI/ML Workload Monitoring', description: 'Monitor GPU utilization, memory usage, and temperature during model training or inference' },
+    { title: 'CUDA Development', description: 'Debug CUDA applications, check GPU availability, and verify CUDA installation' },
+    { title: 'Resource Management', description: 'Monitor GPU memory usage and temperature to prevent thermal throttling and OOM errors' },
+    { title: 'Performance Tuning', description: 'Identify bottlenecks, optimize GPU usage, and balance load across multiple GPUs' },
+    { title: 'System Administration', description: 'Check GPU health, driver status, and hardware information for system maintenance' }
+  ],
+  'nvcc': [
+    { title: 'CUDA Application Development', description: 'Compile CUDA kernels and host code for GPU-accelerated applications' },
+    { title: 'GPU Programming', description: 'Build and optimize GPU-accelerated programs for high-performance computing' },
+    { title: 'Multi-Architecture Support', description: 'Create binaries that run on multiple GPU generations for compatibility' },
+    { title: 'Performance Optimization', description: 'Use different optimization levels and compute architectures for benchmarking' },
+    { title: 'CUDA Debugging', description: 'Generate debug symbols and PTX code for debugging GPU applications' }
+  ],
+  'nvidia-settings': [
+    { title: 'Display Configuration', description: 'Configure resolution, refresh rate, and multi-monitor setup for NVIDIA GPUs' },
+    { title: 'GPU Performance Tuning', description: 'Adjust clock speeds, power limits, and performance modes for optimal performance' },
+    { title: 'Fan Control', description: 'Manually control GPU fan speeds for temperature management (if supported)' },
+    { title: 'Power Management', description: 'Configure power modes and limits to optimize power consumption and performance' },
+    { title: 'System Integration', description: 'Configure NVIDIA settings for specific applications and workloads' }
+  ],
+  'nvidia-debugdump': [
+    { title: 'Troubleshooting', description: 'Collect comprehensive diagnostic information for NVIDIA support and bug reporting' },
+    { title: 'Driver Issues', description: 'Debug driver installation, compatibility problems, and configuration issues' },
+    { title: 'Hardware Diagnostics', description: 'Verify GPU hardware functionality and identify hardware-related problems' },
+    { title: 'System Analysis', description: 'Analyze GPU configuration and system state for optimization' },
+    { title: 'Bug Reporting', description: 'Generate detailed debug information for bug reports and technical support' }
+  ],
+  'nvidia-persistenced': [
+    { title: 'Performance Optimization', description: 'Reduce GPU initialization latency for faster application startup' },
+    { title: 'CUDA Applications', description: 'Improve startup time and performance for CUDA programs and GPU workloads' },
+    { title: 'GPU Workloads', description: 'Maintain driver state for frequent GPU access in multi-user environments' },
+    { title: 'AI/ML Training', description: 'Speed up model training initialization and reduce overhead' },
+    { title: 'Server Environments', description: 'Optimize GPU server performance for continuous workloads' }
+  ],
+  'lspci': [
+    { title: 'Hardware Detection', description: 'Identify all PCI devices including NVIDIA GPUs in the system' },
+    { title: 'GPU Verification', description: 'Verify NVIDIA GPU presence, model, and PCI bus assignment' },
+    { title: 'Driver Debugging', description: 'Check if GPU drivers are loaded correctly and identify hardware issues' },
+    { title: 'System Diagnostics', description: 'Troubleshoot hardware detection issues and PCI bus problems' },
+    { title: 'Multi-GPU Systems', description: 'Identify all GPUs in systems with multiple graphics cards' }
+  ],
+  'lsmod': [
+    { title: 'Driver Verification', description: 'Verify NVIDIA drivers are properly loaded into the kernel' },
+    { title: 'Module Dependencies', description: 'Check module dependencies, usage count, and kernel module state' },
+    { title: 'Troubleshooting', description: 'Diagnose driver loading issues and module conflicts' },
+    { title: 'System Monitoring', description: 'Monitor kernel module state and resource usage' },
+    { title: 'Resource Analysis', description: 'Check module memory usage and identify memory-intensive modules' }
+  ],
+  'gpustat': [
+    { title: 'Quick GPU Monitoring', description: 'Get fast, colorized overview of GPU status, utilization, and memory usage' },
+    { title: 'Development Workflow', description: 'Monitor GPU usage during development with clean, readable output' },
+    { title: 'System Administration', description: 'Track GPU utilization and processes across multiple users' },
+    { title: 'Performance Analysis', description: 'Identify GPU-intensive processes and analyze usage patterns' },
+    { title: 'Multi-GPU Systems', description: 'Monitor multiple GPUs simultaneously with unified display' }
+  ],
+  'glxinfo': [
+    { title: 'GPU Acceleration Verification', description: 'Verify GPU acceleration is working and OpenGL is properly configured' },
+    { title: 'OpenGL Testing', description: 'Check OpenGL capabilities, version, and supported extensions' },
+    { title: 'Driver Verification', description: 'Confirm GPU drivers are providing OpenGL support correctly' },
+    { title: 'Performance Testing', description: 'Verify hardware acceleration is enabled for graphics applications' },
+    { title: 'Troubleshooting', description: 'Diagnose rendering issues and OpenGL configuration problems' }
+  ],
+  'cat-proc-driver-nvidia-gpus-information': [
+    { title: 'Hardware Details', description: 'Get detailed GPU hardware information directly from the NVIDIA driver' },
+    { title: 'Driver Debugging', description: 'Verify driver recognition of GPU hardware and check driver state' },
+    { title: 'Multi-GPU Systems', description: 'Check information for each GPU separately in multi-GPU setups' },
+    { title: 'System Diagnostics', description: 'Perform low-level hardware diagnostics and troubleshooting' },
+    { title: 'Driver Development', description: 'Access driver internal information for development and debugging' }
+  ],
+  'cat-proc-driver-nvidia-version': [
+    { title: 'Driver Verification', description: 'Verify NVIDIA driver is loaded and check exact driver version' },
+    { title: 'Version Checking', description: 'Check driver version number for compatibility and troubleshooting' },
+    { title: 'Troubleshooting', description: 'Verify driver installation correctness and identify version mismatches' },
+    { title: 'Scripting', description: 'Use in scripts to check driver availability and version programmatically' },
+    { title: 'Compatibility', description: 'Verify driver version for CUDA and application compatibility checks' }
+  ],
+  'watch-nvidia-smi': [
+    { title: 'Real-time Monitoring', description: 'Continuously monitor GPU status during workloads with automatic updates' },
+    { title: 'Training Monitoring', description: 'Watch GPU metrics in real-time during ML model training' },
+    { title: 'Performance Analysis', description: 'Monitor GPU usage patterns over time and identify trends' },
+    { title: 'Troubleshooting', description: 'Real-time diagnostics during GPU issues and performance problems' },
+    { title: 'Resource Management', description: 'Track GPU utilization and processes in multi-user systems' }
+  ],
+  'nvprof': [
+    { title: 'Performance Analysis', description: 'Analyze CUDA kernel execution times and identify performance bottlenecks' },
+    { title: 'Memory Optimization', description: 'Track memory transfers and identify inefficient memory access patterns' },
+    { title: 'Code Optimization', description: 'Identify slow kernels and optimize CUDA code for better performance' },
+    { title: 'Profiling Workflows', description: 'Generate profiling reports for performance tuning and optimization' },
+    { title: 'API Debugging', description: 'Trace CUDA API calls for debugging and identifying overhead issues' }
+  ],
+  'devicequery': [
+    { title: 'CUDA Installation Verification', description: 'Verify CUDA installation and GPU detection in the system' },
+    { title: 'GPU Capabilities', description: 'Check compute capability and CUDA version support for compatibility' },
+    { title: 'Multi-GPU Systems', description: 'Identify all CUDA-capable GPUs and their capabilities in multi-GPU setups' },
+    { title: 'Compatibility Checking', description: 'Verify GPU compatibility with CUDA applications and frameworks' },
+    { title: 'Hardware Information', description: 'Get detailed GPU hardware specifications and compute capabilities' }
+  ],
+  'bandwidthtest': [
+    { title: 'Performance Benchmarking', description: 'Measure GPU memory bandwidth and transfer speeds for performance analysis' },
+    { title: 'System Tuning', description: 'Identify memory performance bottlenecks and optimize PCIe/GPU memory performance' },
+    { title: 'Hardware Validation', description: 'Verify GPU memory subsystem performance and hardware functionality' },
+    { title: 'Optimization', description: 'Compare pinned vs pageable memory performance for optimal configurations' },
+    { title: 'Multi-GPU Testing', description: 'Test memory bandwidth on multiple GPUs and PCIe configurations' }
+  ],
+  'nvidia-bug-report-sh': [
+    { title: 'Bug Reporting', description: 'Generate comprehensive diagnostic reports for NVIDIA support and bug tracking' },
+    { title: 'Troubleshooting', description: 'Collect complete system and driver information for troubleshooting GPU issues' },
+    { title: 'System Diagnostics', description: 'Get detailed system configuration snapshot for diagnostic purposes' },
+    { title: 'Support Requests', description: 'Provide detailed information for NVIDIA technical support requests' },
+    { title: 'Driver Issues', description: 'Document driver-related problems with complete system state information' }
+  ],
+  'nvidia-healthmon': [
+    { title: 'Health Monitoring', description: 'Monitor GPU health status in data center and enterprise environments' },
+    { title: 'Temperature Tracking', description: 'Monitor GPU temperatures and detect overheating or cooling issues' },
+    { title: 'Power Monitoring', description: 'Track power consumption and efficiency for power management' },
+    { title: 'Frequency Monitoring', description: 'Monitor GPU clock frequencies and performance states' },
+    { title: 'Automated Diagnostics', description: 'Integrate into monitoring systems for automated health checks' }
+  ],
+  'nvidia-xconfig': [
+    { title: 'X Server Configuration', description: 'Configure X server for NVIDIA GPUs with proper driver settings' },
+    { title: 'Multi-GPU Setup', description: 'Configure systems with multiple NVIDIA GPUs for optimal display configuration' },
+    { title: 'Display Configuration', description: 'Set up multi-monitor and custom display modes for NVIDIA GPUs' },
+    { title: 'Driver Settings', description: 'Apply custom NVIDIA driver settings and configurations to X server' },
+    { title: 'System Setup', description: 'Initial NVIDIA GPU configuration for X server and display management' }
+  ],
+  'nvidia-modprobe': [
+    { title: 'Module Loading', description: 'Load NVIDIA kernel modules when needed for GPU access' },
+    { title: 'Device File Creation', description: 'Create /dev/nvidia* device files with proper permissions for CUDA access' },
+    { title: 'CUDA Setup', description: 'Ensure CUDA applications can access GPU devices with correct permissions' },
+    { title: 'Multi-User Systems', description: 'Set up proper permissions for non-root GPU access in shared systems' },
+    { title: 'System Initialization', description: 'Configure GPU access and device nodes during system boot' }
+  ],
+  'nvidia-detector': [
+    { title: 'GPU Detection', description: 'Quickly check if NVIDIA GPUs are present and detected in the system' },
+    { title: 'Driver Verification', description: 'Verify NVIDIA driver installation and compatibility status' },
+    { title: 'Script Integration', description: 'Use in scripts and automation to detect NVIDIA hardware programmatically' },
+    { title: 'Troubleshooting', description: 'Diagnose GPU detection issues and hardware recognition problems' },
+    { title: 'System Setup', description: 'Verify GPU presence during initial system setup and driver installation' }
+  ],
+  'prime-select': [
+    { title: 'Power Management', description: 'Switch to integrated GPU for power saving on laptops with hybrid graphics' },
+    { title: 'Performance', description: 'Switch to NVIDIA GPU for maximum performance for GPU-intensive workloads' },
+    { title: 'Hybrid Graphics', description: 'Manage dual-GPU laptop configurations for optimal performance and battery life' },
+    { title: 'Battery Life', description: 'Optimize battery life by using integrated GPU when GPU power is not needed' },
+    { title: 'GPU Offloading', description: 'Use PRIME offloading to run specific applications on discrete GPU' }
+  ],
+  'torchrun': [
+    { title: 'Multi-GPU Training', description: 'Launch distributed PyTorch training across multiple GPUs on a single node' },
+    { title: 'Multi-Node Training', description: 'Scale PyTorch training across multiple machines and nodes' },
+    { title: 'Deep Learning', description: 'Train large deep learning models requiring multiple GPUs for distributed training' },
+    { title: 'Distributed Computing', description: 'Run distributed PyTorch workloads across GPU clusters' },
+    { title: 'Production Training', description: 'Launch production machine learning training pipelines with fault tolerance' }
+  ],
+  'deepspeed': [
+    { title: 'Large Model Training', description: 'Train massive language models using ZeRO optimization across multiple GPUs' },
+    { title: 'Memory Optimization', description: 'Use ZeRO stages to train models that exceed single GPU memory capacity' },
+    { title: 'Distributed Training', description: 'Scale training to multiple nodes with efficient parameter distribution' },
+    { title: 'CPU Offloading', description: 'Offload optimizer states to CPU for even larger model training' },
+    { title: 'Gradient Checkpointing', description: 'Enable automatic gradient checkpointing for memory-efficient training' }
+  ],
+  'horovodrun': [
+    { title: 'PyTorch Distributed', description: 'Launch distributed PyTorch training with efficient ring-allreduce communication' },
+    { title: 'TensorFlow Distributed', description: 'Scale TensorFlow training across multiple GPUs and nodes' },
+    { title: 'Multi-Node Training', description: 'Coordinate training across multiple machines with automatic worker discovery' },
+    { title: 'Efficient Communication', description: 'Use tensor fusion for optimized gradient synchronization' },
+    { title: 'Framework Agnostic', description: 'Distributed training that works with PyTorch, TensorFlow, and Keras' }
+  ],
+  'nvlink': [
+    { title: 'Topology Analysis', description: 'Check NVLink topology and GPU interconnect configuration' },
+    { title: 'Performance Optimization', description: 'Understand GPU communication paths for optimizing multi-GPU training' },
+    { title: 'Hardware Verification', description: 'Verify NVLink connections and bandwidth between GPUs' },
+    { title: 'Bandwidth Monitoring', description: 'Monitor NVLink bandwidth utilization during multi-GPU workloads' },
+    { title: 'Multi-GPU Setup', description: 'Configure and verify optimal GPU interconnect for distributed training' }
+  ],
+  'nsys': [
+    { title: 'Performance Profiling', description: 'System-wide performance analysis of GPU and CPU activities' },
+    { title: 'Timeline Analysis', description: 'Visualize kernel launches, memory transfers, and API calls over time' },
+    { title: 'Bottleneck Identification', description: 'Identify performance bottlenecks across application stack' },
+    { title: 'API Tracing', description: 'Trace CUDA, cuBLAS, and cuDNN API calls for debugging' },
+    { title: 'Optimization', description: 'Analyze application performance to optimize GPU utilization' }
+  ],
+  'ncu': [
+    { title: 'Kernel Profiling', description: 'Detailed profiling of individual CUDA kernels for optimization' },
+    { title: 'Occupancy Analysis', description: 'Analyze warp occupancy and thread block efficiency' },
+    { title: 'Memory Analysis', description: 'Identify memory access patterns and throughput bottlenecks' },
+    { title: 'Performance Metrics', description: 'Get detailed GPU metrics like speed of light and utilization' },
+    { title: 'Source Correlation', description: 'Correlate performance metrics with source code for optimization' }
+  ],
+  'perf': [
+    { title: 'System Profiling', description: 'Profile CPU and system events during GPU workloads' },
+    { title: 'Driver Tracing', description: 'Trace GPU driver system calls and ioctl operations' },
+    { title: 'CPU Overhead', description: 'Analyze CPU-side overhead in GPU applications' },
+    { title: 'I/O Analysis', description: 'Profile I/O wait and memory transfer overhead' },
+    { title: 'Complete Analysis', description: 'Combine CPU and GPU profiling for complete performance picture' }
+  ],
+  'rocm-smi': [
+    { title: 'AMD GPU Monitoring', description: 'Monitor AMD GPU status, utilization, and health metrics' },
+    { title: 'Temperature Monitoring', description: 'Track GPU temperature to prevent overheating' },
+    { title: 'Power Management', description: 'Monitor power consumption and optimize GPU power usage' },
+    { title: 'Memory Tracking', description: 'Monitor GPU memory usage and allocation patterns' },
+    { title: 'Performance Analysis', description: 'Analyze AMD GPU performance metrics during workloads' }
+  ],
+  'rocminfo': [
+    { title: 'GPU Information', description: 'Display detailed AMD GPU hardware specifications and capabilities' },
+    { title: 'ROCm Verification', description: 'Verify ROCm installation and GPU detection' },
+    { title: 'Capability Checking', description: 'Check GPU compute capabilities and compatibility' },
+    { title: 'Library Versions', description: 'Display ROCm library versions and driver information' },
+    { title: 'Hardware Details', description: 'Get comprehensive information about AMD GPU hardware' }
+  ],
+  'hipcc': [
+    { title: 'HIP Compilation', description: 'Compile HIP code for execution on AMD GPUs via ROCm' },
+    { title: 'CUDA Porting', description: 'Port CUDA applications to AMD GPUs using HIP compiler' },
+    { title: 'AMD GPU Development', description: 'Build GPU-accelerated applications for AMD hardware' },
+    { title: 'Cross-Platform Code', description: 'Develop portable GPU code using HIP portability layer' },
+    { title: 'ROCm Integration', description: 'Compile applications with automatic ROCm library linking' }
+  ],
+  'update-pciids': [
+    { title: 'Hardware Database Update', description: 'Update PCI ID database to identify new or unknown GPUs correctly' },
+    { title: 'GPU Recognition', description: 'Ensure accurate GPU name display in lspci and hardware tools' },
+    { title: 'New Device Support', description: 'Add support for recently released graphics cards and hardware' },
+    { title: 'Device Identification', description: 'Fix unknown device issues by updating device ID mappings' },
+    { title: 'System Maintenance', description: 'Keep hardware identification database current for accurate diagnostics' }
+  ],
+  'lshw': [
+    { title: 'GPU Information', description: 'Display detailed GPU model, memory, and PCI bus information' },
+    { title: 'Hardware Inventory', description: 'Export complete hardware configuration including all GPUs' },
+    { title: 'System Diagnostics', description: 'Troubleshoot GPU detection and hardware identification issues' },
+    { title: 'Hardware Documentation', description: 'Generate comprehensive system hardware reports' },
+    { title: 'Driver Verification', description: 'Check GPU driver and kernel module information' }
+  ],
+  'inxi': [
+    { title: 'Quick GPU Info', description: 'Get concise GPU information including model and driver version' },
+    { title: 'System Summary', description: 'View complete system overview including GPU and display details' },
+    { title: 'Driver Check', description: 'Verify GPU driver installation and version quickly' },
+    { title: 'OpenGL Information', description: 'Check OpenGL version and renderer information' },
+    { title: 'Display Configuration', description: 'View display resolution, refresh rate, and configuration' }
+  ],
+  'prime-run': [
+    { title: 'Discrete GPU Selection', description: 'Run specific applications on high-performance discrete GPU' },
+    { title: 'Gaming Performance', description: 'Launch games on discrete GPU for optimal frame rates' },
+    { title: 'GPU-Accelerated Apps', description: 'Run GPU-intensive applications (Blender, video editing) on discrete GPU' },
+    { title: 'Power Management', description: 'Use integrated GPU for desktop, discrete GPU only when needed' },
+    { title: 'CUDA Applications', description: 'Run CUDA workloads on NVIDIA discrete GPU' }
+  ],
+  'glmark2': [
+    { title: 'OpenGL Benchmarking', description: 'Measure OpenGL performance and compare GPU performance' },
+    { title: 'Driver Testing', description: 'Test graphics driver performance and stability' },
+    { title: 'GPU Capabilities', description: 'Verify OpenGL feature support and capabilities' },
+    { title: 'Performance Comparison', description: 'Compare OpenGL performance across different GPUs or drivers' },
+    { title: 'Regression Testing', description: 'Test for performance regressions after driver or system updates' }
+  ],
+  'vulkaninfo': [
+    { title: 'Vulkan Verification', description: 'Verify Vulkan installation and GPU support' },
+    { title: 'Capability Checking', description: 'Check Vulkan features, extensions, and API version support' },
+    { title: 'Driver Information', description: 'Display Vulkan driver version and implementation details' },
+    { title: 'Extension Support', description: 'Verify required Vulkan extensions for applications' },
+    { title: 'Debugging', description: 'Diagnose Vulkan application issues and compatibility problems' }
+  ],
+  'clinfo': [
+    { title: 'OpenCL Verification', description: 'Verify OpenCL installation and GPU compute device detection' },
+    { title: 'Compute Capabilities', description: 'Check GPU compute units, work-group sizes, and capabilities' },
+    { title: 'Version Support', description: 'Check supported OpenCL version and extension support' },
+    { title: 'Device Information', description: 'Display detailed information about all OpenCL-capable devices' },
+    { title: 'Debugging', description: 'Debug OpenCL application issues and device compatibility' }
+  ],
+  'dxdiag': [
+    { title: 'GPU Information', description: 'Display detailed GPU and driver information on Windows' },
+    { title: 'DirectX Verification', description: 'Verify DirectX installation and version support' },
+    { title: 'Driver Details', description: 'Check graphics driver version, date, and installation status' },
+    { title: 'Troubleshooting', description: 'Diagnose Windows graphics issues and compatibility problems' },
+    { title: 'System Report', description: 'Generate complete system and graphics diagnostic report' }
+  ],
+  'wmic': [
+    { title: 'GPU Query', description: 'Query GPU information from Windows command line' },
+    { title: 'Scripted Information', description: 'Retrieve GPU details in batch scripts and automation' },
+    { title: 'Hardware Inventory', description: 'Collect GPU information for system inventory and asset management' },
+    { title: 'Driver Version Check', description: 'Programmatically check graphics driver version' },
+    { title: 'Remote Queries', description: 'Query GPU information from remote Windows systems' }
+  ],
+  'get-ciminstance': [
+    { title: 'PowerShell GPU Info', description: 'Query GPU information using modern PowerShell cmdlets' },
+    { title: 'Automated Scripting', description: 'Retrieve GPU details in PowerShell scripts and automation' },
+    { title: 'Hardware Management', description: 'Manage and query GPU information in system administration tasks' },
+    { title: 'Modern WMI Queries', description: 'Use CIM/WMI to query GPU hardware (replacement for deprecated wmic)' },
+    { title: 'Flexible Formatting', description: 'Format GPU information output in various PowerShell formats (list, table, CSV)' }
+  ],
+  'huggingface-cli': [
+    { title: 'Hub Management', description: 'Manage models, datasets, and spaces on Hugging Face Hub from command line' },
+    { title: 'Authentication', description: 'Login and authenticate with Hugging Face account for API access' },
+    { title: 'CLI Workflows', description: 'Automate ML workflows and integrate Hugging Face Hub into scripts' },
+    { title: 'CI/CD Integration', description: 'Integrate Hugging Face operations into continuous integration pipelines' },
+    { title: 'Quick Access', description: 'Access Hugging Face Hub features directly from terminal without web interface' }
+  ],
+  'huggingface-cli-repo': [
+    { title: 'Create Repositories', description: 'Create new model, dataset, or space repositories on Hugging Face Hub' },
+    { title: 'Clone Repos', description: 'Clone Hugging Face repositories for local development and editing' },
+    { title: 'Repository Management', description: 'Manage repository visibility, organization, and settings' },
+    { title: 'Setup Projects', description: 'Quickly set up new ML project repositories with proper structure' },
+    { title: 'Organization Workflows', description: 'Create repositories under organizations for team collaboration' }
+  ],
+  'huggingface-cli-upload': [
+    { title: 'Model Deployment', description: 'Upload model weights, checkpoints, and artifacts to Hugging Face Hub' },
+    { title: 'Dataset Sharing', description: 'Upload datasets and data files for sharing with the ML community' },
+    { title: 'Version Control', description: 'Update repositories with new versions and commit changes' },
+    { title: 'Large Files', description: 'Upload large model files with automatic Git LFS handling' },
+    { title: 'CI/CD Deployment', description: 'Automate model and dataset uploads in continuous deployment pipelines' }
+  ],
+  'huggingface-cli-download': [
+    { title: 'Model Download', description: 'Download pre-trained models for local use and fine-tuning' },
+    { title: 'Dataset Access', description: 'Download datasets for training and research purposes' },
+    { title: 'Selective Downloads', description: 'Download specific files (config, tokenizer) without full model' },
+    { title: 'Caching', description: 'Leverage automatic caching for faster subsequent downloads' },
+    { title: 'Offline Development', description: 'Download models once for offline development and experimentation' }
+  ],
+  'huggingface-cli-model': [
+    { title: 'Model Discovery', description: 'Browse and discover models for specific ML tasks and use cases' },
+    { title: 'Model Information', description: 'View detailed model metadata, cards, and documentation' },
+    { title: 'Browse by Author', description: 'Explore models published by specific authors or organizations' },
+    { title: 'Model Metrics', description: 'Check model performance metrics and evaluation results' },
+    { title: 'Model Selection', description: 'Compare and select appropriate models for projects' }
+  ],
+  'huggingface-cli-dataset': [
+    { title: 'Dataset Discovery', description: 'Find datasets for specific ML tasks and research domains' },
+    { title: 'Dataset Information', description: 'View dataset cards, metadata, and usage documentation' },
+    { title: 'Browse Collections', description: 'Explore datasets from organizations and research groups' },
+    { title: 'Dataset Evaluation', description: 'Check dataset size, structure, and quality before use' },
+    { title: 'Research Data', description: 'Access datasets for ML research and benchmark evaluation' }
+  ],
+  'huggingface-cli-space': [
+    { title: 'Deploy Applications', description: 'Create and deploy interactive ML demos and applications' },
+    { title: 'Gradio Apps', description: 'Deploy Gradio-based interactive ML applications on Hugging Face' },
+    { title: 'Streamlit Apps', description: 'Host Streamlit applications on Hugging Face Spaces' },
+    { title: 'Model Showcases', description: 'Create interactive demos to showcase ML models' },
+    { title: 'Free Hosting', description: 'Host ML applications with free GPU allocation for demos' }
+  ],
+  'huggingface-cli-search': [
+    { title: 'Model Discovery', description: 'Search for models by task, library, or keywords' },
+    { title: 'Dataset Finding', description: 'Find datasets matching specific criteria and use cases' },
+    { title: 'Advanced Filtering', description: 'Filter search results by metadata, author, or organization' },
+    { title: 'Popular Content', description: 'Discover popular models and datasets sorted by downloads or likes' },
+    { title: 'Quick Discovery', description: 'Efficiently find relevant ML resources for projects' }
+  ],
+  'huggingface-cli-inference': [
+    { title: 'Quick Testing', description: 'Test models via Inference API without downloading locally' },
+    { title: 'Model Evaluation', description: 'Quickly evaluate model performance on sample inputs' },
+    { title: 'API Integration', description: 'Test Inference API integration before implementation' },
+    { title: 'Model Comparison', description: 'Compare multiple models quickly via API calls' },
+    { title: 'Prototyping', description: 'Prototype ML applications without local model setup' }
+  ],
+  'huggingface-cli-cache': [
+    { title: 'Disk Management', description: 'Monitor and manage disk space used by cached models and datasets' },
+    { title: 'Cache Cleanup', description: 'Remove old or unused cached files to free up storage space' },
+    { title: 'Cache Optimization', description: 'Optimize cache size with size limits and access-based pruning' },
+    { title: 'Storage Monitoring', description: 'View cache size and location for storage planning' },
+    { title: 'Offline Access', description: 'Manage cached content for offline development workflows' }
+  ],
+  'huggingface-cli-config': [
+    { title: 'Custom Cache', description: 'Configure custom cache directory location for models and datasets' },
+    { title: 'Enterprise Setup', description: 'Configure CLI for Hugging Face Enterprise Hub endpoints' },
+    { title: 'Default Settings', description: 'Set default repository types and CLI preferences' },
+    { title: 'Environment Setup', description: 'Configure CLI for different development environments' },
+    { title: 'Configuration Viewing', description: 'View and verify current CLI configuration settings' }
+  ],
+  'huggingface-cli-org': [
+    { title: 'Organization Browsing', description: 'Discover models and datasets from specific organizations' },
+    { title: 'Team Management', description: 'View organization members and structure' },
+    { title: 'Content Discovery', description: 'Browse repositories published by companies or research groups' },
+    { title: 'Research Access', description: 'Access models and datasets from research institutions' },
+    { title: 'Enterprise Content', description: 'Explore content from enterprise and organizational accounts' }
+  ],
+  'modinfo': [
+    { title: 'Driver Inspection', description: 'Inspect AMDGPU kernel module details and parameters' },
+    { title: 'Version Check', description: 'Check amdgpu driver version and build information' },
+    { title: 'Troubleshooting', description: 'Verify module path and dependencies for debugging' },
+    { title: 'Kernel Compatibility', description: 'Review supported kernel versions and signatures' },
+    { title: 'Parameter Discovery', description: 'Discover tunable module parameters for performance/debug' }
+  ],
+  'amd-smi': [
+    { title: 'GPU Overview', description: 'View high-level AMD GPU status and metrics' },
+    { title: 'Temperature & Power', description: 'Check temperature, power draw, and limits' },
+    { title: 'Clock Management', description: 'Inspect clocks and DPM states (where supported)' },
+    { title: 'Fleet Monitoring', description: 'Baseline multi-GPU systems quickly' },
+    { title: 'Automation', description: 'Scriptable AMD GPU health checks in CI/ops' }
+  ],
+  'amdgpu-top': [
+    { title: 'Live Monitoring', description: 'Monitor AMD GPU utilization, clocks, and VRAM live in TUI' },
+    { title: 'Performance Debugging', description: 'Spot throttling or underutilization during workloads' },
+    { title: 'Thermal Analysis', description: 'Watch thermals and fan response under load' },
+    { title: 'Benchmark Observation', description: 'Observe metrics while running benchmarks' },
+    { title: 'Headless Monitoring', description: 'Lightweight terminal-based monitoring on servers' }
+  ],
+  'radeontop': [
+    { title: 'Block Utilization', description: 'View per-block usage (3D, UVD/VCE, memory) on AMD GPUs' },
+    { title: 'Lightweight Monitor', description: 'Minimal overhead tool for quick checks' },
+    { title: 'Driver Validation', description: 'Validate GPU activity with amdgpu/radeon drivers' },
+    { title: 'Regression Detection', description: 'Identify performance regressions after updates' },
+    { title: 'Scripting Output', description: 'Use in scripts to log utilization over time' }
+  ],
+  'rocgdb': [
+    { title: 'Kernel Debugging', description: 'Debug HIP kernels running on AMD GPUs' },
+    { title: 'Breakpoints & Stepping', description: 'Set breakpoints in GPU code and step through execution' },
+    { title: 'State Inspection', description: 'Inspect GPU memory, registers, and variables' },
+    { title: 'Crash Diagnosis', description: 'Investigate kernel crashes or incorrect results' },
+    { title: 'Toolchain Integration', description: 'Integrate with ROCm toolchain for dev workflows' }
+  ],
+  'hipify-perl': [
+    { title: 'CUDA to HIP', description: 'Quickly translate simple CUDA codebases to HIP' },
+    { title: 'Porting Kickstart', description: 'Bootstrap AMD GPU support for existing CUDA projects' },
+    { title: 'Selective Conversion', description: 'Convert individual files or snippets for testing' },
+    { title: 'Diff Review', description: 'Produce HIP diffs for code review discussions' },
+    { title: 'Education', description: 'Demonstrate mapping between CUDA and HIP APIs' }
+  ],
+  'hipify-clang': [
+    { title: 'Project-Scale Porting', description: 'Translate larger CUDA projects using Clang-based parser' },
+    { title: 'Build System Integration', description: 'Integrate with CMake and compile_commands.json' },
+    { title: 'Accurate Parsing', description: 'Handle complex macros and templates better than perl variant' },
+    { title: 'Incremental Migration', description: 'Port modules incrementally and validate' },
+    { title: 'Modernization', description: 'Update code to HIP idioms while preserving behavior' }
+  ],
+  'rocprof': [
+    { title: 'Counter Collection', description: 'Collect GPU hardware counters for HIP/OpenCL kernels' },
+    { title: 'Timeline Tracing', description: 'Trace kernel launches and HSA/hip activity over time' },
+    { title: 'Bottleneck Analysis', description: 'Identify memory or compute bottlenecks from counters' },
+    { title: 'Regression Checks', description: 'Compare runs across commits to catch perf regressions' },
+    { title: 'Report Generation', description: 'Export stats for sharing with performance teams' }
+  ],
+  'rocprofv2': [
+    { title: 'Next-Gen Profiling', description: 'Use improved tooling for newer ROCm stacks' },
+    { title: 'HIP/HSA Traces', description: 'Capture traces with better schema and stability' },
+    { title: 'Scalable Workflows', description: 'Run profiling in CI and large test matrices' },
+    { title: 'Detailed Analysis', description: 'Deeper insights with updated collectors' },
+    { title: 'Migration Path', description: 'Transition from rocprof with minimal changes' }
+  ],
+  'rocm-bandwidth-test': [
+    { title: 'PCIe Validation', description: 'Validate PCIe/xGMI bandwidth to GPUs' },
+    { title: 'NUMA Effects', description: 'Measure bandwidth vs NUMA locality' },
+    { title: 'Peer-to-Peer', description: 'Assess inter-GPU copy bandwidth' },
+    { title: 'Baseline Systems', description: 'Create bandwidth baselines for clusters' },
+    { title: 'Regression Detection', description: 'Catch bandwidth drops after updates' }
+  ],
+  'rocblas-bench': [
+    { title: 'GEMM Throughput', description: 'Benchmark BLAS operations (e.g., GEMM) on AMD GPUs' },
+    { title: 'Tuning & Shapes', description: 'Explore matrix sizes and tuning parameters' },
+    { title: 'Model Prep', description: 'Size BLAS workloads for DL/ML models' },
+    { title: 'Hardware Compare', description: 'Compare performance across GPUs or nodes' },
+    { title: 'CI Benchmarks', description: 'Track perf in CI for changes to math libs' }
+  ],
+  'rocfft-test': [
+    { title: 'Correctness Tests', description: 'Validate FFT results for various sizes/dimensions' },
+    { title: 'Feature Checks', description: 'Ensure required transforms are available' },
+    { title: 'Perf Smoke', description: 'Quick performance sanity checks' },
+    { title: 'Bug Isolation', description: 'Reproduce FFT issues for debugging' },
+    { title: 'Upgrade Safety', description: 'Verify after ROCm/library upgrades' }
+  ],
+  'rocfft-rider': [
+    { title: 'Throughput Bench', description: 'Measure FFT throughput across sizes' },
+    { title: 'Kernel Selection', description: 'Observe algorithm choices and impacts' },
+    { title: 'Capacity Planning', description: 'Inform system sizing for FFT-heavy apps' },
+    { title: 'GPU Comparison', description: 'Compare GPUs/drivers for FFT workloads' },
+    { title: 'CI Performance', description: 'Automate FFT benchmarks in CI' }
+  ],
+  'miopen-driver': [
+    { title: 'DNN Benchmarking', description: 'Benchmark conv/pool/bn via MIOpen' },
+    { title: 'Algorithm Search', description: 'Exercise find-db and algo selection' },
+    { title: 'Model Shaping', description: 'Tune tensor shapes for target GPUs' },
+    { title: 'Regression Tracking', description: 'Detect perf changes in DL kernels' },
+    { title: 'Hardware Baselines', description: 'Establish DL baselines per GPU' }
+  ],
+  'amdgpu-install': [
+    { title: 'Driver Install', description: 'Install AMDGPU/ROCm stack on supported distros' },
+    { title: 'Usecase Profiles', description: 'Install subsets (OpenCL, Vulkan, ROCm)' },
+    { title: 'Cluster Setup', description: 'Automate installs for multi-node environments' },
+    { title: 'Troubleshooting', description: 'Resolve install issues with clear flags' },
+    { title: 'Upgrade Paths', description: 'Plan safe upgrades between ROCm releases' }
+  ],
+  'python': [
+    { title: 'Run Scripts', description: 'Execute Python scripts and applications' },
+    { title: 'Interactive REPL', description: 'Use the Python interactive shell for quick tests' },
+    { title: 'Module Execution', description: 'Run modules with -m for reliable interpreter pairing' },
+    { title: 'Version Check', description: 'Check interpreter version and build options' },
+    { title: 'Stdlib Tools', description: 'Leverage stdlib entry points (http.server, venv)' }
+  ],
+  'python3': [
+    { title: 'Explicit Python 3', description: 'Ensure Python 3 interpreter on all systems' },
+    { title: 'Shebang Consistency', description: 'Use python3 in shebangs for portability' },
+    { title: 'Venv Creation', description: 'Create venvs via python3 -m venv' },
+    { title: 'Package Mgmt', description: 'Use python3 -m pip to manage packages' },
+    { title: 'Script Launch', description: 'Run Python 3 apps and tooling explicitly' }
+  ],
+  'pyenv': [
+    { title: 'Version Management', description: 'Install and switch between Python versions' },
+    { title: 'Project Isolation', description: 'Pin per-project Python versions with pyenv local' },
+    { title: 'Global Default', description: 'Set global Python version for user shell' },
+    { title: 'Dev/Test Matrix', description: 'Test across multiple Python versions' },
+    { title: 'Shim Control', description: 'Ensure commands resolve via pyenv shims' }
+  ],
+  'deactivate': [
+    { title: 'Exit Venv', description: 'Leave the currently active virtual environment' },
+    { title: 'Reset PATH', description: 'Restore PATH to system interpreter' },
+    { title: 'Context Switch', description: 'Switch between environments cleanly' },
+    { title: 'Scripting', description: 'Use in scripts to end venv scopes' },
+    { title: 'Troubleshooting', description: 'Fix misrouted interpreter due to lingering venv' }
+  ],
+  'pip': [
+    { title: 'Install Packages', description: 'Install dependencies from PyPI and elsewhere' },
+    { title: 'Freeze/Lock', description: 'Export exact versions to requirements.txt' },
+    { title: 'Show/List', description: 'Inspect installed packages and versions' },
+    { title: 'Build Wheels', description: 'Build wheels for distribution or caching' },
+    { title: 'Scoped Pip', description: 'Use python -m pip to target interpreter' }
+  ],
+  'conda': [
+    { title: 'Create Envs', description: 'Create isolated environments with specific Python versions' },
+    { title: 'Binary Packages', description: 'Install prebuilt scientific stacks via channels' },
+    { title: 'Export/Import', description: 'Share envs with environment.yml' },
+    { title: 'Channel Mgmt', description: 'Use conda-forge or custom channels' },
+    { title: 'Activation', description: 'Activate/deactivate envs reliably' }
+  ],
+  'poetry': [
+    { title: 'Dependency Mgmt', description: 'Manage deps via pyproject.toml and lock file' },
+    { title: 'Per-Project Venv', description: 'Automatic virtualenvs for projects' },
+    { title: 'Run Tasks', description: 'Run commands within the project env' },
+    { title: 'Build/Publish', description: 'Build and publish packages to PyPI' },
+    { title: 'Reproducibility', description: 'Lock dependencies for consistent installs' }
+  ],
+  'pipenv': [
+    { title: 'Pip+Venv Combo', description: 'Manage packages and virtualenv together' },
+    { title: 'Pipfile Locking', description: 'Use Pipfile.lock for reproducible environments' },
+    { title: 'Run & Shell', description: 'Execute commands and spawn shell in env' },
+    { title: 'Python Selection', description: 'Choose interpreter for the env' },
+    { title: 'Graph Deps', description: 'Inspect dependency graph and conflicts' }
+  ],
+  'pipdeptree': [
+    { title: 'Dependency Tree', description: 'Visualize package dependency relationships' },
+    { title: 'Conflict Detection', description: 'Identify conflicting requirements' },
+    { title: 'Reverse Lookup', description: 'Find which packages depend on a given one' },
+    { title: 'JSON Output', description: 'Export machine-readable tree for tools' },
+    { title: 'Cleanup', description: 'Spot unused or redundant dependencies' }
+  ],
+  'python-m': [
+    { title: 'Interpreter Pairing', description: 'Ensure tooling runs under the correct interpreter' },
+    { title: 'Module Entry Points', description: 'Run modules like pip, venv, http.server' },
+    { title: 'Path Reliability', description: 'Avoid PATH confusion across envs' },
+    { title: 'Scripting', description: 'Use -m in scripts for portability' },
+    { title: 'One-Liners', description: 'Quickly run useful stdlib modules' }
+  ],
+  'jupyter': [
+    { title: 'Notebook/Lab', description: 'Launch Jupyter Notebook or Lab' },
+    { title: 'Kernel Mgmt', description: 'Manage kernels and troubleshoot' },
+    { title: 'nbconvert', description: 'Convert notebooks to HTML/PDF/Markdown' },
+    { title: 'Server Ops', description: 'Run Jupyter on a server for remote work' },
+    { title: 'Data Science', description: 'Interactive analysis and visualization' }
+  ],
+  'ipython': [
+    { title: 'Enhanced REPL', description: 'Use magics, completion, and debugging' },
+    { title: 'Script Debugging', description: 'Run scripts interactively with -i' },
+    { title: 'Interactive Dev', description: 'Iterate quickly on code and ideas' },
+    { title: 'Jupyter Integration', description: 'Leverage IPython features in notebooks' },
+    { title: 'Productivity', description: 'History, macros, and extensions' }
+  ],
+  'virtualenv': [
+    { title: 'Isolated Envs', description: 'Create isolated Python environments' },
+    { title: 'Custom Interpreter', description: 'Choose interpreter version per env' },
+    { title: 'Performance', description: 'Faster, feature-rich alternative to venv' },
+    { title: 'System Site-Packages', description: 'Optionally inherit system packages' },
+    { title: 'Prompt Customization', description: 'Customize env prompt names' }
+  ],
+  'tensorboard': [
+    { title: 'Training Metrics', description: 'Visualize loss, accuracy, and custom scalars over time' },
+    { title: 'Graphs', description: 'Inspect computation graphs and dataflow' },
+    { title: 'Profiler', description: 'Analyze performance traces in the Profile tab' },
+    { title: 'Embeddings', description: 'Visualize embedding spaces interactively' },
+    { title: 'Experiment Tracking', description: 'Compare multiple training runs' }
+  ],
+  'tf-upgrade-v2': [
+    { title: 'Automated Migration', description: 'Migrate TF1 codebases to TF2 APIs' },
+    { title: 'Report Generation', description: 'Produce a detailed migration report' },
+    { title: 'Batch Upgrade', description: 'Upgrade entire source trees' },
+    { title: 'Compat Strategy', description: 'Leverage compat.v1 for incremental migration' },
+    { title: 'Refactor Aid', description: 'Reduce manual API rename workload' }
+  ],
+  'tflite-convert': [
+    { title: 'Edge Deployment', description: 'Convert models for mobile/edge devices' },
+    { title: 'Quantization', description: 'Apply int8/float16 quantization to reduce size/latency' },
+    { title: 'SavedModel/Keras', description: 'Convert from SavedModel or Keras formats' },
+    { title: 'GraphDef Conversion', description: 'Fallback conversion from frozen GraphDef' },
+    { title: 'Compatibility Tests', description: 'Validate converted models with target runtime' }
+  ],
+  'saved-model-cli': [
+    { title: 'Model Inspection', description: 'List signatures, inputs, outputs, and tags' },
+    { title: 'Sanity Inference', description: 'Run inference with provided npz inputs' },
+    { title: 'Export Validation', description: 'Validate exported models before serving' },
+    { title: 'Signature Debug', description: 'Debug signature definitions and shapes' },
+    { title: 'Pipeline QA', description: 'Check artifacts produced by pipelines' }
+  ],
+  'tf-profiler': [
+    { title: 'Performance Tracing', description: 'Capture and analyze training/inference traces' },
+    { title: 'Bottleneck ID', description: 'Identify CPU/GPU hotspots and stalls' },
+    { title: 'TensorBoard Integration', description: 'View traces in TensorBoard Profile' },
+    { title: 'Programmatic Profiling', description: 'Start/stop profiling from code' },
+    { title: 'Regression Tracking', description: 'Compare traces across commits' }
+  ],
+  'tf-experimental-async-scope': [
+    { title: 'Async Execution', description: 'Run code in an async scope for throughput' },
+    { title: 'Input Pipelines', description: 'Improve tf.data pipeline performance' },
+    { title: 'Training Speed', description: 'Overlap execution to reduce stalls' },
+    { title: 'Selective Use', description: 'Apply around targeted blocks' },
+    { title: 'Advanced Tuning', description: 'Combine with autotune and XLA' }
+  ],
+  'tf-compat-v1-train-saver-save': [
+    { title: 'Checkpointing', description: 'Save model checkpoints in TF1/compat.v1 flows' },
+    { title: 'Legacy Support', description: 'Maintain older graph-based models' },
+    { title: 'Migration Path', description: 'Stage migration towards TF2 Checkpoint' },
+    { title: 'Recovery', description: 'Enable training resume after interruptions' },
+    { title: 'Experiment Tracking', description: 'Store periodic checkpoints with global_step' }
+  ],
+  'torchrun': [
+    { title: 'Single-node Multi-GPU', description: 'Launch N GPU processes on one node for DDP' },
+    { title: 'Multi-node Training', description: 'Coordinate distributed runs across nodes' },
+    { title: 'Elastic Jobs', description: 'Use rendezvous backends for resilient jobs' },
+    { title: 'Configurable Restarts', description: 'Auto-restart failed workers up to limits' },
+    { title: 'Migration', description: 'Replace legacy torch.distributed.launch flows' }
+  ],
+  'torchserve': [
+    { title: 'Model Serving', description: 'Serve PyTorch models via REST/GRPC endpoints' },
+    { title: 'Model Registry', description: 'Register/update models through management API' },
+    { title: 'Scaling', description: 'Scale workers per model for throughput' },
+    { title: 'Observability', description: 'Use logs/metrics for operations' },
+    { title: 'A/B Testing', description: 'Deploy multiple model versions' }
+  ],
+  'torch-model-archiver': [
+    { title: 'Package Models', description: 'Build .mar artifacts for TorchServe' },
+    { title: 'Custom Handlers', description: 'Bundle custom inference handlers' },
+    { title: 'Extra Assets', description: 'Include labels and auxiliary files' },
+    { title: 'Versioning', description: 'Version models for controlled rollout' },
+    { title: 'Reproducibility', description: 'Standardize deployment artifacts' }
+  ],
+  'torch-tensorboard': [
+    { title: 'Logging', description: 'Log scalars/images/histograms from PyTorch' },
+    { title: 'Visualization', description: 'Visualize runs in TensorBoard' },
+    { title: 'Comparison', description: 'Compare experiments and hyperparameters' },
+    { title: 'Graph Export', description: 'Export model graph for inspection' },
+    { title: 'Profile Viewing', description: 'View PyTorch profiler traces' }
+  ],
+  'torch-profiler': [
+    { title: 'Operator Profiling', description: 'Analyze CPU/GPU operator timings' },
+    { title: 'Trace Export', description: 'Export traces for TensorBoard Profile' },
+    { title: 'Bottleneck Analysis', description: 'Identify hotspots and stalls' },
+    { title: 'Schedule Capture', description: 'Warmup/active/post schedules' },
+    { title: 'Shape Tracking', description: 'Record shapes and stack traces' }
+  ],
+  'torch-distributed-run': [
+    { title: 'Compatibility', description: 'Legacy launcher kept for older codebases' },
+    { title: 'Migration Aid', description: 'Bridge to torchrun-based workflows' },
+    { title: 'DDP Launch', description: 'Start DDP processes via -m entry point' },
+    { title: 'Scripts Support', description: 'Continue to run existing scripts' },
+    { title: 'Parity', description: 'Use similar flags to torchrun where applicable' }
+  ],
+  'torch-utils-tensorboard': [
+    { title: 'SummaryWriter', description: 'Log scalars, images, histograms from PyTorch' },
+    { title: 'Graph Logging', description: 'Log model graphs for inspection' },
+    { title: 'Experiment Tracking', description: 'Organize runs under directories' },
+    { title: 'TB Integration', description: 'View logs with tensorboard --logdir' },
+    { title: 'Lightweight', description: 'Simple API for common logging needs' }
+  ],
+  'jax-profiler-start-trace': [
+    { title: 'Start Tracing', description: 'Begin JAX profiler trace to a log directory' },
+    { title: 'TensorBoard Profile', description: 'Enable viewing traces in TensorBoard' },
+    { title: 'Perf Analysis', description: 'Capture training/inference performance' },
+    { title: 'Scoped Tracing', description: 'Start before workload to capture region' },
+    { title: 'Integration', description: 'Combine with stop_trace to complete session' }
+  ],
+  'jax-profiler-stop-trace': [
+    { title: 'Stop Tracing', description: 'Stop the active JAX profiling session' },
+    { title: 'Finalize Logs', description: 'Flush trace data to disk' },
+    { title: 'View in TB', description: 'Open TensorBoard to inspect session' },
+    { title: 'Session Control', description: 'Manage repeated profiling sessions' },
+    { title: 'CI Hooks', description: 'End traces in automated runs' }
+  ],
+  'jax-debug-print': [
+    { title: 'JIT-safe Debug', description: 'Print inside jitted functions' },
+    { title: 'Inspect Values', description: 'Display tensors/shapes during transforms' },
+    { title: 'Minimal Intrusion', description: 'Debug without breaking JIT/vmap/pmap' },
+    { title: 'Conditional Prints', description: 'Add formatted, contextual prints' },
+    { title: 'Rapid Iteration', description: 'Speed up debugging of JAX programs' }
+  ],
+  'keras': [
+    { title: 'Version Check', description: 'Verify Keras CLI availability and version' },
+    { title: 'Docs Pointer', description: 'Discover related subcommands and help' },
+    { title: 'Project Ops', description: 'Placeholder wrapper for Keras project CLIs' },
+    { title: 'Getting Started', description: 'Quick entrypoint for local installs' },
+    { title: 'Env Validation', description: 'Ensure PATH and install are configured' }
+  ],
+  'keras-autodoc': [
+    { title: 'API Docs', description: 'Generate API docs for Keras modules' },
+    { title: 'Templates', description: 'Use custom templates for output' },
+    { title: 'Selective Targets', description: 'Document specific objects or modules' },
+    { title: 'Docs CI', description: 'Integrate into documentation pipelines' },
+    { title: 'Navigation', description: 'Produce structured API pages' }
+  ],
+  'keras-export': [
+    { title: 'SavedModel Export', description: 'Export Keras models to SavedModel' },
+    { title: 'Keras Format', description: 'Persist models in .keras format' },
+    { title: 'Serving Prep', description: 'Prepare models for serving/inference' },
+    { title: 'Conversion Prep', description: 'Prepare for TFLite or ONNX conversion' },
+    { title: 'Artifact Management', description: 'Standardize export locations' }
+  ],
+  'keras-tuner': [
+    { title: 'HParams Search', description: 'Run hyperparameter tuning experiments' },
+    { title: 'Search Spaces', description: 'Define parameter spaces programmatically' },
+    { title: 'Results Tracking', description: 'Log and review trials/results' },
+    { title: 'Schedulers', description: 'Use algorithms like Random/Bayes/Hyperband' },
+    { title: 'Reproducibility', description: 'Seed and export best runs' }
+  ],
+  'keras-evaluate': [
+    { title: 'Metric Reporting', description: 'Evaluate models and print metrics' },
+    { title: 'Batching', description: 'Control batch size and steps' },
+    { title: 'Dataset Variants', description: 'Point to various input formats' },
+    { title: 'CI Checks', description: 'Automate eval in CI pipelines' },
+    { title: 'Regression Tests', description: 'Track metric drift between builds' }
+  ],
+  'keras-predict': [
+    { title: 'Batch Inference', description: 'Run predictions on folders/files' },
+    { title: 'Outputs', description: 'Write predictions to JSON/CSV' },
+    { title: 'Throughput', description: 'Tune batch sizes for speed' },
+    { title: 'Pipelines', description: 'Embed in data processing flows' },
+    { title: 'Sanity Checks', description: 'Quickly validate model outputs' }
+  ],
+  'keras-convert': [
+    { title: 'Format Conversion', description: 'Convert between .keras and SavedModel' },
+    { title: 'Export Strategy', description: 'Choose formats per deployment target' },
+    { title: 'Toolchain Prep', description: 'Prepare for downstream converters' },
+    { title: 'Artifact Hygiene', description: 'Standardize output directories' },
+    { title: 'Automation', description: 'Automate conversions in CI/CD' }
+  ],
+  'fastai-ls': [
+    { title: 'List Artifacts', description: 'List datasets, models, and experiment files' },
+    { title: 'Inventory', description: 'Create quick inventories of project assets' },
+    { title: 'Scripting', description: 'Use JSON output for automation' },
+    { title: 'Sanity Check', description: 'Verify expected files exist' },
+    { title: 'Repo Hygiene', description: 'Surface unused or large artifacts' }
+  ],
+  'fastai-train': [
+    { title: 'Quick Training', description: 'Kick off training runs from a config' },
+    { title: 'Hyperparams', description: 'Set epochs, lr, batch size from CLI' },
+    { title: 'Reproducibility', description: 'Fix seeds and configs for repeatable runs' },
+    { title: 'CI Training', description: 'Small training runs in CI to validate code' },
+    { title: 'Baseline Runs', description: 'Establish baselines for datasets' }
+  ],
+  'fastai-predict': [
+    { title: 'Batch Inference', description: 'Predict on folders or file lists' },
+    { title: 'Export Outputs', description: 'Save predictions to CSV/JSON' },
+    { title: 'Pipelines', description: 'Integrate into data processing pipelines' },
+    { title: 'Model QA', description: 'Spot-check predictions for sanity' },
+    { title: 'Throughput Tuning', description: 'Adjust batch size for speed' }
+  ],
+  'fastai-interpret': [
+    { title: 'Confusion Matrix', description: 'Generate confusion matrices' },
+    { title: 'Top Losses', description: 'Identify and visualize hardest samples' },
+    { title: 'Error Analysis', description: 'Drill into misclassifications' },
+    { title: 'Report Gen', description: 'Export artifacts for reviews' },
+    { title: 'Dataset Iteration', description: 'Inform dataset cleanup based on errors' }
+  ],
+  'fastai-export': [
+    { title: 'Export Learner', description: 'Export trained models to export.pkl' },
+    { title: 'Reproducible Inference', description: 'Standardize inference artifacts' },
+    { title: 'Deployment', description: 'Prepare models for serving tools' },
+    { title: 'Versioning', description: 'Version exports for rollback' },
+    { title: 'Archival', description: 'Store artifacts for long-term use' }
+  ],
+  'fastai-tune': [
+    { title: 'HParams Search', description: 'Run hyperparameter tuning jobs' },
+    { title: 'Search Control', description: 'Limit trials and set seeds' },
+    { title: 'Automation', description: 'Automate searches in CI/CD' },
+    { title: 'Result Tracking', description: 'Collect and compare best trials' },
+    { title: 'Config-Driven', description: 'Define search in YAML/JSON configs' }
+  ],
+  'onnxruntime-test': [
+    { title: 'Runtime Validation', description: 'Validate ORT builds and operators' },
+    { title: 'Env Checks', description: 'Confirm provider availability' },
+    { title: 'Release QA', description: 'Smoke tests for new releases' },
+    { title: 'CI Gates', description: 'Include in CI to prevent regressions' },
+    { title: 'Debugging', description: 'Narrow down failing ops/models' }
+  ],
+  'onnxruntime-perf-test': [
+    { title: 'Latency Tests', description: 'Measure end-to-end latency' },
+    { title: 'Throughput', description: 'Assess QPS under different threads/batch' },
+    { title: 'EP Comparison', description: 'Compare CPU/CUDA/ROCm/DML providers' },
+    { title: 'Tuning', description: 'Tune threads and warmups' },
+    { title: 'Benchmark Suites', description: 'Create repeatable benchmark runs' }
+  ],
+  'onnxruntime-training': [
+    { title: 'Training Entry', description: 'Access ORT training subcommands' },
+    { title: 'Feature Checks', description: 'Verify training-enabled builds' },
+    { title: 'Pipelines', description: 'Integrate with training pipelines' },
+    { title: 'Distributed', description: 'Use training with distributed setups' },
+    { title: 'Docs Sync', description: 'Align builds with documentation features' }
+  ],
+  'onnxruntime-benchmark': [
+    { title: 'Benchmarking', description: 'Run standardized benchmarks on models' },
+    { title: 'Iterations', description: 'Control iterations and warmup cycles' },
+    { title: 'Batching', description: 'Measure effect of batch sizes' },
+    { title: 'Provider Mix', description: 'Select providers for fair comparisons' },
+    { title: 'Perf Tracking', description: 'Track performance across releases' }
+  ],
+  'deepspeed': [
+    { title: 'Large-scale Training', description: 'Train massive models with ZeRO optimization' },
+    { title: 'Parallelism', description: 'Leverage pipeline/tensor/data parallel strategies' },
+    { title: 'Multi-node', description: 'Scale across nodes with hostfile and configs' },
+    { title: 'HF Integration', description: 'Combine with Accelerate and Transformers' },
+    { title: 'Config-driven', description: 'Manage optimizations via ds_config.json' }
+  ],
+  'accelerate-config': [
+    { title: 'Wizard Setup', description: 'Interactively configure distributed strategy' },
+    { title: 'Precision', description: 'Choose bf16/fp16/fp32 mixed precision' },
+    { title: 'Topology', description: 'Set processes and machines' },
+    { title: 'Storage', description: 'Persist config for future launches' },
+    { title: 'Repeatability', description: 'Quickly reconfigure per machine' }
+  ],
+  'accelerate-launch': [
+    { title: 'Distributed Launch', description: 'Start scripts with DDP/FS-DP/Deepspeed' },
+    { title: 'Config Use', description: 'Use saved accelerate configs' },
+    { title: 'Precision Modes', description: 'Enable mixed precision for speed' },
+    { title: 'Multi-GPU', description: 'Launch across multiple GPUs easily' },
+    { title: 'Prod/Dev', description: 'Use same command locally and on clusters' }
+  ],
+  'accelerate-test': [
+    { title: 'Sanity Check', description: 'Validate Accelerate setup' },
+    { title: 'Device Visibility', description: 'Check GPU/TPU detection' },
+    { title: 'Quick Debug', description: 'Catch misconfigurations early' },
+    { title: 'Support Reports', description: 'Provide outputs for issue templates' },
+    { title: 'CI Gate', description: 'Run as part of pipeline checks' }
+  ],
+  'accelerate-env': [
+    { title: 'Environment Info', description: 'Print relevant versions/backends' },
+    { title: 'Debugging', description: 'Diagnose env issues quickly' },
+    { title: 'Reproducibility', description: 'Capture environment snapshots' },
+    { title: 'Support', description: 'Share details in bug reports' },
+    { title: 'Audit', description: 'Confirm correct driver/library setup' }
+  ],
+  'accelerate-log': [
+    { title: 'Run Logs', description: 'Review logs from Accelerate runs' },
+    { title: 'Diagnostics', description: 'Extract signals for debugging' },
+    { title: 'Monitoring', description: 'Integrate with log tooling' },
+    { title: 'History', description: 'Track changes across runs' },
+    { title: 'Automation', description: 'Use logs in CI artifacts' }
+  ],
+  'accelerate': [
+    { title: 'Suite Entry', description: 'Access the full Accelerate suite' },
+    { title: 'Help/Docs', description: 'Discover subcommands and options' },
+    { title: 'Uniform UX', description: 'Consistent interface across systems' },
+    { title: 'Install Check', description: 'Confirm package and path' },
+    { title: 'Scripting', description: 'Use in scripts and Makefiles' }
+  ],
+  'colossalai': [
+    { title: 'Parallelism Suite', description: 'Explore Colossal-AI tooling' },
+    { title: 'Docs/Help', description: 'Check available subcommands' },
+    { title: 'Ecosystem', description: 'Use alongside DeepSpeed/Megatron' },
+    { title: 'Prototyping', description: 'Try strategies on small models' },
+    { title: 'Install Verify', description: 'Ensure CLI is available' }
+  ],
+  'colossalai-run': [
+    { title: 'Distributed Launch', description: 'Run jobs with Colossal-AI' },
+    { title: 'Nproc Control', description: 'Set processes per node' },
+    { title: 'Configs', description: 'Pass strategy configs' },
+    { title: 'Multi-node', description: 'Use hostfile for clusters' },
+    { title: 'Benchmark', description: 'Compare strategies quickly' }
+  ],
+  'ray': [
+    { title: 'Cluster Control', description: 'Start/stop Ray clusters' },
+    { title: 'Status', description: 'Check cluster health' },
+    { title: 'Dashboard', description: 'Access dashboard and logs' },
+    { title: 'Local Dev', description: 'Run Ray locally for testing' },
+    { title: 'Prod Ops', description: 'Integrate Ray into ops scripts' }
+  ],
+  'ray-job': [
+    { title: 'Job Submit', description: 'Submit jobs to a Ray cluster' },
+    { title: 'Logs', description: 'Fetch job logs' },
+    { title: 'Manage', description: 'List/stop jobs programmatically' },
+    { title: 'CI/CD', description: 'Run training as Ray jobs' },
+    { title: 'Remote Exec', description: 'Use cluster address endpoints' }
+  ],
+  'horovodrun': [
+    { title: 'Distributed Train', description: 'Launch Horovod jobs with MPI/Gloo' },
+    { title: 'Hosts/Nproc', description: 'Configure processes and hosts' },
+    { title: 'Backend Select', description: 'Use gloo or mpi as needed' },
+    { title: 'Interoperability', description: 'Work with TF/PyTorch frameworks' },
+    { title: 'Scaling', description: 'Scale up with minimal code changes' }
+  ],
+  'mlflow': [
+    { title: 'Tracking UI', description: 'Launch MLflow UI to view runs' },
+    { title: 'Projects', description: 'Run MLflow projects' },
+    { title: 'Models', description: 'Serve models via MLflow models' },
+    { title: 'Artifacts', description: 'Manage artifacts and registries' },
+    { title: 'Experimentation', description: 'Organize runs and experiments' }
+  ],
+  'wandb': [
+    { title: 'Login/API', description: 'Authenticate to W&B' },
+    { title: 'Sweeps', description: 'Create and run hyperparameter sweeps' },
+    { title: 'Agents', description: 'Launch agents to execute sweeps' },
+    { title: 'Artifacts', description: 'Track and version datasets/models' },
+    { title: 'Dashboards', description: 'Visualize metrics and compare runs' }
+  ],
+  'ollama': [
+    { title: 'Local LLMs', description: 'Run and manage local LLMs easily' },
+    { title: 'Model Lifecycle', description: 'Pull, list, and stop models' },
+    { title: 'REST Serve', description: 'Serve a local REST API for inference' },
+    { title: 'Rapid Prototyping', description: 'Test prompts locally before deploy' },
+    { title: 'Offline Use', description: 'Run models without internet access' }
+  ],
+  'vllm': [
+    { title: 'High Throughput', description: 'Serve LLMs with optimized batching' },
+    { title: 'OpenAI API', description: 'Expose OpenAI-compatible endpoints' },
+    { title: 'GPU Util', description: 'Tune GPU memory utilization' },
+    { title: 'Long Context', description: 'Configure max model length' },
+    { title: 'Production', description: 'Use behind gateways/load balancers' }
+  ],
+  'text-generation-launcher': [
+    { title: 'TGI Serving', description: 'Serve HF models with optimized kernels' },
+    { title: 'Sharding', description: 'Scale with sharded model replicas' },
+    { title: 'Batching', description: 'Efficient request batching for throughput' },
+    { title: 'CUDA Tuning', description: 'Select dtype and GPU settings' },
+    { title: 'REST/gRPC', description: 'Integrate with existing services' }
+  ],
+  'tensorflow-model-server': [
+    { title: 'SavedModel Serving', description: 'Serve TensorFlow models via gRPC/REST' },
+    { title: 'Versioned Models', description: 'Host multiple model versions' },
+    { title: 'GPU Serving', description: 'Enable GPU memory fraction settings' },
+    { title: 'Scaling', description: 'Horizontal scale with orchestrators' },
+    { title: 'Health Checks', description: 'Integrate health endpoints for ops' }
+  ],
+  'uvicorn': [
+    { title: 'ASGI Apps', description: 'Serve FastAPI/Starlette apps' },
+    { title: 'Workers', description: 'Tune workers for concurrency' },
+    { title: 'TLS', description: 'Configure SSL for secure endpoints' },
+    { title: 'Reload Dev', description: 'Enable reload during development' },
+    { title: 'Reverse Proxy', description: 'Run behind NGINX/Traefik' }
+  ],
+  'gunicorn': [
+    { title: 'WSGI Apps', description: 'Serve Flask/Django inference APIs' },
+    { title: 'Workers/Binds', description: 'Control worker count and bindings' },
+    { title: 'Timeouts', description: 'Set sane timeouts for long inferences' },
+    { title: 'Logs', description: 'Enable access and error logs' },
+    { title: 'UvicornWorker', description: 'Use ASGI via UvicornWorker' }
+  ],
+  'gradio': [
+    { title: 'Interactive Demos', description: 'Build quick UI for models' },
+    { title: 'Public Sharing', description: 'Share via secure tunnels' },
+    { title: 'Auth', description: 'Add simple authentication' },
+    { title: 'Spaces', description: 'Deploy to Hugging Face Spaces' },
+    { title: 'Prototyping', description: 'Iterate on UX rapidly' }
+  ],
+  'streamlit': [
+    { title: 'Data Apps', description: 'Create dashboards and demos' },
+    { title: 'Deploy Easily', description: 'Run locally or in containers' },
+    { title: 'State/Cache', description: 'Use caching for performance' },
+    { title: 'Inputs/Outputs', description: 'Collect inputs and render outputs' },
+    { title: 'Team Demos', description: 'Share results with stakeholders' }
+  ],
+  'openai': [
+    { title: 'Quick Calls', description: 'Test chat/completions from CLI' },
+    { title: 'File Ops', description: 'Upload and manage files' },
+    { title: 'Fine-tunes', description: 'Manage fine-tune jobs' },
+    { title: 'Scripting', description: 'Automate routine API tasks' },
+    { title: 'Debugging', description: 'Verify tokens and responses' }
+  ],
+  'litellm': [
+    { title: 'Unified Proxy', description: 'Proxy multiple LLM providers' },
+    { title: 'OpenAI API', description: 'Expose a common API surface' },
+    { title: 'Config-based', description: 'Define routes/providers via YAML' },
+    { title: 'Portability', description: 'Swap providers without code changes' },
+    { title: 'Cost Control', description: 'Route traffic by policy/price' }
+  ],
+  'tritonserver': [
+    { title: 'Multi-backend Serving', description: 'Serve TensorRT/ONNX/TF/PT models' },
+    { title: 'Dynamic Batching', description: 'Improve throughput with batching' },
+    { title: 'Ensembles', description: 'Compose models into pipelines' },
+    { title: 'Metrics', description: 'Enable Prometheus/GPU metrics' },
+    { title: 'GPU/CPU', description: 'Choose backends per deployment' }
+  ],
+  'perf-analyzer': [
+    { title: 'Latency/Throughput', description: 'Benchmark Triton model performance' },
+    { title: 'Concurrency Sweeps', description: 'Find optimal concurrency settings' },
+    { title: 'Protocols', description: 'Test over HTTP or gRPC' },
+    { title: 'Time Windows', description: 'Stable measurements over windows' },
+    { title: 'Capacity Planning', description: 'Estimate production sizing' }
+  ],
+  'peft-run': [
+    { title: 'PEFT Launch', description: 'Kick off parameter-efficient tuning' },
+    { title: 'LoRA Config', description: 'Control rank/alpha and outputs' },
+    { title: 'Model/Dataset', description: 'Select models and datasets' },
+    { title: 'Export', description: 'Export adapters for inference' },
+    { title: 'Pipelines', description: 'Integrate into training pipelines' }
+  ],
+  'bitsandbytes': [
+    { title: 'Quantization', description: 'Use 4-bit/8-bit quantization for LLMs' },
+    { title: 'Memory Savings', description: 'Fit larger models on GPUs' },
+    { title: 'Integration', description: 'Works with Transformers/PEFT' },
+    { title: 'GPU Kernels', description: 'Leverage optimized CUDA ops' },
+    { title: 'Fallbacks', description: 'Handle compute capability differences' }
+  ],
+  'langserve': [
+    { title: 'Serve Chains', description: 'Expose chains as REST APIs' },
+    { title: 'FastAPI', description: 'Run on FastAPI/ASGI servers' },
+    { title: 'Reload Dev', description: 'Develop with hot reload' },
+    { title: 'Auth/Config', description: 'Configure auth and settings' },
+    { title: 'Prod Ready', description: 'Containerize for deployment' }
+  ],
+  'langchain': [
+    { title: 'Project CLI', description: 'Scaffold LangChain projects' },
+    { title: 'Serve/Run', description: 'Run or serve workflows' },
+    { title: 'Templates', description: 'Use starter templates' },
+    { title: 'Integrations', description: 'Plug into vector stores and LLMs' },
+    { title: 'Iteration', description: 'Rapidly iterate on chains' }
+  ],
+  'crewai': [
+    { title: 'Multi-agent', description: 'Orchestrate agent crews' },
+    { title: 'Init/Run', description: 'Initialize and run projects' },
+    { title: 'Tasks/Tools', description: 'Define tasks and tools per agent' },
+    { title: 'Collaboration', description: 'Coordinate agent collaboration' },
+    { title: 'Deployment', description: 'Serve agents as services' }
+  ],
+  'autogen': [
+    { title: 'Agent Framework', description: 'Build multi-agent AI systems' },
+    { title: 'Module Entrypoints', description: 'Run via python -m autogen.*' },
+    { title: 'Config Files', description: 'Drive behavior via configs' },
+    { title: 'Interoperability', description: 'Combine with serving stacks' },
+    { title: 'Experimentation', description: 'Prototype orchestration flows' }
+  ],
+  'csvcut': [
+    { title: 'Select Columns', description: 'Extract specific columns from CSVs' },
+    { title: 'Reorder Columns', description: 'Change column order for downstream tools' },
+    { title: 'Schema Discovery', description: 'List columns and positions' },
+    { title: 'Pipelines', description: 'Combine with jq/mlr for transforms' },
+    { title: 'Performance', description: 'Stream large CSVs efficiently' }
+  ],
+  'csvgrep': [
+    { title: 'Filter Rows', description: 'Keep rows matching values or regex' },
+    { title: 'Quality Gates', description: 'Drop invalid-status rows' },
+    { title: 'Case Handling', description: 'Control case-sensitivity via regex' },
+    { title: 'Column Targeting', description: 'Match on named columns' },
+    { title: 'Pre-clean', description: 'Reduce data before heavy ops' }
+  ],
+  'csvlook': [
+    { title: 'Pretty Print', description: 'View CSVs as aligned tables' },
+    { title: 'Review', description: 'Quickly spot anomalies/empties' },
+    { title: 'Share', description: 'Readable previews in reviews' },
+    { title: 'Paging', description: 'Pipe to less for navigation' },
+    { title: 'Debugging', description: 'Inspect intermediate outputs' }
+  ],
+  'csvsort': [
+    { title: 'Sort Rows', description: 'Sort by numeric or textual columns' },
+    { title: 'Reverse Sort', description: 'Descending order for top lists' },
+    { title: 'Stable Pipelines', description: 'Deterministic ordering for diffs' },
+    { title: 'Multi-key', description: 'Sort by multiple columns' },
+    { title: 'Pre-join', description: 'Prep datasets for joins/merges' }
+  ],
+  'csvstack': [
+    { title: 'Stack Files', description: 'Vertically concatenate CSVs' },
+    { title: 'ETL', description: 'Combine monthly shards into one' },
+    { title: 'Grouping', description: 'Add group labels per source' },
+    { title: 'Schema Align', description: 'Handle differing column orders' },
+    { title: 'Reports', description: 'Build quarter/annual aggregates' }
+  ],
+  'csvstat': [
+    { title: 'Stats', description: 'Compute mean/median/min/max' },
+    { title: 'Cardinality', description: 'Count uniques and empties' },
+    { title: 'Types', description: 'Infer column data types' },
+    { title: 'QA', description: 'Detect outliers and anomalies' },
+    { title: 'Docs', description: 'Summarize datasets for handoff' }
+  ],
+  'csvjson': [
+    { title: 'CSV to JSON', description: 'Convert rows to JSON objects' },
+    { title: 'Keyed Output', description: 'Key records by a column' },
+    { title: 'Streaming', description: 'Stream JSON for large files' },
+    { title: 'APIs', description: 'Prep data for API ingestion' },
+    { title: 'Interchange', description: 'Feed downstream JSON tools' }
+  ],
+  'csvformat': [
+    { title: 'Dialect Convert', description: 'Change delimiters/quotes' },
+    { title: 'TSV Output', description: 'Convert CSV to TSV' },
+    { title: 'Normalization', description: 'Standardize file formats' },
+    { title: 'Compatibility', description: 'Match tool ingestion needs' },
+    { title: 'Pipelines', description: 'Ensure consistent separators' }
+  ],
+  'in2csv': [
+    { title: 'XLS/XLSX to CSV', description: 'Convert spreadsheets to CSV' },
+    { title: 'Sheet Select', description: 'Target specific sheet names' },
+    { title: 'JSON to CSV', description: 'Flatten JSON structures' },
+    { title: 'Bulk Convert', description: 'Batch convert input formats' },
+    { title: 'ETL Intake', description: 'Normalize inputs into CSV' }
+  ],
+  'csvsql': [
+    { title: 'SQL over CSV', description: 'Query CSVs with SQL syntax' },
+    { title: 'DB Import', description: 'Create tables and insert rows' },
+    { title: 'Joins', description: 'Join multiple CSV sources' },
+    { title: 'Schema Gen', description: 'Generate CREATE TABLE DDL' },
+    { title: 'Prototyping', description: 'Try queries before DB loads' }
+  ],
+  'csvclean': [
+    { title: 'Validate', description: 'Detect malformed rows/encodings' },
+    { title: 'Repair', description: 'Fix or drop problematic rows' },
+    { title: 'Reports', description: 'Output issues for review' },
+    { title: 'Output Dir', description: 'Write cleaned files to dir' },
+    { title: 'Pre-ingest', description: 'Ensure CSV quality before ETL' }
+  ],
+  'jq': [
+    { title: 'Filter JSON', description: 'Select fields and elements' },
+    { title: 'Transform', description: 'Map/Reduce JSON structures' },
+    { title: 'Pretty/Raw', description: 'Switch pretty vs raw output' },
+    { title: 'Scripting', description: 'Compose complex pipelines' },
+    { title: 'Validation', description: 'Quick sanity checks' }
+  ],
+  'yq': [
+    { title: 'YAML Queries', description: 'Extract and transform YAML' },
+    { title: 'YAML↔JSON', description: 'Convert between formats' },
+    { title: 'Config Ops', description: 'Patch config files in CI' },
+    { title: 'Merge', description: 'Merge multiple YAML files' },
+    { title: 'Lint Adjunct', description: 'Pair with yamllint checks' }
+  ],
+  'json-pp': [
+    { title: 'Pretty Print', description: 'Readable JSON formatting' },
+    { title: 'Pipes', description: 'Format curl outputs' },
+    { title: 'Canonical', description: 'Stable key ordering' },
+    { title: 'Diff Prep', description: 'Normalize before diffing' },
+    { title: 'QA Reviews', description: 'Readable PR artifacts' }
+  ],
+  'yamllint': [
+    { title: 'Syntax Lint', description: 'Catch YAML syntax errors' },
+    { title: 'Style Rules', description: 'Enforce style guidelines' },
+    { title: 'CI Checks', description: 'Fail builds on bad YAML' },
+    { title: 'Custom Config', description: 'Project-specific rules' },
+    { title: 'Best Practices', description: 'Encourage maintainable YAML' }
+  ],
+  'jsonlint': [
+    { title: 'Validate JSON', description: 'Identify malformed JSON' },
+    { title: 'Pretty Output', description: 'Optional pretty printing' },
+    { title: 'CI Use', description: 'Quick JSON schema checks' },
+    { title: 'Error Context', description: 'Show line/column details' },
+    { title: 'Pre-commit', description: 'Use in pre-commit hooks' }
+  ],
+  'datasets-cli': [
+    { title: 'Dataset Ops', description: 'Test/load HF datasets locally' },
+    { title: 'Save Info', description: 'Generate dataset info files' },
+    { title: 'Download', description: 'Pre-fetch datasets to cache' },
+    { title: 'Env Inspect', description: 'Show environment details' },
+    { title: 'Pipelines', description: 'Automate dataset prep steps' }
+  ],
+  'datacleaner': [
+    { title: 'Profiling', description: 'Profile data quality issues' },
+    { title: 'Cleaning', description: 'Automate basic cleaning steps' },
+    { title: 'Reports', description: 'Generate quality reports' },
+    { title: 'Preprocessing', description: 'Prep data for ML pipelines' },
+    { title: 'Audits', description: 'Track improvements over time' }
+  ],
+  'openrefine': [
+    { title: 'Interactive Clean', description: 'Clean messy data via UI' },
+    { title: 'Transforms', description: 'Apply GREL transformations' },
+    { title: 'Reconcile', description: 'Match entities with services' },
+    { title: 'Export', description: 'Export to many formats' },
+    { title: 'Server Mode', description: 'Run on headless servers' }
+  ],
+  'iconv': [
+    { title: 'Encoding Convert', description: 'Convert file encodings' },
+    { title: 'UTF-8', description: 'Normalize inputs to UTF-8' },
+    { title: 'Batch', description: 'Batch convert directories' },
+    { title: 'Lists', description: 'List supported encodings' },
+    { title: 'Pipelines', description: 'Ensure clean text ingestion' }
+  ],
+  'datamash': [
+    { title: 'Aggregations', description: 'Compute sum/mean/min/max' },
+    { title: 'Group By', description: 'Group by fields for stats' },
+    { title: 'TSV First', description: 'Excel at TSV processing' },
+    { title: 'Pipe Friendly', description: 'Combine with cut/sed/awk' },
+    { title: 'Large Data', description: 'Stream without loading all' }
+  ],
+  'mlr': [
+    { title: 'Record Streams', description: 'Process CSV/TSV/JSON' },
+    { title: 'Verbs', description: 'cut/sort/join/stats in one tool' },
+    { title: 'Format Flex', description: 'Switch formats mid-pipeline' },
+    { title: 'Perf', description: 'Fast for big files' },
+    { title: 'Scripting', description: 'Compose multi-step pipelines' }
+  ],
+  'parquet-tools': [
+    { title: 'Schema', description: 'Inspect Parquet schema' },
+    { title: 'Head/Meta', description: 'Preview rows and metadata' },
+    { title: 'Debug', description: 'Dump raw pages when needed' },
+    { title: 'Interop', description: 'Verify producer/consumer' },
+    { title: 'Audits', description: 'Check partitioned datasets' }
+  ],
+  'featherls': [
+    { title: 'Feather Schema', description: 'Quickly view feather schema' },
+    { title: 'Summary', description: 'Get basic file summaries' },
+    { title: 'Pipelines', description: 'Use in conversion pipelines' },
+    { title: 'Debug IO', description: 'Check field types/encodings' },
+    { title: 'Cataloging', description: 'Inventory feather datasets' }
+  ],
+  'arrow-cat': [
+    { title: 'Arrow Preview', description: 'Print Arrow/IPC table data' },
+    { title: 'Select Columns', description: 'Limit columns for display' },
+    { title: 'Sampling', description: 'Limit output rows' },
+    { title: 'Scripting', description: 'Use in shell pipelines' },
+    { title: 'Inspection', description: 'Sanity-check files quickly' }
+  ],
+  'csv2parquet': [
+    { title: 'CSV→Parquet', description: 'Convert CSV to Parquet format' },
+    { title: 'Compression', description: 'Apply columnar compression' },
+    { title: 'Schema Control', description: 'Specify or infer schema' },
+    { title: 'Data Lakes', description: 'Stage into lake formats' },
+    { title: 'Automation', description: 'Batch convert datasets' }
+  ],
+  'parquet2csv': [
+    { title: 'Parquet→CSV', description: 'Convert Parquet to CSV' },
+    { title: 'Column Filter', description: 'Export only needed columns' },
+    { title: 'Sampling', description: 'Export a subset for debugging' },
+    { title: 'Interchange', description: 'Provide CSV to consumers' },
+    { title: 'Pipelines', description: 'Integrate into ETL flows' }
+  ],
+  'pandas-profiling': [
+    { title: 'EDA Report', description: 'Generate HTML profiling reports' },
+    { title: 'Descriptives', description: 'Show stats and distributions' },
+    { title: 'Missingness', description: 'Visualize missing values' },
+    { title: 'Correlations', description: 'Correlation matrices/heatmaps' },
+    { title: 'Docs', description: 'Share static reports' }
+  ],
+  'sweetviz': [
+    { title: 'Visual EDA', description: 'Attractive EDA reports quickly' },
+    { title: 'Compare', description: 'Compare training vs test sets' },
+    { title: 'Target Analysis', description: 'Target-feature relationships' },
+    { title: 'Share', description: 'Export HTML reports' },
+    { title: 'Baseline', description: 'Rapid dataset understanding' }
+  ],
+  'dataprep-eda': [
+    { title: 'Auto EDA', description: 'Create EDA reports programmatically' },
+    { title: 'Cleaning Hints', description: 'Suggest cleaning actions' },
+    { title: 'Stats/Plots', description: 'Stats with visualizations' },
+    { title: 'Notebook Use', description: 'Great for notebooks' },
+    { title: 'Export', description: 'Save to HTML for review' }
+  ],
+  'ydata-profiling': [
+    { title: 'Modern Profiling', description: 'Successor to pandas-profiling' },
+    { title: 'Performance', description: 'Faster profiling on big data' },
+    { title: 'Customizable', description: 'Tweak sections and visuals' },
+    { title: 'Integrations', description: 'Works with Pandas/Polars' },
+    { title: 'Reports', description: 'Shareable HTML outputs' }
+  ],
+  'mlinspect': [
+    { title: 'Pipeline Tracing', description: 'Trace data through ML pipelines' },
+    { title: 'Issue Detection', description: 'Detect leakage/bugs early' },
+    { title: 'Auditing', description: 'Audit transformations applied' },
+    { title: 'Docs', description: 'Document pipeline steps' },
+    { title: 'Debugging', description: 'Locate faulty transforms' }
+  ],
+  'dataexplore': [
+    { title: 'Quick Explore', description: 'Spin up a quick data browser' },
+    { title: 'CSV/Parquet', description: 'Open common file types' },
+    { title: 'Filtering', description: 'Filter and search rows' },
+    { title: 'Local UI', description: 'Run a lightweight UI' },
+    { title: 'Review', description: 'Share snapshots with team' }
+  ],
+  'tokenizer-cli': [
+    { title: 'Tokenize Text', description: 'Encode text with HF tokenizers' },
+    { title: 'Batch Files', description: 'Tokenize files to JSON' },
+    { title: 'Decode', description: 'Decode token ids back to text' },
+    { title: 'Model Choice', description: 'Switch tokenizer models' },
+    { title: 'Pipelines', description: 'Pre-tokenize for training' }
+  ],
+  'fasttext': [
+    { title: 'Text Classify', description: 'Train/test classifiers' },
+    { title: 'Word Vectors', description: 'Generate word embeddings' },
+    { title: 'Predict', description: 'Predict labels for new data' },
+    { title: 'Quantize', description: 'Compress models for speed' },
+    { title: 'Language Tasks', description: 'Use for NLP baselines' }
+  ],
+  'langdetect': [
+    { title: 'Language ID', description: 'Detect language of text' },
+    { title: 'Batch', description: 'Detect over files/streams' },
+    { title: 'JSON Output', description: 'Emit JSON for pipelines' },
+    { title: 'Fallbacks', description: 'Handle short/noisy text' },
+    { title: 'Pre-route', description: 'Route by language in ETL' }
+  ],
+  'cleantext': [
+    { title: 'Normalize', description: 'Lowercase/remove punctuation' },
+    { title: 'Emoji/URL', description: 'Handle emojis and links' },
+    { title: 'De-noise', description: 'Strip artifacts for NLP' },
+    { title: 'Batch Clean', description: 'Clean large corpora' },
+    { title: 'Configurable', description: 'Enable/disable steps' }
+  ],
+  'great-expectations': [
+    { title: 'Data Validation', description: 'Define expectations/suites' },
+    { title: 'Checkpoints', description: 'Run checkpoints over data' },
+    { title: 'Docs', description: 'Build data docs sites' },
+    { title: 'Integrations', description: 'Work with Pandas/Spark' },
+    { title: 'CI/CD', description: 'Validate in pipelines' }
+  ],
+  'pandas-schema': [
+    { title: 'Schema Validate', description: 'Validate DataFrame schema' },
+    { title: 'Rules', description: 'Define column-level rules' },
+    { title: 'Reports', description: 'Generate violation reports' },
+    { title: 'ETL Gates', description: 'Gate ETL on schema checks' },
+    { title: 'Automation', description: 'Automate pre-ingestion checks' }
+  ],
+  'deequ': [
+    { title: 'Data Quality', description: 'Declarative checks on Spark' },
+    { title: 'Metrics', description: 'Compute metrics over columns' },
+    { title: 'Constraints', description: 'Define constraints/rules' },
+    { title: 'Scalable', description: 'Run on large datasets' },
+    { title: 'Pipelines', description: 'Integrate in Spark jobs' }
+  ],
+  'cerberus': [
+    { title: 'JSON/YAML Schema', description: 'Validate documents via schema' },
+    { title: 'Errors', description: 'Readable error messages' },
+    { title: 'Custom Rules', description: 'Extend with custom validators' },
+    { title: 'Scripting', description: 'Use in CLI-driven flows' },
+    { title: 'Pre-ingest', description: 'Block bad data early' }
+  ],
+  'duckdb': [
+    { title: 'Ad hoc SQL', description: 'Query CSV/Parquet directly' },
+    { title: 'Local Analytics', description: 'Fast OLAP on local files' },
+    { title: 'ETL Staging', description: 'Stage transforms with SQL' },
+    { title: 'Interchange', description: 'Export results to Parquet' },
+    { title: 'Notebooks', description: 'Great for exploratory analysis' }
+  ],
+  'clickhouse-client': [
+    { title: 'Analytics DB', description: 'Query high-speed columnar DB' },
+    { title: 'Bulk Ops', description: 'Load/export large datasets' },
+    { title: 'Materialization', description: 'Use materialized views' },
+    { title: 'Compression', description: 'Leverage compression codecs' },
+    { title: 'Pipelines', description: 'Integrate with ETL jobs' }
+  ],
+  'exiftool': [
+    { title: 'Metadata Extract', description: 'Extract EXIF/XMP/ID3 tags' },
+    { title: 'Batch JSON', description: 'Emit JSON for many files' },
+    { title: 'Tag Edit', description: 'Write/normalize tags' },
+    { title: 'Audits', description: 'Audit media dataset quality' },
+    { title: 'Filtering', description: 'Filter by tag conditions' }
+  ],
+  'sox': [
+    { title: 'Audio Convert', description: 'Convert formats/sample rates' },
+    { title: 'Trim/Pad', description: 'Clip or pad durations' },
+    { title: 'Normalize', description: 'Normalize loudness' },
+    { title: 'Effects', description: 'Apply effects like reverb' },
+    { title: 'Batch', description: 'Process corpora in scripts' }
+  ],
+  'imagemagick': [
+    { title: 'Resize/Crop', description: 'Resize or crop images' },
+    { title: 'Compression', description: 'Tweak quality and strip EXIF' },
+    { title: 'Batch Ops', description: 'Process image directories' },
+    { title: 'Format Convert', description: 'Convert between formats' },
+    { title: 'Thumbnails', description: 'Generate preview thumbnails' }
+  ],
+  'mediainfo': [
+    { title: 'Media Inspect', description: 'Inspect video/audio codecs' },
+    { title: 'JSON/XML', description: 'Output structured metadata' },
+    { title: 'Audits', description: 'Validate datasets at scale' },
+    { title: 'Bitrate/Duration', description: 'Check bitrate & duration' },
+    { title: 'Automation', description: 'Use in QC pipelines' }
+  ],
+  'opencv-cli': [
+    { title: 'Quick Checks', description: 'Verify OpenCV install' },
+    { title: 'Module Entrypoints', description: 'Run python -m cv2 helpers' },
+    { title: 'Image Ops', description: 'Script image transforms' },
+    { title: 'Feature Prep', description: 'Prep features for ML tasks' },
+    { title: 'Pipelines', description: 'Use in processing pipelines' }
+  ],
+  'audiocraft': [
+    { title: 'Audio Gen', description: 'Generate audio/music' },
+    { title: 'Models', description: 'Use MusicGen variants' },
+    { title: 'Prompting', description: 'Prompt-based generation' },
+    { title: 'Batch', description: 'Batch generate clips' },
+    { title: 'Evaluation', description: 'Compare generations' }
+  ],
+  'scrapy': [
+    { title: 'Start Project', description: 'Scaffold scraping projects' },
+    { title: 'Crawl', description: 'Run spiders to collect data' },
+    { title: 'Pipelines', description: 'Store data via pipelines' },
+    { title: 'Shell', description: 'Debug selectors in shell' },
+    { title: 'Feeds', description: 'Export to JSON/CSV/Parquet' }
+  ],
+  'twint': [
+    { title: 'Social Data', description: 'Scrape tweets (legacy tool)' },
+    { title: 'Search', description: 'Search queries/time ranges' },
+    { title: 'Formats', description: 'Export JSON/CSV' },
+    { title: 'Pipelines', description: 'Integrate into ETL' },
+    { title: 'Caveats', description: 'Project may require forks' }
+  ],
+  'beautifulsoup-cli': [
+    { title: 'HTML Parse', description: 'Query HTML with selectors' },
+    { title: 'Extraction', description: 'Extract links/titles/etc.' },
+    { title: 'Normalization', description: 'Clean HTML content' },
+    { title: 'Pipes', description: 'Use with curl/wget' },
+    { title: 'Rapid Scripts', description: 'Lightweight scraping tasks' }
+  ],
+  'newspaper3k': [
+    { title: 'Article Extract', description: 'Extract article text/meta' },
+    { title: 'Summaries', description: 'Generate summaries' },
+    { title: 'Batch URLs', description: 'Process URL lists' },
+    { title: 'Dataset Build', description: 'Create news datasets' },
+    { title: 'Cleaning', description: 'Remove boilerplate/ads' }
+  ],
+  'dvc': [
+    { title: 'Data Versioning', description: 'Track data & models' },
+    { title: 'Pipelines', description: 'Define reproducible DAGs' },
+    { title: 'Remotes', description: 'Push/pull to S3/GCS/etc.' },
+    { title: 'Experiments', description: 'Track experiment runs' },
+    { title: 'CI/CD', description: 'Automate data pipelines' }
+  ],
+  'git-lfs': [
+    { title: 'Large Files', description: 'Track big binaries in Git' },
+    { title: 'Storage', description: 'Store assets in LFS' },
+    { title: 'Pull/Fetch', description: 'Fetch LFS pointers' },
+    { title: 'Team Workflows', description: 'Share large assets' },
+    { title: 'Policies', description: 'Enforce tracking patterns' }
+  ],
+  'lakefs': [
+    { title: 'Lake Versioning', description: 'Git-like ops for lakes' },
+    { title: 'Branches', description: 'Branch and commit data' },
+    { title: 'Experiments', description: 'Isolate experiments safely' },
+    { title: 'Integrations', description: 'Work with Spark/Presto' },
+    { title: 'Governance', description: 'Audit and reproducibility' }
+  ],
+  'neptune': [
+    { title: 'Tracking', description: 'Log experiments to Neptune' },
+    { title: 'Artifacts', description: 'Store artifacts and metadata' },
+    { title: 'Dashboards', description: 'Monitor runs in app UI' },
+    { title: 'Collaboration', description: 'Share results with teams' },
+    { title: 'Automation', description: 'Integrate with CI/CD' }
+  ],
+  'comet': [
+    { title: 'Experiments', description: 'Track metrics and params' },
+    { title: 'Model Registry', description: 'Register and manage models' },
+    { title: 'Reports', description: 'Create shareable reports' },
+    { title: 'Artifacts', description: 'Log datasets and files' },
+    { title: 'Integrations', description: 'Works with major frameworks' }
+  ],
+  'clearml-init': [
+    { title: 'Configure', description: 'Set ClearML server & creds' },
+    { title: 'Bootstrap', description: 'Initialize project setup' },
+    { title: 'Verify', description: 'Test connectivity to server' },
+    { title: 'Profiles', description: 'Manage multiple profiles' },
+    { title: 'Quick Start', description: 'Start tracking fast' }
+  ],
+  'clearml-agent': [
+    { title: 'Daemons', description: 'Run agents on queues' },
+    { title: 'Docker', description: 'Execute in Dockerized envs' },
+    { title: 'Autoscaling', description: 'Scale workers dynamically' },
+    { title: 'Queues', description: 'Manage execution queues' },
+    { title: 'Remote Exec', description: 'Run remote experiments' }
+  ],
+  'clearml-task': [
+    { title: 'Task Create', description: 'Create tracked tasks' },
+    { title: 'Enqueue', description: 'Enqueue tasks to agents' },
+    { title: 'Projects', description: 'Organize tasks into projects' },
+    { title: 'Templates', description: 'Reuse task templates' },
+    { title: 'Metadata', description: 'Attach parameters/outputs' }
+  ],
+  'clearml-server': [
+    { title: 'Self-host', description: 'Run your own ClearML server' },
+    { title: 'Compose/Helm', description: 'Deploy with Docker/Helm' },
+    { title: 'Scaling', description: 'Scale services for teams' },
+    { title: 'Integrations', description: 'Integrate storage/backends' },
+    { title: 'Backup', description: 'Maintain server backups' }
+  ],
+  'clearml': [
+    { title: 'Suite Entry', description: 'Access ClearML CLI tools' },
+    { title: 'Help', description: 'Discover available commands' },
+    { title: 'Local Dev', description: 'Run small demos locally' },
+    { title: 'CI/CD', description: 'Integrate with pipelines' },
+    { title: 'Best Practices', description: 'Track everything' }
+  ],
+  'sacred': [
+    { title: 'Reproducibility', description: 'Structure experiments' },
+    { title: 'Config', description: 'Manage experiment configs' },
+    { title: 'Observers', description: 'Log runs via observers' },
+    { title: 'Dashboards', description: 'Use sacredboard/omniboard' },
+    { title: 'CLI', description: 'Invoke via python -m' }
+  ],
+  'matplotlib-cli': [
+    { title: 'Static Plots', description: 'Generate plots via scripts' },
+    { title: 'Savefig', description: 'Export to PNG/SVG/PDF' },
+    { title: 'Batch', description: 'Automate plot generation' },
+    { title: 'Styles', description: 'Apply style sheets' },
+    { title: 'Annotations', description: 'Annotate results clearly' }
+  ],
+  'seaborn-cli': [
+    { title: 'Stat Plots', description: 'High-level statistical plots' },
+    { title: 'Themes', description: 'Use themes/context' },
+    { title: 'Pair/Joint', description: 'Pairplot/jointplot quickly' },
+    { title: 'Regression', description: 'lmplot/regplot for trends' },
+    { title: 'Pipelines', description: 'Script common visuals' }
+  ],
+  'plotly': [
+    { title: 'Interactive', description: 'Interactive charts & 3D' },
+    { title: 'Export', description: 'Static image exports' },
+    { title: 'Dashboards', description: 'Build dashboards/demos' },
+    { title: 'Notebooks', description: 'Great in notebooks' },
+    { title: 'Sharing', description: 'Share with teammates' }
+  ],
+  'dash': [
+    { title: 'Dash Apps', description: 'Run Plotly Dash apps' },
+    { title: 'Deploy', description: 'Serve dashboards for teams' },
+    { title: 'Components', description: 'Use rich UI components' },
+    { title: 'Callbacks', description: 'Reactive data updates' },
+    { title: 'Prototyping', description: 'Build quickly from scripts' }
+  ],
+  'trainer': [
+    { title: 'Training Entry', description: 'Run tracked training jobs' },
+    { title: 'Configurable', description: 'Pass configs/params' },
+    { title: 'Logging', description: 'Log metrics to backends' },
+    { title: 'Checkpoints', description: 'Save/load checkpoints' },
+    { title: 'Repro', description: 'Set seeds for reproducibility' }
+  ],
 };
 
 // Define COMMAND_TIPS with proper typing
@@ -1993,12 +3505,47 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
+async function getRelatedCommandsByCategory(category: string, excludeSlug: string, limit: number = 5): Promise<string[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+      (process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3007' 
+        : 'https://ainews.com');
+    
+    const res = await fetch(`${baseUrl}/api/commands`, {
+      cache: 'no-store'
+    });
+    
+    if (!res.ok) {
+      console.error('Failed to fetch commands for related commands');
+      return [];
+    }
+    
+    const data = await res.json();
+    const commands = data.commands || [];
+    
+    // Filter by category and exclude current command
+    const related = commands
+      .filter((cmd: any) => {
+        const cmdCategory = typeof cmd.category === 'string' ? cmd.category : cmd.category || 'misc';
+        return cmdCategory === category && cmd.slug !== excludeSlug;
+      })
+      .slice(0, limit)
+      .map((cmd: any) => cmd.slug);
+    
+    return related;
+  } catch (error) {
+    console.error('Error fetching related commands by category:', error);
+    return [];
+  }
+}
+
 async function getCommand(slug: string): Promise<Command | null> {
   try {
     // Use process.env.NEXT_PUBLIC_SITE_URL or fallback for server components
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
       (process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:3000' 
+        ? 'http://localhost:3007' 
         : 'https://ainews.com');
     
     // Skip API call if known sample commands
@@ -2225,12 +3772,12 @@ function getSampleOptions(slug: string): string {
 // Helper function to get category color
 function getCategoryColor(category: string) {
   const colors: { [key: string]: string } = {
-    'file-management': 'bg-blue-100 text-blue-800',
+    'file-management': 'bg-purple-100 text-purple-800',
     'user-management': 'bg-green-100 text-green-800',
     'process-management': 'bg-purple-100 text-purple-800',
     'networking': 'bg-yellow-100 text-yellow-800',
     'permissions': 'bg-red-100 text-red-800',
-    'package-management': 'bg-indigo-100 text-indigo-800',
+    'package-management': 'bg-purple-100 text-purple-800',
     'system-management': 'bg-pink-100 text-pink-800',
     'misc': 'bg-gray-100 text-gray-800'
   };
@@ -2342,6 +3889,97 @@ function formatContent(content: string): string {
   return formattedContent;
 }
 
+// Function to format notes with markdown syntax
+function formatNotes(notes: string): string {
+  if (!notes) return '';
+  
+  // First sanitize any HTML entities
+  let formattedNotes = notes
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+  
+  // Convert markdown code (`code`) to HTML <code> FIRST (before bold processing)
+  formattedNotes = formattedNotes.replace(
+    /`([^`]+)`/g,
+    `<code class="${styles.codeInline}">$1</code>`
+  );
+  
+  // Convert markdown headings (**Use Cases:**) to HTML headings BEFORE converting to bold
+  formattedNotes = formattedNotes.replace(
+    /^\*\*([A-Za-z0-9\s\/&]+:?)\*\*$/gm,
+    '<h3 class="text-lg font-bold text-gray-800 mt-6 mb-3">$1</h3>'
+  );
+  
+  // Convert remaining markdown bold (**text**) to HTML <strong>
+  formattedNotes = formattedNotes.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong>$1</strong>'
+  );
+  
+  // Handle lists - convert lines starting with - to <ul><li>
+  // Process line by line to handle list grouping
+  const lines = formattedNotes.split('\n');
+  const processedLines: string[] = [];
+  let inList = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    if (trimmed.startsWith('- ')) {
+      // This is a list item
+      if (!inList) {
+        // Start a new list
+        processedLines.push('<ul class="list-disc pl-6 mb-2">');
+        inList = true;
+      }
+      // Add the list item (remove '- ' prefix)
+      processedLines.push(`<li>${trimmed.substring(2)}</li>`);
+    } else {
+      // Not a list item
+      if (inList) {
+        // Close the list
+        processedLines.push('</ul>');
+        inList = false;
+      }
+      // Add the line as-is (might be empty or other content)
+      if (trimmed !== '' || i === 0 || lines[i - 1]?.trim() !== '') {
+        processedLines.push(line);
+      }
+    }
+  }
+  
+  // Close any remaining open list
+  if (inList) {
+    processedLines.push('</ul>');
+  }
+  
+  formattedNotes = processedLines.join('\n');
+  
+  // Convert double line breaks to paragraphs (but preserve lists and headings)
+  formattedNotes = formattedNotes.split(/\n\n+/).map(para => {
+    const trimmed = para.trim();
+    if (trimmed === '') return '';
+    // Don't wrap already wrapped content (lists, headings, code)
+    if (trimmed.startsWith('<ul>') || trimmed.startsWith('</ul>') || 
+        trimmed.startsWith('<li>') || trimmed.startsWith('<h') || 
+        trimmed.startsWith('<code') || trimmed.startsWith('<strong')) {
+      return trimmed;
+    }
+    // If it's a single line with no HTML, wrap in paragraph
+    if (!trimmed.includes('<') && trimmed.length > 0) {
+      return `<p class="mb-4">${trimmed}</p>`;
+    }
+    return trimmed;
+  }).join('\n\n');
+  
+  // Use formatContent for any remaining formatting (handles inline code, etc.)
+  formattedNotes = formatContent(formattedNotes);
+  
+  return formattedNotes;
+}
+
 // Function to create detailed examples with explanations
 function formatExamples(examples: string): string {
   if (!examples) return '';
@@ -2425,8 +4063,27 @@ export default async function CommandPage({ params }: { params: { slug: string }
   const htmlContent = command.content ? formatContent(command.content) : '';
   const introText = `The <code>${command.title}</code> command is one of the most frequently used commands in Linux/Unix-like operating systems. <code>${command.title}</code> ${command.description}`;
   
-  // Get related commands if available, otherwise use a default set
-  const relatedCommands = command.related_commands || RELATED_COMMANDS[command.slug] || [];
+  // Get related commands - try database first, then hardcoded, then same category
+  let relatedCommands: string[] = [];
+  
+  // First try database related_commands
+  if (command.related_commands && Array.isArray(command.related_commands) && command.related_commands.length > 0) {
+    relatedCommands = command.related_commands;
+  }
+  // Then try hardcoded RELATED_COMMANDS
+  else if (RELATED_COMMANDS[command.slug] && RELATED_COMMANDS[command.slug].length > 0) {
+    relatedCommands = RELATED_COMMANDS[command.slug];
+  }
+  // Finally, fetch from same category
+  else {
+    const category = typeof command.category === 'string' ? command.category : (command.category || 'misc');
+    relatedCommands = await getRelatedCommandsByCategory(category, command.slug, 5);
+    
+    // If still no results and we have a fallback, use it
+    if (relatedCommands.length === 0 && RELATED_COMMANDS[command.slug]) {
+      relatedCommands = RELATED_COMMANDS[command.slug];
+    }
+  }
   
   // Get use cases if available, otherwise use empty array
   const useCases = COMMAND_USE_CASES[command.slug] || [];
@@ -2454,7 +4111,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
       <CommandStructuredData command={command} />
       
       <div className="mb-8">
-        <Link href="/commands" className="text-blue-600 hover:text-blue-800 inline-flex items-center">
+        <Link href="/commands" className="text-purple-600 hover:text-purple-800 inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -2481,7 +4138,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
           </div>
           
           <div className="mt-6">
-            <a href="#examples" className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 mr-3">
+            <a href="#examples" className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 mr-3">
               See Examples
             </a>
             <a href="#syntax" className="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-200 bg-transparent hover:bg-gray-700">
@@ -2500,7 +4157,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
       <div className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             Quick Reference
@@ -2527,7 +4184,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
         
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Common Use Cases
@@ -2535,7 +4192,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
           <ul className="space-y-3">
             {useCases.slice(0, 4).map((useCase, index) => (
               <li key={index} className="flex items-start">
-                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-green-100 text-green-800 text-sm font-medium mr-3 flex-shrink-0">
+                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mr-3 flex-shrink-0">
                   {index + 1}
                 </span>
                 <div>
@@ -2590,14 +4247,14 @@ export default async function CommandPage({ params }: { params: { slug: string }
             </div>
             <div className="p-6 bg-gradient-to-br from-white to-gray-50">
               {/* Examples Introduction */}
-              <div className="mb-8 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2 flex items-center">
+              <div className="mb-8 bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                <h3 className="text-lg font-semibold text-purple-800 mb-2 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   How to Use These Examples
                 </h3>
-                <p className="text-blue-700">
+                <p className="text-purple-700">
                   The examples below show common ways to use the <code className={styles.codeInline}>{command.title}</code> command. 
                   Try them in your terminal to see the results. You can copy any example by clicking on the code block.
                 </p>
@@ -2647,7 +4304,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
               <h2 className="text-lg font-semibold">Notes</h2>
             </div>
             <div className={`p-6 ${styles.notesSection}`}>
-              <FormattedContent html={command.notes} />
+              <FormattedContent html={formatNotes(command.notes)} />
             </div>
           </div>
         )}
@@ -2715,8 +4372,8 @@ export default async function CommandPage({ params }: { params: { slug: string }
       )}
       
       {/* Related Commands */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md overflow-hidden mb-10">
-        <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center">
+      <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg shadow-md overflow-hidden mb-10">
+        <div className="px-6 py-4 bg-gradient-to-r from-purple-600 to-violet-600 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -2731,9 +4388,9 @@ export default async function CommandPage({ params }: { params: { slug: string }
                 href={`/commands/${cmd}`} 
                 className="relative group"
               >
-                <div className="transition-all duration-300 transform group-hover:scale-105 bg-white border border-gray-200 hover:border-blue-300 hover:shadow-md rounded-lg p-3 flex flex-col items-center text-center">
-                  <span className="text-blue-600 font-mono font-medium mb-1">{cmd}</span>
-                  <div className="h-1 w-10 bg-blue-400 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="transition-all duration-300 transform group-hover:scale-105 bg-white border border-gray-200 hover:border-purple-300 hover:shadow-md rounded-lg p-3 flex flex-col items-center text-center">
+                  <span className="text-purple-600 font-mono font-medium mb-1">{cmd}</span>
+                  <div className="h-1 w-10 bg-purple-400 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </Link>
             ))}
@@ -2741,7 +4398,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
           <div className="mt-5 text-center">
             <Link 
               href="/commands" 
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -2765,7 +4422,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
             {useCases.map((useCase, index) => (
               <div key={index} className="flex">
                 <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md bg-purple-500 text-white">
                     <span className="text-xl font-semibold">{index + 1}</span>
                   </div>
                 </div>
@@ -2786,7 +4443,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
       {htmlContent && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-10">
           <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
             Detailed Explanation
@@ -2796,7 +4453,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
       )}
       
       {/* "Learn By Doing" Section */}
-      <div className="bg-indigo-700 rounded-lg shadow-xl p-6 mb-10 text-white">
+      <div className="bg-purple-700 rounded-lg shadow-xl p-6 mb-10 text-white">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
             <h2 className="text-2xl font-bold mb-4">Learn By Doing</h2>
@@ -2806,13 +4463,13 @@ export default async function CommandPage({ params }: { params: { slug: string }
             <div className="flex flex-wrap gap-4">
               <a 
                 href="#examples" 
-                className="inline-flex items-center px-4 py-2 border border-white text-base font-medium rounded-md text-white hover:bg-indigo-600"
+                className="inline-flex items-center px-4 py-2 border border-white text-base font-medium rounded-md text-white hover:bg-purple-600"
               >
                 See Examples
               </a>
               <Link 
                 href="/lab-exercises" 
-                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-100"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-purple-700 bg-white hover:bg-gray-100"
               >
                 Try Lab Exercises
               </Link>
@@ -2837,7 +4494,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
       <div className="flex justify-between items-center">
         <Link 
           href="/commands" 
-          className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-purple-700 bg-purple-100 hover:bg-purple-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />

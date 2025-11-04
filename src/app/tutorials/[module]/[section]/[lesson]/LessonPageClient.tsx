@@ -274,7 +274,7 @@ export default function LessonPageClient() {
     );
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007';
 
   return (
     <div className="full-height-page min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">

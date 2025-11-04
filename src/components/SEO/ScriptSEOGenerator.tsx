@@ -142,8 +142,8 @@ export default function ScriptSEOGenerator({ scriptData, onGenerate, isGeneratin
     
     // Generate multiple title options
     const titleOptions = [
-      `${title} - ${purpose} ${language} Script | LinuxConcept`,
-      `${purpose} Script in ${language} - ${title} | LinuxConcept`,
+      `${title} - ${purpose} ${language} Script | HackerThink`,
+      `${purpose} Script in ${language} - ${title} | HackerThink`,
       `${title}: ${difficulty} Level ${language} ${purpose} Script`,
       `${language} ${purpose} Script: ${title} (${complexityText})`,
       `${title} - ${language} ${script_type} Script for ${purpose}`

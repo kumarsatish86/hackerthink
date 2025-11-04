@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function AdminSettings() {
   const [generalSettings, setGeneralSettings] = useState({
-    siteName: 'LinuxConcept',
+    siteName: 'HackerThink',
     siteDescription: 'Learn Linux and IT concepts easily',
     contactEmail: 'contact@ainews.com',
     maxUploadSize: 10
@@ -17,7 +17,7 @@ export default function AdminSettings() {
     smtpUsername: '',
     smtpPassword: '',
     senderEmail: 'noreply@ainews.com',
-    senderName: 'LinuxConcept'
+    senderName: 'HackerThink'
   });
 
   const [apiSettings, setApiSettings] = useState({
@@ -68,21 +68,27 @@ export default function AdminSettings() {
       <div className="mb-6 flex flex-wrap gap-4">
         <Link 
           href="/admin/settings" 
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           General Settings
         </Link>
         <Link 
           href="/admin/settings/appearance" 
-          className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           Appearance Settings
         </Link>
         <Link 
           href="/admin/seo" 
-          className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           SEO Settings
+        </Link>
+        <Link 
+          href="/admin/settings/import-integrations" 
+          className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+        >
+          Import Integrations
         </Link>
       </div>
       
@@ -102,7 +108,7 @@ export default function AdminSettings() {
                   name="siteName"
                   value={generalSettings.siteName}
                 onChange={handleGeneralChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                 required
                 />
               </div>
@@ -117,7 +123,7 @@ export default function AdminSettings() {
                   name="contactEmail"
                   value={generalSettings.contactEmail}
                 onChange={handleGeneralChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                 required
               />
             </div>
@@ -133,7 +139,7 @@ export default function AdminSettings() {
               value={generalSettings.siteDescription}
               onChange={handleGeneralChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                 />
               </div>
 
@@ -149,7 +155,7 @@ export default function AdminSettings() {
               onChange={handleGeneralChange}
               min="1"
               max="100"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
         </div>
@@ -169,7 +175,7 @@ export default function AdminSettings() {
                     name="smtpServer"
                     value={emailSettings.smtpServer}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
 
@@ -183,7 +189,7 @@ export default function AdminSettings() {
                     name="smtpPort"
                     value={emailSettings.smtpPort}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
@@ -199,7 +205,7 @@ export default function AdminSettings() {
                     name="smtpUsername"
                     value={emailSettings.smtpUsername}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
 
@@ -213,7 +219,7 @@ export default function AdminSettings() {
                     name="smtpPassword"
                     value={emailSettings.smtpPassword}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
@@ -229,7 +235,7 @@ export default function AdminSettings() {
                     name="senderEmail"
                     value={emailSettings.senderEmail}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
                 </div>
 
@@ -243,7 +249,7 @@ export default function AdminSettings() {
                 name="senderName"
                 value={emailSettings.senderName}
                 onChange={handleEmailChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                 </div>
@@ -263,7 +269,7 @@ export default function AdminSettings() {
               name="recaptchaKey"
               value={apiSettings.recaptchaKey}
               onChange={handleApiChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
                 </div>
 
@@ -279,7 +285,7 @@ export default function AdminSettings() {
               onChange={handleApiChange}
               min="10"
               max="1000"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
                 </div>
               </div>
@@ -288,7 +294,7 @@ export default function AdminSettings() {
         <div className="flex justify-end">
                 <button
                   type="submit"
-            className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
             Save Settings
                 </button>

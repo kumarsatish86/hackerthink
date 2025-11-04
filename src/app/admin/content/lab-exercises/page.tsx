@@ -256,7 +256,7 @@ export default function LabExercisesManagement() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -273,7 +273,7 @@ export default function LabExercisesManagement() {
           <button
             onClick={fetchLabExercises}
             disabled={loading}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             <svg className="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -282,7 +282,7 @@ export default function LabExercisesManagement() {
           </button>
           <Link
             href="/admin/content/lab-exercises/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -320,7 +320,7 @@ export default function LabExercisesManagement() {
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search exercises..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function LabExercisesManagement() {
               <select
                 value={statusFilter}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="all">All Status</option>
                 <option value="published">Published</option>
@@ -344,7 +344,7 @@ export default function LabExercisesManagement() {
               <select
                 value={difficultyFilter}
                 onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="all">All Difficulties</option>
                 <option value="Beginner">Beginner</option>
@@ -359,7 +359,7 @@ export default function LabExercisesManagement() {
               <select
                 value={sortBy}
                 onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="created_at">Created Date</option>
                 <option value="updated_at">Updated Date</option>
@@ -376,7 +376,7 @@ export default function LabExercisesManagement() {
               <select
                 value={itemsPerPage}
                 onChange={(e) => handleFilterChange('itemsPerPage', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -398,7 +398,7 @@ export default function LabExercisesManagement() {
                   value="desc"
                   checked={sortOrder === 'desc'}
                   onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
-                  className="form-radio h-4 w-4 text-indigo-600"
+                  className="form-radio h-4 w-4 text-red-600"
                 />
                 <span className="ml-2 text-sm text-gray-700">Descending</span>
               </label>
@@ -409,7 +409,7 @@ export default function LabExercisesManagement() {
                   value="asc"
                   checked={sortOrder === 'asc'}
                   onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
-                  className="form-radio h-4 w-4 text-indigo-600"
+                  className="form-radio h-4 w-4 text-red-600"
                 />
                 <span className="ml-2 text-sm text-gray-700">Ascending</span>
               </label>
@@ -431,7 +431,7 @@ export default function LabExercisesManagement() {
               <select
                 value={bulkAction}
                 onChange={(e) => setBulkAction(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
               >
                 <option value="">Choose action...</option>
                 <option value="publish">Publish</option>
@@ -441,7 +441,7 @@ export default function LabExercisesManagement() {
               <button
                 onClick={handleBulkAction}
                 disabled={!bulkAction || actionLoading}
-                className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
               >
                 {actionLoading ? 'Processing...' : 'Apply'}
               </button>
@@ -482,7 +482,7 @@ export default function LabExercisesManagement() {
                       type="checkbox"
                       checked={selectAll}
                       onChange={handleSelectAll}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                     />
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -516,7 +516,7 @@ export default function LabExercisesManagement() {
                         type="checkbox"
                         checked={selectedItems.includes(exercise.id)}
                         onChange={() => handleSelectItem(exercise.id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -543,7 +543,7 @@ export default function LabExercisesManagement() {
                         <div className="ml-4">
                           <Link
                             href={`/admin/content/lab-exercises/${exercise.id}`}
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                            className="text-sm font-medium text-red-600 hover:text-red-500"
                           >
                             {exercise.title}
                           </Link>
@@ -579,7 +579,7 @@ export default function LabExercisesManagement() {
                         {exercise.published && (
                           <Link
                             href={`/lab-exercises/${exercise.slug}`}
-                            className="text-indigo-600 hover:text-indigo-500 p-1 rounded hover:bg-indigo-50"
+                            className="text-red-600 hover:text-red-500 p-1 rounded hover:bg-red-50"
                             target="_blank"
                             title="View Live"
                           >
@@ -611,7 +611,7 @@ export default function LabExercisesManagement() {
                         </button>
                         <Link
                           href={`/admin/content/lab-exercises/${exercise.id}`}
-                          className="text-indigo-600 hover:text-indigo-500 p-1 rounded hover:bg-indigo-50"
+                          className="text-red-600 hover:text-red-500 p-1 rounded hover:bg-red-50"
                           title="Edit"
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -662,7 +662,7 @@ export default function LabExercisesManagement() {
               <div className="mt-6">
                 <Link
                   href="/admin/content/lab-exercises/new"
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -725,7 +725,7 @@ export default function LabExercisesManagement() {
                       onClick={() => handlePageChange(pageNum)}
                       className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                         pageNum === pagination.page
-                          ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                          ? 'z-10 bg-red-50 border-red-500 text-red-600'
                           : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                       }`}
                     >

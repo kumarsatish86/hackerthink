@@ -25,7 +25,7 @@ interface LabExercise {
 
 async function getLabExercise(slug: string): Promise<LabExercise | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/lab-exercises/${slug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/lab-exercises/${slug}`, {
       cache: 'no-store' // Ensure fresh data
     });
     
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `${exercise.title} - Lab Exercise | LinuxConcept`,
+    title: `${exercise.title} - Lab Exercise | HackerThink`,
     description: exercise.description,
     openGraph: {
       title: `${exercise.title} - Lab Exercise`,

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate SEO title (max 60 characters)
-    const seoTitle = `${term} - ${category || 'Technical Term'} Definition | LinuxConcept`;
+    const seoTitle = `${term} - ${category || 'Technical Term'} Definition | HackerThink`;
     const truncatedTitle = seoTitle.length > 60 ? seoTitle.substring(0, 57) + '...' : seoTitle;
 
     // Generate SEO description (max 160 characters)
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
       "description": cleanDefinition,
       "inDefinedTermSet": {
         "@type": "DefinedTermSet",
-        "name": "LinuxConcept Technical Glossary",
+        "name": "HackerThink Technical Glossary",
         "description": "A comprehensive glossary of technical terms and concepts"
       },
       "category": category || "General",
       "url": `https://ainews.com/term/${term.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, '-')}`,
       "publisher": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": "https://ainews.com"
       }
     }, null, 2);

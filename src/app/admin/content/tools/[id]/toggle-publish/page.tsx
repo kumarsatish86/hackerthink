@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Toggle Publish Status - Admin - LinuxConcept',
+  title: 'Toggle Publish Status - Admin - HackerThink',
 };
 
 // Define tool type

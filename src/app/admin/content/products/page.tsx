@@ -321,7 +321,7 @@ const ProductsPage = () => {
     console.log('⏳ [PRODUCTS PAGE] Showing loading spinner...');
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -337,7 +337,7 @@ const ProductsPage = () => {
         </div>
         <Link
           href="/admin/content/products/create"
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -398,7 +398,7 @@ const ProductsPage = () => {
                 setLastFetchTime(Date.now());
               }}
               disabled={loading}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               <svg className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -417,7 +417,7 @@ const ProductsPage = () => {
                   setPricingTypeFilter('all');
                   setFeaturedFilter('all');
                 }}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 Clear All Filters
               </button>
@@ -439,7 +439,7 @@ const ProductsPage = () => {
               <input
                 id="search"
                 name="search"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm"
                 placeholder="Search by name, description, company..."
                 type="search"
                 value={searchTerm}
@@ -453,7 +453,7 @@ const ProductsPage = () => {
             <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select
               id="status-filter"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
             >
@@ -469,7 +469,7 @@ const ProductsPage = () => {
             <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
             <select
               id="category-filter"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
             >
@@ -485,7 +485,7 @@ const ProductsPage = () => {
             <label htmlFor="pricing-filter" className="block text-sm font-medium text-gray-700 mb-1">Pricing</label>
             <select
               id="pricing-filter"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={pricingTypeFilter}
               onChange={(e) => setPricingTypeFilter(e.target.value)}
             >
@@ -501,7 +501,7 @@ const ProductsPage = () => {
             <label htmlFor="featured-filter" className="block text-sm font-medium text-gray-700 mb-1">Featured</label>
             <select
               id="featured-filter"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={featuredFilter}
               onChange={(e) => setFeaturedFilter(e.target.value)}
             >
@@ -516,7 +516,7 @@ const ProductsPage = () => {
             <label htmlFor="sort-by" className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
             <select
               id="sort-by"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
             >
@@ -533,7 +533,7 @@ const ProductsPage = () => {
             <label htmlFor="sort-order" className="block text-sm font-medium text-gray-700 mb-1">Order</label>
             <select
               id="sort-order"
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as any)}
             >
@@ -546,15 +546,15 @@ const ProductsPage = () => {
 
       {/* Bulk Actions */}
       {selectedItems.length > 0 && (
-        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-indigo-700">
+            <span className="text-sm text-red-700">
               {selectedItems.length} item(s) selected
             </span>
             <div className="flex gap-2">
               <button
                 onClick={() => setSelectedItems([])}
-                className="text-sm text-indigo-600 hover:text-indigo-800"
+                className="text-sm text-red-600 hover:text-red-800"
               >
                 Clear Selection
               </button>
@@ -588,7 +588,7 @@ const ProductsPage = () => {
                           setSelectedItems([]);
                         }
                       }}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                     />
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -628,7 +628,7 @@ const ProductsPage = () => {
                             setSelectedItems(selectedItems.filter(id => id !== product.id));
                           }
                         }}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -679,8 +679,10 @@ const ProductsPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <FaStar className="h-4 w-4 text-yellow-400 mr-1" />
-                        <span className="text-sm text-gray-900">{product.rating.toFixed(1)}</span>
-                        <span className="text-sm text-gray-500 ml-1">({product.review_count})</span>
+                        <span className="text-sm text-gray-900">
+                          {typeof product.rating === 'number' && !isNaN(product.rating) ? product.rating.toFixed(1) : 'N/A'}
+                        </span>
+                        <span className="text-sm text-gray-500 ml-1">({product.review_count || 0})</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -722,7 +724,7 @@ const ProductsPage = () => {
                         </Link>
                         <Link
                           href={`/admin/content/products/${product.id}`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-red-600 hover:text-red-900"
                           title="Edit"
                         >
                           <FaEdit className="h-4 w-4" />
@@ -756,7 +758,7 @@ const ProductsPage = () => {
             <div className="mt-6">
               <Link
                 href="/admin/content/products/create"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 <FaPlus className="mr-2 h-4 w-4" />
                 Create Product
@@ -798,7 +800,7 @@ const ProductsPage = () => {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 >
                   <option value={10}>10</option>
                   <option value={20}>20</option>
@@ -846,7 +848,7 @@ const ProductsPage = () => {
                       onClick={() => setCurrentPage(pageNum)}
                       className={`relative inline-flex items-center px-3 py-2 text-sm font-medium rounded-md ${
                         currentPage === pageNum
-                          ? 'bg-indigo-600 text-white'
+                          ? 'bg-red-600 text-white'
                           : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                       }`}
                     >
@@ -912,3 +914,4 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
+

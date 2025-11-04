@@ -118,7 +118,7 @@ export default function MicrosoftIntegrationsPage() {
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Microsoft Integrations</h1>
         <div className="flex justify-center mt-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         </div>
       </div>
     );
@@ -187,7 +187,7 @@ export default function MicrosoftIntegrationsPage() {
                           placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'tenantId', integration.config.tenantId)}
                           disabled={saving}
                         >
@@ -218,7 +218,7 @@ export default function MicrosoftIntegrationsPage() {
                           placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'clientId', integration.config.clientId)}
                           disabled={saving}
                         >
@@ -249,7 +249,7 @@ export default function MicrosoftIntegrationsPage() {
                           placeholder="Enter client secret"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'clientSecret', integration.config.clientSecret)}
                           disabled={saving}
                         >
@@ -284,7 +284,7 @@ export default function MicrosoftIntegrationsPage() {
                           placeholder="Enter API key"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'apiKey', integration.config.apiKey)}
                           disabled={saving}
                         >
@@ -302,7 +302,7 @@ export default function MicrosoftIntegrationsPage() {
                         id={`sync-users-${integration.id}`}
                         checked={integration.config.syncUsers || false}
                         onChange={() => handleUpdateConfig(integration, 'syncUsers', !integration.config.syncUsers)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`sync-users-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Sync users automatically
@@ -332,7 +332,7 @@ export default function MicrosoftIntegrationsPage() {
                           placeholder="https://outlook.office.com/webhook/..."
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'webhookUrl', integration.config.webhookUrl)}
                           disabled={saving}
                         >
@@ -350,7 +350,7 @@ export default function MicrosoftIntegrationsPage() {
                         id={`send-notifications-${integration.id}`}
                         checked={integration.config.sendNotifications || false}
                         onChange={() => handleUpdateConfig(integration, 'sendNotifications', !integration.config.sendNotifications)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`send-notifications-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Send notifications for new user registrations

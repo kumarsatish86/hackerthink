@@ -38,7 +38,7 @@ interface ScriptData {
 // Fetch script data for metadata generation
 async function getScriptData(slug: string): Promise<ScriptData | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/scripts/${slug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/scripts/${slug}`, {
       cache: 'no-store'
     });
     
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   if (!script) {
     return {
-      title: 'Script Not Found | LinuxConcept',
+      title: 'Script Not Found | HackerThink',
       description: 'The requested script could not be found.',
     };
   }
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const scriptUrl = `${baseUrl}/scripts/${script.slug}`;
   const imageUrl = script.featured_image || `${baseUrl}/images/script-default.png`;
   
-  const title = script.meta_title || `${script.title} - ${script.language} Script | LinuxConcept`;
+  const title = script.meta_title || `${script.title} - ${script.language} Script | HackerThink`;
   const description = script.meta_description || script.description || 
     `Download and use this ${script.language} script for ${script.script_type.toLowerCase()}. ${script.difficulty} level script compatible with ${script.os_compatibility}.`;
 
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       'devops',
       ...(script.tags || [])
     ].join(', '),
-    authors: [{ name: script.author_name || "LinuxConcept Team" }],
+    authors: [{ name: script.author_name || "HackerThink Team" }],
     openGraph: {
       type: 'article',
       title,
@@ -104,7 +104,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           alt: `${script.title} - ${script.language} Script`,
         },
       ],
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       locale: 'en_US',
       publishedTime: script.created_at,
       modifiedTime: script.updated_at,

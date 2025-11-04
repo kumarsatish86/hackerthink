@@ -11,7 +11,7 @@ const integrationCategories = [
     description: 'Google Analytics, Tag Manager, Search Console, and AdSense',
     icon: (
       <svg
-        className="h-10 w-10 text-indigo-600"
+        className="h-10 w-10 text-red-600"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -32,7 +32,7 @@ const integrationCategories = [
     description: 'Microsoft Clarity analytics and Webmaster tools',
     icon: (
       <svg
-        className="h-10 w-10 text-indigo-600"
+        className="h-10 w-10 text-red-600"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -53,7 +53,7 @@ const integrationCategories = [
     description: 'OpenAI, Anthropic Claude, DeepSeek, and other AI providers',
     icon: (
       <svg
-        className="h-10 w-10 text-indigo-600"
+        className="h-10 w-10 text-red-600"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -74,7 +74,7 @@ const integrationCategories = [
     description: 'Various analytics platforms and tracking services',
     icon: (
       <svg
-        className="h-10 w-10 text-indigo-600"
+        className="h-10 w-10 text-red-600"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -95,7 +95,7 @@ const integrationCategories = [
     description: 'Social media, third-party widgets, and other integrations',
     icon: (
       <svg
-        className="h-10 w-10 text-indigo-600"
+        className="h-10 w-10 text-red-600"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -160,7 +160,7 @@ export default function IntegrationsPage() {
       
       <div className="mb-8">
         <p className="text-gray-600">
-          Connect your LinuxConcept website with third-party services and tools to enhance functionality, 
+          Connect your HackerThink website with third-party services and tools to enhance functionality, 
           track analytics, monetize content, and more.
         </p>
       </div>
@@ -174,7 +174,7 @@ export default function IntegrationsPage() {
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className="bg-indigo-100 rounded-full p-3">
+                <div className="bg-red-100 rounded-full p-3">
                   {category.icon}
                 </div>
                 {!loading && activeIntegrations[category.id] > 0 && (
@@ -187,7 +187,7 @@ export default function IntegrationsPage() {
               <p className="text-gray-600">{category.description}</p>
             </div>
             <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
-              <span className="text-indigo-600 font-medium flex items-center">
+              <span className="text-red-600 font-medium flex items-center">
                 Configure
                 <svg 
                   className="ml-2 w-4 h-4" 

@@ -120,7 +120,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ value, onChange }) => {
       },
       'publisher': {
         '@type': 'Organization',
-        'name': 'LinuxConcept',
+        'name': 'HackerThink',
         'logo': {
           '@type': 'ImageObject',
           'url': 'https://ainews.com/logo.png'

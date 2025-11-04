@@ -76,7 +76,7 @@ export default function BulkSEOGenerator({ scripts, onBulkUpdate }: BulkSEOGener
 
     const purposeText = purposeMap[purpose] || 'Utility';
     
-    return `${script.title} - ${purposeText} ${script.language} Script | LinuxConcept`;
+    return `${script.title} - ${purposeText} ${script.language} Script | HackerThink`;
   };
 
   const generateSEODescription = (script: Script, purpose: string) => {

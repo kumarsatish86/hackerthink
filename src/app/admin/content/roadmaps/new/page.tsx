@@ -34,7 +34,7 @@ export default function NewRoadmapPage() {
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -304,7 +304,7 @@ export default function NewRoadmapPage() {
                   name="is_published"
                   checked={formData.is_published}
                   onChange={handleChange}
-                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  className="h-4 w-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
                 />
                 <label htmlFor="is_published" className="ml-2 block text-sm text-gray-700">
                   Publish this roadmap (make it visible to users)
@@ -323,7 +323,7 @@ export default function NewRoadmapPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
                 isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >

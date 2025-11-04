@@ -311,7 +311,7 @@ function CoursesContent() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -327,7 +327,7 @@ function CoursesContent() {
         {tab === 'all' && (
           <Link
             href="/admin/content/courses/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -343,7 +343,7 @@ function CoursesContent() {
           <Link
             href="/admin/content/courses"
             className={`px-3 py-2 text-sm font-medium rounded-md ${
-              tab === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700'
+              tab === 'all' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             All Courses
@@ -351,7 +351,7 @@ function CoursesContent() {
           <Link
             href="/admin/content/courses?tab=lessons"
             className={`px-3 py-2 text-sm font-medium rounded-md ${
-              tab === 'lessons' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700'
+              tab === 'lessons' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             Lessons
@@ -359,7 +359,7 @@ function CoursesContent() {
           <Link
             href="/admin/content/courses?tab=assignments"
             className={`px-3 py-2 text-sm font-medium rounded-md ${
-              tab === 'assignments' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700'
+              tab === 'assignments' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             Assignments
@@ -367,7 +367,7 @@ function CoursesContent() {
           <Link
             href="/admin/content/courses?tab=quizzes"
             className={`px-3 py-2 text-sm font-medium rounded-md ${
-              tab === 'quizzes' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:text-gray-700'
+              tab === 'quizzes' ? 'bg-red-600 text-white' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             Quizzes
@@ -389,7 +389,7 @@ function CoursesContent() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search courses..."
-                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
               />
             </div>
             <div>
@@ -400,7 +400,7 @@ function CoursesContent() {
                 id="level-filter"
                 value={filterLevel}
                 onChange={(e) => setFilterLevel(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
               >
                 <option value="all">All Levels</option>
                 <option value="Beginner">Beginner</option>
@@ -416,7 +416,7 @@ function CoursesContent() {
                 id="status-filter"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
               >
                 <option value="all">All Status</option>
                 <option value="published">Published</option>
@@ -432,7 +432,7 @@ function CoursesContent() {
                   id="sort"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 >
                   <option value="created_at">Created Date</option>
                   <option value="title">Title</option>
@@ -441,7 +441,7 @@ function CoursesContent() {
                 </select>
                 <button
                   onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                  className="px-3 py-2 border border-l-0 border-gray-300 rounded-r bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500"
+                  className="px-3 py-2 border border-l-0 border-gray-300 rounded-r bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-red-500"
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </button>
@@ -453,10 +453,10 @@ function CoursesContent() {
 
       {/* Bulk Actions Bar */}
       {tab === 'all' && selectedCourses.length > 0 && (
-        <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <span className="text-sm font-medium text-indigo-700">
+              <span className="text-sm font-medium text-red-700">
                 {selectedCourses.length} course{selectedCourses.length === 1 ? '' : 's'} selected
               </span>
             </div>
@@ -521,7 +521,7 @@ function CoursesContent() {
                     type="checkbox"
                     checked={selectedCourses.length === paginatedCourses.length && paginatedCourses.length > 0}
                     onChange={handleSelectAll}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
                   <span className="ml-2 text-sm font-medium text-gray-700">Select All</span>
                 </div>
@@ -530,14 +530,14 @@ function CoursesContent() {
               {/* Courses List */}
               <ul className="divide-y divide-gray-200">
                 {paginatedCourses.map((course) => (
-                <li key={course.id} className={selectedCourses.includes(course.id) ? 'bg-indigo-50' : ''}>
+                <li key={course.id} className={selectedCourses.includes(course.id) ? 'bg-red-50' : ''}>
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-start space-x-3">
                       <input
                         type="checkbox"
                         checked={selectedCourses.includes(course.id)}
                         onChange={() => handleSelectCourse(course.id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mt-1"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded mt-1"
                       />
                       <div className="flex-1 min-w-0">
                         {/* Course Status Badges */}
@@ -565,7 +565,7 @@ function CoursesContent() {
                         
                         {/* Course Title */}
                         <Link href={`/admin/content/courses/${course.id}`}>
-                          <h3 className="text-lg font-medium text-indigo-600 truncate hover:underline">
+                          <h3 className="text-lg font-medium text-red-600 truncate hover:underline">
                             {course.title}
                           </h3>
                         </Link>
@@ -639,7 +639,7 @@ function CoursesContent() {
                             course.published
                               ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200'
                               : 'text-green-700 bg-green-100 hover:bg-green-200'
-                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50`}
+                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50`}
                         >
                           {course.published ? 'Unpublish' : 'Publish'}
                         </button>
@@ -651,14 +651,14 @@ function CoursesContent() {
                             course.is_featured
                               ? 'text-purple-700 bg-purple-100 hover:bg-purple-200'
                               : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50`}
+                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50`}
                         >
                           {course.is_featured ? 'Unfeature' : 'Feature'}
                         </button>
                         
                         <Link
                           href={`/admin/content/courses/${course.id}`}
-                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                         >
                           Edit
                         </Link>
@@ -674,7 +674,7 @@ function CoursesContent() {
                             </button>
                             <button
                               onClick={() => setDeleteConfirm(null)}
-                              className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             >
                               Cancel
                             </button>
@@ -709,7 +709,7 @@ function CoursesContent() {
                         id="items-per-page"
                         value={itemsPerPage}
                         onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                        className="p-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="p-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                       >
                         <option value={10}>10</option>
                         <option value={20}>20</option>
@@ -737,7 +737,7 @@ function CoursesContent() {
                             onClick={() => setCurrentPage(pageNum)}
                             className={`px-3 py-1 text-sm border rounded ${
                               currentPage === pageNum
-                                ? 'bg-indigo-600 text-white border-indigo-600'
+                                ? 'bg-red-600 text-white border-red-600'
                                 : 'border-gray-300 hover:bg-gray-50'
                             }`}
                           >
@@ -768,7 +768,7 @@ function CoursesContent() {
               <div className="mt-6">
                 <Link
                   href="/admin/content/courses/new"
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -795,7 +795,7 @@ function CoursesContent() {
                   href={`/admin/content/courses/${course.id}?tab=curriculum`}
                   className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
-                  <h4 className="font-medium text-indigo-600">{course.title}</h4>
+                  <h4 className="font-medium text-red-600">{course.title}</h4>
                   <p className="mt-1 text-sm text-gray-500">
                     {course.lesson_count || 0} {course.lesson_count === 1 ? 'lesson' : 'lessons'} · {course.section_count || 0} {course.section_count === 1 ? 'section' : 'sections'}
                   </p>
@@ -820,7 +820,7 @@ function CoursesContent() {
                   href={`/admin/content/courses/${course.id}?tab=assignments`}
                   className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
-                  <h4 className="font-medium text-indigo-600">{course.title}</h4>
+                  <h4 className="font-medium text-red-600">{course.title}</h4>
                   <p className="mt-1 text-sm text-gray-500">
                     {course.section_count || 0} {course.section_count === 1 ? 'section' : 'sections'}
                   </p>
@@ -845,7 +845,7 @@ function CoursesContent() {
                   href={`/admin/content/courses/${course.id}?tab=quizzes`}
                   className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
-                  <h4 className="font-medium text-indigo-600">{course.title}</h4>
+                  <h4 className="font-medium text-red-600">{course.title}</h4>
                   <p className="mt-1 text-sm text-gray-500">
                     {course.section_count || 0} {course.section_count === 1 ? 'section' : 'sections'}
                   </p>
@@ -872,7 +872,7 @@ export default function CoursesManagement() {
     <Suspense fallback={
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
           <p className="ml-3 text-lg text-gray-700">Loading courses...</p>
         </div>
       </div>

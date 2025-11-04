@@ -16,12 +16,12 @@ export default function TermStructuredData({ term }: TermStructuredDataProps) {
     "dateModified": term.updated_at,
     "author": {
       "@type": "Organization",
-      "name": "LinuxConcept Team",
+      "name": "HackerThink Team",
       "url": baseUrl
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl,
       "logo": {
         "@type": "ImageObject",
@@ -57,12 +57,12 @@ export default function TermStructuredData({ term }: TermStructuredDataProps) {
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": `${term.term} - ${term.category} | LinuxConcept Glossary`,
+    "name": `${term.term} - ${term.category} | HackerThink Glossary`,
     "description": term.definition,
     "url": termUrl,
     "isPartOf": {
       "@type": "WebSite",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": baseUrl
     },
     "breadcrumb": {
@@ -94,7 +94,7 @@ export default function TermStructuredData({ term }: TermStructuredDataProps) {
       "description": term.definition,
       "inDefinedTermSet": {
         "@type": "DefinedTermSet",
-        "name": "LinuxConcept IT Glossary",
+        "name": "HackerThink IT Glossary",
         "description": "Comprehensive glossary of IT and Linux terminology"
       }
     }
@@ -109,7 +109,7 @@ export default function TermStructuredData({ term }: TermStructuredDataProps) {
     "url": termUrl,
     "inDefinedTermSet": {
       "@type": "DefinedTermSet",
-      "name": "LinuxConcept IT Glossary",
+      "name": "HackerThink IT Glossary",
       "description": "Comprehensive glossary of IT and Linux terminology",
       "url": `${baseUrl}/term`
     },

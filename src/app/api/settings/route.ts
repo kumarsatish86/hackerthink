@@ -14,14 +14,14 @@ const pool = new Pool({
   port: parseInt(serverRuntimeConfig.DB_PORT || process.env.DB_PORT || '5432'),
   user: serverRuntimeConfig.DB_USER || process.env.DB_USER || 'postgres',
   password: serverRuntimeConfig.DB_PASSWORD || process.env.DB_PASSWORD || 'Admin1234',
-  database: serverRuntimeConfig.DB_NAME || process.env.DB_NAME || 'linuxconcept',
+  database: serverRuntimeConfig.DB_NAME || process.env.DB_NAME || 'HackerThink',
 });
 
 // GET handler for fetching settings
 export async function GET(request: NextRequest) {
   try {
     // Use Next.js built-in URL parsing with searchParams
-    const { searchParams } = new URL(request.url || '', 'http://localhost:3000');
+    const { searchParams } = new URL(request.url || '', 'http://localhost:3007');
     
     // Get keys from query parameters
     let keys: string[] = [];
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     if (Object.keys(settings).length === 0) {
       console.log('[Settings API] No settings found in database, returning defaults');
       const defaults: Record<string, string> = {
-        site_name: 'Linux Concept',
+        site_name: 'HackerThink',
         site_description: 'Learn Linux concepts, scripts, and tutorials',
         favicon_path: '/favicon.ico'
       };
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
     
     // Return default values in case of error (but with 200 status for graceful degradation)
     const defaults: Record<string, string> = {
-      site_name: 'Linux Concept',
+      site_name: 'HackerThink',
       site_description: 'Learn Linux concepts, scripts, and tutorials',
       favicon_path: '/favicon.ico'
     };

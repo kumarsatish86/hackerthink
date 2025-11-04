@@ -4,20 +4,22 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isMoreDropdownOpen, setIsMoreDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [siteSettings, setSiteSettings] = useState<{
     logo_path?: string;
     site_name?: string;
   }>({
     logo_path: '',
-    site_name: 'AIWeb'
+    site_name: 'HackerThink'
   });
   const [logoLoaded, setLogoLoaded] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
@@ -33,7 +35,7 @@ export function Navbar() {
         
         setSiteSettings({
           logo_path: settings.logo_path || '',
-          site_name: settings.site_name || 'AIWeb'
+          site_name: settings.site_name || 'HackerThink'
         });
       } catch (error) {
         console.error('Error fetching site settings:', error);
@@ -50,15 +52,18 @@ export function Navbar() {
     { name: 'Research', href: '/research' },
     { name: 'Opinion', href: '/opinion' },
     { name: 'World', href: '/world' },
+    { name: 'Articles', href: '/articles' },
     { name: 'More', href: '#', isDropdown: true },
   ];
 
   const moreItems = [
     { name: 'AI Tools', href: '/tools' },
     { name: 'AI Courses', href: '/courses' },
+    { name: 'Quizzes', href: '/quizzes' },
     { name: 'Tutorials', href: '/tutorials' },
     { name: 'AI Models', href: '/models' },
     { name: 'Datasets', href: '/datasets' },
+    { name: 'AI Commands', href: '/commands' },
     { name: 'Community', href: '/community' },
   ];
 
@@ -106,14 +111,22 @@ export function Navbar() {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <span className="text-xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
-                AIWeb
+                HackerThink
               </span>
             </Link>
           </div>
 
           {/* Search Bar */}
           <div className="flex-1 max-w-md mx-8 hidden md:flex md:items-center">
-            <div className="relative w-full">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                }
+              }}
+              className="relative w-full"
+            >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -122,9 +135,17 @@ export function Navbar() {
               <input
                 type="text"
                 placeholder="Search AI news..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    e.preventDefault();
+                    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
                 className="block w-full pl-10 pr-3 py-1.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm"
               />
-            </div>
+            </form>
           </div>
           
           {/* User Actions */}
@@ -337,6 +358,32 @@ export function Navbar() {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
+          {/* Mobile Search */}
+          <div className="px-4 py-3 border-b border-gray-200">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                  setIsMenuOpen(false);
+                }
+              }}
+              className="relative"
+            >
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search AI news..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm"
+              />
+            </form>
+          </div>
           <div className="pt-2 pb-3 space-y-1">
             {navigation.map((item) => (
               !item.isDropdown ? (

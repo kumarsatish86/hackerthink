@@ -10,7 +10,7 @@ try {
     port: parseInt(process.env.DB_PORT || '5432'),
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'Admin1234',
-    database: process.env.DB_NAME || 'ainews',
+    database: process.env.DB_NAME || 'hackerthink',
     connectionTimeoutMillis: 5000, // 5 second timeout
     idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
   });

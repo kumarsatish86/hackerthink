@@ -13,5 +13,5 @@ export function getSiteUrl(): string {
   }
   
   // In development, use localhost
-  return 'http://localhost:3000';
+  return 'http://localhost:3007';
 } 

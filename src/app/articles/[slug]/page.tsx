@@ -282,7 +282,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       },
       publisher: {
         '@type': 'Organization',
-        name: 'LinuxConcept',
+        name: 'HackerThink',
         logo: {
           '@type': 'ImageObject',
           url: 'https://ainews.com/images/logo.png'
@@ -676,7 +676,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     if (article) {
       // Update document title dynamically
       const title = article.meta_title || article.title;
-      document.title = `${title} | LinuxConcept`;
+      document.title = `${title} | HackerThink`;
       
       // Update meta description
       let metaDescription = document.querySelector('meta[name="description"]');
@@ -737,7 +737,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     
     return () => {
       // Reset title when unmounting
-      document.title = 'LinuxConcept';
+      document.title = 'HackerThink';
       
       // Remove schema script
       const schemaScript = document.querySelector('script[type="application/ld+json"]');
@@ -1276,7 +1276,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="md:w-1/2 mb-8 md:mb-0 md:pr-8">
-                <h2 className="text-3xl font-bold text-white mb-4">Stay Updated with LinuxConcept</h2>
+                <h2 className="text-3xl font-bold text-white mb-4">Stay Updated with HackerThink</h2>
                 <p className="text-indigo-100 text-lg mb-4 max-w-2xl">
                   Subscribe to our newsletter for the latest Linux tutorials, tips, command guides, and resources. 
                   Join our community of Linux enthusiasts and IT professionals.

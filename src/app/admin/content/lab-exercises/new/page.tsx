@@ -239,7 +239,7 @@ export default function NewLabExercise() {
   if (status === 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -253,7 +253,7 @@ export default function NewLabExercise() {
         </div>
         <Link
           href="/admin/content/lab-exercises"
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
         >
           Cancel
         </Link>
@@ -287,7 +287,7 @@ export default function NewLabExercise() {
               id="title"
               value={formData.title}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
               required
             />
           </div>
@@ -302,7 +302,7 @@ export default function NewLabExercise() {
               id="slug"
               value={formData.slug}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             />
             {formData.title && !formData.slug && (
               <p className="mt-1 text-xs text-gray-500">
@@ -326,7 +326,7 @@ export default function NewLabExercise() {
               name="difficulty"
               value={formData.difficulty}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             >
               <option value="Beginner">Beginner</option>
               <option value="Intermediate">Intermediate</option>
@@ -345,7 +345,7 @@ export default function NewLabExercise() {
               min="1"
               value={formData.duration}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             />
           </div>
 
@@ -360,7 +360,7 @@ export default function NewLabExercise() {
               rows={3}
               value={formData.description}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             />
           </div>
 
@@ -374,7 +374,7 @@ export default function NewLabExercise() {
               rows={3}
               value={formData.prerequisites}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
               placeholder="Enter prerequisites, one per line..."
             />
             <p className="mt-1 text-xs text-gray-500">
@@ -392,7 +392,7 @@ export default function NewLabExercise() {
               id="related_course_id"
               value={formData.related_course_id}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             />
           </div>
 
@@ -405,7 +405,7 @@ export default function NewLabExercise() {
               name="author_id"
               value={formData.author_id}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
               required
             >
               <option value="">Select an author</option>
@@ -427,7 +427,7 @@ export default function NewLabExercise() {
               id="featured_image"
               value={formData.featured_image}
               onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
             />
           </div>
 
@@ -484,7 +484,7 @@ export default function NewLabExercise() {
                             newResources[index] = { ...resource, title: e.target.value };
                             setFormData({ ...formData, helpful_resources: newResources });
                           }}
-                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                         />
                         <input
                           type="url"
@@ -495,7 +495,7 @@ export default function NewLabExercise() {
                             newResources[index] = { ...resource, url: e.target.value };
                             setFormData({ ...formData, helpful_resources: newResources });
                           }}
-                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                         />
                         <button
                           type="button"
@@ -542,7 +542,7 @@ export default function NewLabExercise() {
                           });
                         }}
                         placeholder="e.g., Terminal, Command Line, etc."
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                       />
                     </div>
                     <div>
@@ -559,7 +559,7 @@ export default function NewLabExercise() {
                           });
                         }}
                         placeholder="Enter terminal commands, one per line:&#10;$ ls -la&#10;total 32&#10;drwxr-xr-x 5 user staff 160 Mar 10 14:23 .&#10;drwxr-xr-x 3 user staff 96 Mar 10 14:22 ..&#10;-rw-r--r-- 1 user staff 108 Mar 10 14:23 script.sh&#10;$ chmod +x script.sh&#10;$ ./script.sh&#10;Hello, World!"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm font-mono"
                       />
                     </div>
                   </div>
@@ -580,7 +580,7 @@ export default function NewLabExercise() {
                             newExercises[index] = { ...exercise, title: e.target.value };
                             setFormData({ ...formData, related_exercises: newExercises });
                           }}
-                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                         />
                         <input
                           type="text"
@@ -591,7 +591,7 @@ export default function NewLabExercise() {
                             newExercises[index] = { ...exercise, slug: e.target.value };
                             setFormData({ ...formData, related_exercises: newExercises });
                           }}
-                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                         />
                         <button
                           type="button"
@@ -662,7 +662,7 @@ export default function NewLabExercise() {
                 id="meta_title"
                     value={seoData.meta_title}
                     onChange={(e) => handleSEOChange('meta_title', e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                     placeholder="Enter meta title for SEO..."
               />
             </div>
@@ -677,7 +677,7 @@ export default function NewLabExercise() {
                 rows={3}
                     value={seoData.meta_description}
                     onChange={(e) => handleSEOChange('meta_description', e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
                     placeholder="Enter meta description for SEO..."
               />
             </div>
@@ -693,7 +693,7 @@ export default function NewLabExercise() {
                     rows={8}
                     value={seoData.schema_json}
                     onChange={(e) => handleSEOChange('schema_json', e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono text-xs"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm font-mono text-xs"
                     placeholder="Schema JSON will be generated automatically when you click 'Auto Generate SEO'..."
                   />
                   <p className="mt-1 text-xs text-gray-500">
@@ -713,7 +713,7 @@ export default function NewLabExercise() {
                   type="checkbox"
                   checked={formData.published}
                   onChange={handleCheckboxChange}
-                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                 />
               </div>
               <div className="ml-3 text-sm">
@@ -728,7 +728,7 @@ export default function NewLabExercise() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             {isSubmitting ? 'Saving...' : 'Save Lab Exercise'}
           </button>

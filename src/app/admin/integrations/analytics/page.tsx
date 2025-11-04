@@ -118,7 +118,7 @@ export default function AnalyticsIntegrationsPage() {
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Analytics Integrations</h1>
         <div className="flex justify-center mt-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         </div>
       </div>
     );
@@ -187,7 +187,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="https://analytics.example.com/"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'url', integration.config.url)}
                           disabled={saving}
                         >
@@ -218,7 +218,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="1"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'siteId', integration.config.siteId)}
                           disabled={saving}
                         >
@@ -236,7 +236,7 @@ export default function AnalyticsIntegrationsPage() {
                         id={`disable-cookies-${integration.id}`}
                         checked={integration.config.disableCookies || false}
                         onChange={() => handleUpdateConfig(integration, 'disableCookies', !integration.config.disableCookies)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`disable-cookies-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Disable cookies tracking
@@ -266,7 +266,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="yourdomain.com"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'domain', integration.config.domain)}
                           disabled={saving}
                         >
@@ -297,7 +297,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="https://plausible.io/js/script.js"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'scriptUrl', integration.config.scriptUrl)}
                           disabled={saving}
                         >
@@ -332,7 +332,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="ABCDEF"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'siteId', integration.config.siteId)}
                           disabled={saving}
                         >
@@ -363,7 +363,7 @@ export default function AnalyticsIntegrationsPage() {
                           placeholder="stats.yourdomain.com"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'customDomain', integration.config.customDomain)}
                           disabled={saving}
                         >

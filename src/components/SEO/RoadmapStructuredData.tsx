@@ -12,7 +12,7 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
     "image": roadmap.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/roadmap-default.png`,
     "provider": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "educationalLevel": roadmap.level || "Intermediate",
@@ -57,7 +57,7 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
     "image": roadmap.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/roadmap-default.png`,
     "provider": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "courseMode": "online",
@@ -87,7 +87,7 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
       },
       "instructor": {
         "@type": "Person",
-        "name": "LinuxConcept Team"
+        "name": "HackerThink Team"
       }
     },
     "syllabusSections": Array.isArray(roadmap.modules) ? roadmap.modules.map((module, index) => ({
@@ -121,12 +121,12 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
     "image": roadmap.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/roadmap-default.png`,
     "author": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "dateCreated": roadmap.created_at,
@@ -176,12 +176,12 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
     "image": roadmap.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/roadmap-default.png`,
     "author": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "dateCreated": roadmap.created_at,
@@ -265,7 +265,7 @@ export default function RoadmapStructuredData({ roadmap }: RoadmapStructuredData
     "image": roadmap.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/roadmap-default.png`,
     "isPartOf": {
       "@type": "WebSite",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "about": {

@@ -40,7 +40,7 @@ export const generateToolStructuredData = (tool: {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com"
     }
   };
@@ -98,7 +98,7 @@ export const generateCommandStructuredData = (command: {
     "operatingSystem": command.platform || "Linux",
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com",
       "logo": {
         "@type": "ImageObject",
@@ -140,13 +140,13 @@ export const generateScriptStructuredData = (script: {
     "keywords": script.tags ? script.tags.join(", ") : script.script_type,
     "author": {
       "@type": "Person",
-      "name": script.author_name || "LinuxConcept"
+      "name": script.author_name || "HackerThink"
     },
     "dateCreated": script.created_at,
     "dateModified": script.updated_at,
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com"
     },
     "educationalUse": script.script_type || "script",
@@ -192,7 +192,7 @@ export const generateLabExerciseStructuredData = (labExercise: {
     }),
     "provider": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com"
     },
     ...(labExercise.author_name && {
@@ -225,7 +225,7 @@ export const generateWebStoryStructuredData = (story: {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": story.title,
-    "description": story.description || `${story.title} - Web Story by LinuxConcept`,
+    "description": story.description || `${story.title} - Web Story by HackerThink`,
     "url": `https://ainews.com/stories/${story.slug}`,
     ...(story.date_published && { "datePublished": story.date_published }),
     ...(story.date_modified && { "dateModified": story.date_modified }),
@@ -237,7 +237,7 @@ export const generateWebStoryStructuredData = (story: {
     }),
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com",
       "logo": {
         "@type": "ImageObject",
@@ -287,7 +287,7 @@ export const generateCourseStructuredData = (course: {
     ...(course.author_name && {
       "provider": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "sameAs": "https://ainews.com"
       },
       "instructor": {
@@ -366,7 +366,7 @@ export const generateRoadmapStructuredData = (roadmap: {
     }),
     "provider": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": "https://ainews.com"
     },
     ...(roadmap.modules && roadmap.modules.length > 0 && {

@@ -53,11 +53,11 @@ export default function ScriptStructuredData({ script }: ScriptStructuredDataPro
     "dateModified": script.updated_at,
     "author": {
       "@type": "Person",
-      "name": script.author_name || "LinuxConcept Team"
+      "name": script.author_name || "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "offers": {
@@ -93,11 +93,11 @@ export default function ScriptStructuredData({ script }: ScriptStructuredDataPro
         "dateModified": script.updated_at,
         "author": {
           "@type": "Person",
-          "name": script.author_name || "LinuxConcept Team"
+          "name": script.author_name || "HackerThink Team"
         },
         "publisher": {
           "@type": "Organization",
-          "name": "LinuxConcept",
+          "name": "HackerThink",
           "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
         },
         "offers": {
@@ -131,11 +131,11 @@ export default function ScriptStructuredData({ script }: ScriptStructuredDataPro
     "image": script.featured_image || `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/images/script-default.png`,
     "author": {
       "@type": "Person",
-      "name": script.author_name || "LinuxConcept Team"
+      "name": script.author_name || "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "dateCreated": script.created_at,
@@ -195,11 +195,11 @@ export default function ScriptStructuredData({ script }: ScriptStructuredDataPro
     "url": `${process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'}/scripts/${script.slug}`,
     "author": {
       "@type": "Person",
-      "name": script.author_name || "LinuxConcept Team"
+      "name": script.author_name || "HackerThink Team"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "LinuxConcept",
+      "name": "HackerThink",
       "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
     },
     "dateCreated": script.created_at,

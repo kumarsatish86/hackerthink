@@ -82,7 +82,7 @@ export async function fetchSiteSettings(keys) {
       // Server-side: construct from environment or use localhost
       baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
                 process.env.NEXT_PUBLIC_API_URL || 
-                'http://localhost:3000';
+                'http://localhost:3007';
     }
     
     // Construct the full URL
@@ -104,7 +104,7 @@ export async function fetchSiteSettings(keys) {
     
     // Return default settings as fallback
     return {
-      site_name: 'AIWeb',
+      site_name: 'HackerThink',
       site_description: 'Your comprehensive platform for AI news, tools, learning, and model training',
       favicon_path: '/favicon.ico',
     };

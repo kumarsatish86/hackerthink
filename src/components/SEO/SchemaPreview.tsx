@@ -32,7 +32,7 @@ export default function SchemaPreview({ scriptData }: SchemaPreviewProps) {
       "datePublished": new Date().toISOString(),
       "author": {
         "@type": "Organization",
-        "name": "LinuxConcept"
+        "name": "HackerThink"
       },
       "offers": {
         "@type": "Offer",
@@ -247,7 +247,7 @@ export default function SchemaPreview({ scriptData }: SchemaPreviewProps) {
         <h5 className="text-sm font-medium text-blue-800 mb-2">Validate Schema:</h5>
         <div className="flex flex-wrap gap-2">
           <a
-            href={`https://search.google.com/test/rich-results?url=${encodeURIComponent(`http://localhost:3000/scripts/${scriptData.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}`)}`}
+            href={`https://search.google.com/test/rich-results?url=${encodeURIComponent(`http://localhost:3007/scripts/${scriptData.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded hover:bg-blue-200"
@@ -255,7 +255,7 @@ export default function SchemaPreview({ scriptData }: SchemaPreviewProps) {
             🔍 Google Rich Results
           </a>
           <a
-            href={`https://validator.schema.org/?url=${encodeURIComponent(`http://localhost:3000/scripts/${scriptData.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}`)}`}
+            href={`https://validator.schema.org/?url=${encodeURIComponent(`http://localhost:3007/scripts/${scriptData.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded hover:bg-blue-200"

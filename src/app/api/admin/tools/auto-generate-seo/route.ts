@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate SEO data based on the content
-    const seo_title = `${title} - ${category || 'Tool'} | LinuxConcept`;
+    const seo_title = `${title} - ${category || 'Tool'} | HackerThink`;
     const seo_description = description 
       ? `${description.substring(0, 150)}${description.length > 150 ? '...' : ''}`
       : `Use this ${category || 'tool'} for ${platform || 'Linux'} system administration and management tasks.`;
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       },
       "publisher": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com'
       },
       "keywords": keywords,

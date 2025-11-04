@@ -394,7 +394,7 @@ const TutorialsPage = () => {
       'security': <FaShieldAlt className="text-red-600" />,
       'devops': <FaRocket className="text-orange-600" />,
     };
-    return iconMap[iconName] || <FaBook className="text-indigo-600" />;
+    return iconMap[iconName] || <FaBook className="text-red-600" />;
   };
 
   // Format date for display
@@ -445,7 +445,7 @@ const TutorialsPage = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ), 
-      color: 'indigo' as const
+      color: 'red' as const
     },
     { 
       title: 'Active', 
@@ -502,7 +502,7 @@ const TutorialsPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -522,7 +522,7 @@ const TutorialsPage = () => {
               setLastFetchTime(Date.now());
             }}
             disabled={loading}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             title={`Last refreshed: ${lastFetchTime ? new Date(lastFetchTime).toLocaleTimeString() : 'Never'}`}
           >
             <svg className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -586,7 +586,7 @@ const TutorialsPage = () => {
               <input
                 id="search"
                 name="search"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm"
                 placeholder="Search tutorials by title, description, category..."
                 type="search"
                 value={searchTerm}
@@ -605,7 +605,7 @@ const TutorialsPage = () => {
 
           <div className="flex flex-col sm:flex-row gap-4">
             <select
-              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               value={filterStatus}
               onChange={(e) => {
                 setFilterStatus(e.target.value);
@@ -620,7 +620,7 @@ const TutorialsPage = () => {
             <button
               type="button"
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 min-w-[120px] justify-center"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 min-w-[120px] justify-center"
             >
               <svg className="-ml-1 mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
@@ -657,7 +657,7 @@ const TutorialsPage = () => {
               </label>
               <select
                 id="filterCategory"
-                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
                 value={filterCategory}
                 onChange={(e) => {
                   setFilterCategory(e.target.value);
@@ -689,7 +689,7 @@ const TutorialsPage = () => {
               <select
                 value={bulkAction}
                 onChange={(e) => setBulkAction(e.target.value)}
-                className="block w-full sm:w-auto pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="block w-full sm:w-auto pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               >
                 <option value="">Choose action...</option>
                 <option value="activate">Activate</option>
@@ -714,7 +714,7 @@ const TutorialsPage = () => {
                   setSelectedTutorials(new Set());
                   setSelectAll(false);
                 }}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 Clear Selection
               </button>
@@ -735,7 +735,7 @@ const TutorialsPage = () => {
                       type="checkbox"
                       checked={selectAll}
                       onChange={handleSelectAll}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                     />
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -812,7 +812,7 @@ const TutorialsPage = () => {
                         type="checkbox"
                         checked={selectedTutorials.has(tutorial.id)}
                         onChange={() => handleSelectTutorial(tutorial.id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -822,7 +822,7 @@ const TutorialsPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="max-w-md">
-                        <div className="text-sm font-medium text-indigo-600 hover:underline">
+                        <div className="text-sm font-medium text-red-600 hover:underline">
                           <Link href={`/admin/content/tutorials/edit-tutorial/${tutorial.id}`}>
                             {tutorial.title}
                           </Link>
@@ -865,7 +865,7 @@ const TutorialsPage = () => {
                             tutorial.is_active
                               ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200'
                               : 'text-green-700 bg-green-100 hover:bg-green-200'
-                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50`}
+                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50`}
                           title={tutorial.is_active ? 'Deactivate' : 'Activate'}
                         >
                           {tutorial.is_active ? (
@@ -881,7 +881,7 @@ const TutorialsPage = () => {
 
                     <Link
                       href={`/admin/content/tutorials/edit-tutorial/${tutorial.id}`}
-                          className="inline-flex items-center p-2 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="inline-flex items-center p-2 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       title="Edit Tutorial"
                     >
                       <FaEdit className="h-4 w-4" />
@@ -890,7 +890,7 @@ const TutorialsPage = () => {
                         <Link
                           href={`/tutorials/${tutorial.slug}`}
                           target="_blank"
-                          className="inline-flex items-center p-2 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          className="inline-flex items-center p-2 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           title="View Tutorial"
                         >
                           <FaEye className="h-4 w-4" />
@@ -910,7 +910,7 @@ const TutorialsPage = () => {
                             </button>
                             <button
                               onClick={() => setDeleteConfirm(null)}
-                              className="inline-flex items-center p-2 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              className="inline-flex items-center p-2 border border-gray-300 text-xs font-medium rounded shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                               title="Cancel"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -975,7 +975,7 @@ const TutorialsPage = () => {
                 id="itemsPerPage"
                 value={itemsPerPage}
                 onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                className="block w-24 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="block w-24 pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -1027,7 +1027,7 @@ const TutorialsPage = () => {
                       onClick={() => handlePageChange(pageNum)}
                       className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                         pageNum === currentPage
-                          ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                          ? 'z-10 bg-red-50 border-red-500 text-red-600'
                           : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                       }`}
                     >
@@ -1057,3 +1057,4 @@ const TutorialsPage = () => {
 };
 
 export default TutorialsPage;
+

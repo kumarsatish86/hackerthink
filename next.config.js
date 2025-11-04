@@ -23,7 +23,7 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000',
+        port: '3007',
         pathname: '/uploads/**',
       },
     ],
@@ -31,7 +31,7 @@ const nextConfig = {
   // Disable static generation for problematic pages
   excludeDefaultMomentLocales: true,
   generateBuildId: async () => {
-    return 'ainews-build-' + Date.now()
+    return 'hackerthink-build-' + Date.now()
   },
   // Simplified webpack configuration
   webpack: (config, { isServer, dev }) => {
@@ -74,7 +74,7 @@ const nextConfig = {
     DB_PORT: process.env.DB_PORT || '5432',
     DB_USER: process.env.DB_USER || 'postgres',
     DB_PASSWORD: process.env.DB_PASSWORD || 'Admin1234',
-    DB_NAME: process.env.DB_NAME || 'ainews',
+    DB_NAME: process.env.DB_NAME || 'hackerthink',
   },
   publicRuntimeConfig: {
     // Will be available on both server and client

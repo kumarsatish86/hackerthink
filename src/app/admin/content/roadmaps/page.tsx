@@ -187,7 +187,7 @@ export default function RoadmapsListPage() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -201,7 +201,7 @@ export default function RoadmapsListPage() {
         </div>
         <Link
           href="/admin/content/roadmaps/new"
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
         >
           Create New Roadmap
         </Link>
@@ -220,7 +220,7 @@ export default function RoadmapsListPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search roadmaps..."
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
             />
           </div>
           <div>
@@ -231,7 +231,7 @@ export default function RoadmapsListPage() {
               id="level-filter"
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
               <option value="all">All Levels</option>
               <option value="Beginner">Beginner</option>
@@ -248,7 +248,7 @@ export default function RoadmapsListPage() {
               id="status-filter"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
               <option value="all">All Status</option>
               <option value="published">Published</option>
@@ -264,7 +264,7 @@ export default function RoadmapsListPage() {
                 id="sort"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="flex-1 p-2 border border-gray-300 rounded-l focus:ring-2 focus:ring-red-500 focus:border-red-500"
               >
                 <option value="updated_at">Updated Date</option>
                 <option value="title">Title</option>
@@ -273,7 +273,7 @@ export default function RoadmapsListPage() {
               </select>
               <button
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-2 border border-l-0 border-gray-300 rounded-r bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500"
+                className="px-3 py-2 border border-l-0 border-gray-300 rounded-r bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-red-500"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </button>
@@ -284,10 +284,10 @@ export default function RoadmapsListPage() {
 
       {/* Bulk Actions Bar */}
       {selectedRoadmaps.length > 0 && (
-        <div className="mb-4 bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <span className="text-sm font-medium text-indigo-700">
+              <span className="text-sm font-medium text-red-700">
                 {selectedRoadmaps.length} roadmap{selectedRoadmaps.length === 1 ? '' : 's'} selected
               </span>
             </div>
@@ -340,7 +340,7 @@ export default function RoadmapsListPage() {
                     type="checkbox"
                     checked={selectedRoadmaps.length === paginatedRoadmaps.length && paginatedRoadmaps.length > 0}
                     onChange={handleSelectAll}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -372,13 +372,13 @@ export default function RoadmapsListPage() {
                 </tr>
               ) : (
                 paginatedRoadmaps.map((roadmap) => (
-                  <tr key={roadmap.id} className={selectedRoadmaps.includes(roadmap.id) ? 'bg-indigo-50' : ''}>
+                  <tr key={roadmap.id} className={selectedRoadmaps.includes(roadmap.id) ? 'bg-red-50' : ''}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <input
                         type="checkbox"
                         checked={selectedRoadmaps.includes(roadmap.id)}
                         onChange={() => handleSelectRoadmap(roadmap.id)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -417,7 +417,7 @@ export default function RoadmapsListPage() {
                         </Link>
                         <Link
                           href={`/admin/content/roadmaps/${roadmap.id}`}
-                          className="inline-flex items-center p-2 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded-full"
+                          className="inline-flex items-center p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-full"
                           title="Edit roadmap"
                         >
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -479,7 +479,7 @@ export default function RoadmapsListPage() {
                     id="items-per-page"
                     value={itemsPerPage}
                     onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                    className="p-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="p-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   >
                     <option value={10}>10</option>
                     <option value={20}>20</option>
@@ -507,7 +507,7 @@ export default function RoadmapsListPage() {
                         onClick={() => setCurrentPage(pageNum)}
                         className={`px-3 py-1 text-sm border rounded ${
                           currentPage === pageNum
-                            ? 'bg-indigo-600 text-white border-indigo-600'
+                            ? 'bg-red-600 text-white border-red-600'
                             : 'border-gray-300 hover:bg-gray-50'
                         }`}
                       >

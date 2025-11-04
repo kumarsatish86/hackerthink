@@ -30,7 +30,7 @@ export default function SEOLayout({ children }: { children: React.ReactNode }) {
                   href={item.path}
                   className={`px-4 py-3 text-sm font-medium whitespace-nowrap ${
                     isActive
-                      ? 'border-b-2 border-indigo-500 text-indigo-600'
+                      ? 'border-b-2 border-red-500 text-red-600'
                       : 'text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >

@@ -1,5 +1,5 @@
 /**
- * Script to create missing tables in the LinuxConcept database
+ * Script to create missing tables in the HackerThink database
  */
 const { Pool } = require('pg');
 
@@ -9,7 +9,7 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
 async function createMissingTables() {
@@ -191,7 +191,7 @@ async function createMissingTables() {
       
       // Insert default settings
       const defaultSettings = [
-        { key: 'site_name', value: 'LinuxConcept', type: 'string', category: 'general' },
+        { key: 'site_name', value: 'HackerThink', type: 'string', category: 'general' },
         { key: 'site_tagline', value: 'Learn Linux concepts, scripts and tools', type: 'string', category: 'general' },
         { key: 'contact_email', value: 'admin@ainews.com', type: 'string', category: 'contact' },
         { key: 'enable_comments', value: 'true', type: 'boolean', category: 'comments' },

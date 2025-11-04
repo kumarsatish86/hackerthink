@@ -11,7 +11,7 @@ export async function getSiteSettings(keys: string[] = []): Promise<Record<strin
     // Get the base URL - ensure it works in both browser and server environments
     const baseUrl = typeof window !== 'undefined' 
       ? window.location.origin 
-      : (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
+      : (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3007');
     
     // Use dynamicFetch instead of direct fetch with no-store
     const response = await dynamicFetch(`${baseUrl}/api/settings${queryParams}`);
@@ -54,7 +54,7 @@ export async function saveSiteSettings(settings: Record<string, string>): Promis
     // Get the base URL - ensure it works in both browser and server environments
     const baseUrl = typeof window !== 'undefined' 
       ? window.location.origin 
-      : (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000');
+      : (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3007');
     
     // Use dynamicFetch instead of direct fetch
     const response = await dynamicFetch(`${baseUrl}/api/settings`, {

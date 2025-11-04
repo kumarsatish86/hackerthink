@@ -7,7 +7,7 @@ import { RoadmapData, RoadmapPageProps } from '@/types/roadmap';
 // Fetch roadmap data for metadata generation
 async function getRoadmapData(slug: string): Promise<RoadmapData | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/learning-roadmap/${slug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/learning-roadmap/${slug}`, {
       cache: 'no-store'
     });
     
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: RoadmapPageProps): Promise<Me
   
   if (!roadmap) {
     return {
-      title: 'Roadmap Not Found | LinuxConcept Learning Roadmaps',
+      title: 'Roadmap Not Found | HackerThink Learning Roadmaps',
       description: 'The requested learning roadmap could not be found.',
     };
   }
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: RoadmapPageProps): Promise<Me
   const roadmapUrl = `${baseUrl}/learning-roadmap/${roadmap.slug}`;
   const imageUrl = roadmap.featured_image || `${baseUrl}/images/roadmap-default.png`;
   
-  const title = roadmap.seo_title || `${roadmap.title} - Learning Roadmap | LinuxConcept`;
+  const title = roadmap.seo_title || `${roadmap.title} - Learning Roadmap | HackerThink`;
   const description = roadmap.seo_description || roadmap.description || 
     `Master ${roadmap.title} with our comprehensive learning roadmap. ${roadmap.level} level course with ${roadmap.modules?.length || 0} modules.`;
 
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: RoadmapPageProps): Promise<Me
     title,
     description,
     keywords: keywords.join(', '),
-    authors: [{ name: "LinuxConcept Team" }],
+    authors: [{ name: "HackerThink Team" }],
     openGraph: {
       type: 'article',
       title,
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: RoadmapPageProps): Promise<Me
           alt: `${roadmap.title} - Learning Roadmap`,
         },
       ],
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       locale: 'en_US',
       publishedTime: roadmap.created_at,
       modifiedTime: roadmap.updated_at,
@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: RoadmapPageProps): Promise<Me
       'roadmap:prerequisites': roadmap.prerequisites?.length || 0,
       'roadmap:career-outcomes': roadmap.career_outcomes?.length || 0,
       'course:type': 'learning-roadmap',
-      'course:provider': 'LinuxConcept',
+      'course:provider': 'HackerThink',
       'course:free': 'true',
     },
   };

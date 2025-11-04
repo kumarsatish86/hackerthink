@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 
 const faqs = [
   {
-    question: 'What is LinuxConcept?',
-    answer: 'LinuxConcept is a comprehensive platform for learning Linux and IT skills with hands-on labs, tutorials, and community support.'
+    question: 'What is HackerThink?',
+    answer: 'HackerThink is a comprehensive platform for learning Linux and IT skills with hands-on labs, tutorials, and community support.'
   },
   {
-    question: 'Is LinuxConcept free to use?',
+    question: 'Is HackerThink free to use?',
     answer: 'Many resources are free, but we also offer premium courses and labs for advanced learning and certification.'
   },
   {

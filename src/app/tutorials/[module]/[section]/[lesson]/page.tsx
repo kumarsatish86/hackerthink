@@ -37,7 +37,7 @@ interface Lesson {
 // Function to fetch lesson data for metadata generation
 async function getLessonData(moduleSlug: string, sectionSlug: string, lessonSlug: string): Promise<Lesson | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007';
     const response = await fetch(`${baseUrl}/api/tutorials/lessons/view/${lessonSlug}`, {
       cache: 'no-store' // Ensure fresh data for metadata
     });
@@ -72,12 +72,12 @@ export async function generateMetadata({
   
   if (!lesson) {
     return {
-      title: 'Lesson Not Found - LinuxConcept',
+      title: 'Lesson Not Found - HackerThink',
       description: 'The requested lesson could not be found.',
     };
   }
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007';
   const metaTitle = lesson.meta_title || lesson.title;
   const metaDescription = lesson.meta_description || lesson.excerpt || lesson.content.substring(0, 160).replace(/<[^>]*>/g, '');
   const canonicalUrl = lesson.canonical_url || `${baseUrl}/tutorials/${moduleSlug}/${sectionSlug}/${lessonSlug}`;
@@ -93,12 +93,12 @@ export async function generateMetadata({
       "image": lesson.og_image || `${baseUrl}/images/tutorial-default.jpg`,
       "author": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": baseUrl
       },
       "publisher": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": baseUrl,
         "logo": {
           "@type": "ImageObject",
@@ -142,7 +142,7 @@ export async function generateMetadata({
       "description": metaDescription,
       "provider": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": baseUrl
       },
       "courseCode": lesson.slug,
@@ -168,7 +168,7 @@ export async function generateMetadata({
         "endDate": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year from now
                  "instructor": {
            "@type": "Person",
-           "name": "LinuxConcept Team",
+           "name": "HackerThink Team",
            "url": baseUrl
          },
         "courseWorkload": `PT${lesson.reading_time || lesson.estimated_time}M`
@@ -247,12 +247,12 @@ export async function generateMetadata({
     title: metaTitle,
     description: metaDescription,
     keywords: lesson.meta_keywords || `${lesson.difficulty_level}, linux tutorial, ${lesson.title.toLowerCase()}`,
-    authors: [{ name: 'LinuxConcept' }],
+    authors: [{ name: 'HackerThink' }],
     openGraph: {
       title: lesson.og_title || lesson.title,
       description: lesson.og_description || lesson.excerpt || lesson.content.substring(0, 160).replace(/<[^>]*>/g, ''),
       url: canonicalUrl,
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       images: [
         {
           url: lesson.og_image || `${baseUrl}/images/tutorial-default.jpg`,

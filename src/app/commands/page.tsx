@@ -25,54 +25,68 @@ export default function CommandsPage() {
   const [platformFilter, setPlatformFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Featured command categories with descriptions
+  // Featured command categories with descriptions (new project taxonomy)
   const featuredCategories = [
     {
-      title: 'File Management',
-      description: 'Manage files and directories on your system',
-      icon: '📁',
-      category: 'file-management',
-      commands: ['ls', 'cp', 'mv', 'rm']
+      title: 'AI Framework CLIs',
+      description: 'Framework launchers, profilers, and ecosystem tooling',
+      icon: '🧠',
+      category: 'ai-framework-clis',
+      commands: ['tensorboard', 'torchrun', 'tflite-convert', 'saved-model-cli']
     },
     {
-      title: 'User Management',
-      description: 'Create, modify, and manage user accounts',
-      icon: '👤',
-      category: 'user-management',
-      commands: ['useradd', 'userdel', 'passwd', 'chage']
+      title: 'Model Deployment & Inference',
+      description: 'Serve, scale, and benchmark models in production',
+      icon: '🚀',
+      category: 'model-deployment-inference-cli',
+      commands: ['vllm', 'text-generation-launcher', 'uvicorn', 'torchserve']
     },
     {
-      title: 'Process Management',
-      description: 'Monitor and control system processes',
-      icon: '⚙️',
-      category: 'process-management',
-      commands: ['ps', 'top', 'kill', 'nice']
+      title: 'GPU / CUDA / NVIDIA',
+      description: 'Diagnostics, profiling, and configuration for NVIDIA GPUs',
+      icon: '🟩',
+      category: 'gpu-cuda-nvidia',
+      commands: ['nvidia-smi', 'glmark2', 'vulkaninfo', 'clinfo']
     },
     {
-      title: 'Networking',
-      description: 'Network configuration and troubleshooting',
-      icon: '🌐',
-      category: 'networking',
-      commands: ['ping', 'ssh', 'ifconfig', 'netstat']
+      title: 'ROCm / AMD GPU',
+      description: 'AMD GPU utilities, profilers, and HIP/HSA tooling',
+      icon: '🟥',
+      category: 'rocm-amd-gpu',
+      commands: ['rocminfo', 'rocm-smi', 'rocprof', 'amdgpu-top']
     },
     {
-      title: 'Permissions',
-      description: 'Manage file and directory permissions',
-      icon: '🔒',
-      category: 'permissions',
-      commands: ['chmod', 'chown', 'chgrp', 'umask']
+      title: 'Hugging Face CLI',
+      description: 'Manage models, datasets, spaces, and uploads',
+      icon: '🤗',
+      category: 'hugging-face-cli',
+      commands: ['huggingface-cli', 'huggingface-cli upload', 'huggingface-cli repo', 'huggingface-cli search']
     },
     {
-      title: 'Package Management',
-      description: 'Install, update, and manage software packages',
-      icon: '📦',
-      category: 'package-management',
-      commands: ['apt', 'yum', 'dnf', 'pacman']
+      title: 'Python Env & Package Mgmt',
+      description: 'Virtualenvs, package managers, and notebooks',
+      icon: '🐍',
+      category: 'python-env-package-management',
+      commands: ['python', 'pip', 'conda', 'poetry']
+    },
+    {
+      title: 'Data Prep & Processing',
+      description: 'CSV/JSON/Parquet tools, profiling, and validation',
+      icon: '🧰',
+      category: 'data-preparation-processing',
+      commands: ['csvcut', 'jq', 'parquet-tools', 'pandas-profiling']
+    },
+    {
+      title: 'Experiment Tracking & Viz',
+      description: 'Track runs and visualize metrics and artifacts',
+      icon: '📊',
+      category: 'experiment-tracking-visualization',
+      commands: ['mlflow', 'wandb', 'dash', 'plotly']
     }
   ];
   
   // Top platforms
-  const topPlatforms = ['linux', 'unix', 'macos', 'all'];
+  const topPlatforms = ['all'];
   
   useEffect(() => {
     // Fetch commands from API
@@ -116,13 +130,14 @@ export default function CommandsPage() {
   
   const categories = [
     { id: 'all', name: 'All Categories' },
-    { id: 'file-management', name: 'File Management' },
-    { id: 'user-management', name: 'User Management' },
-    { id: 'process-management', name: 'Process Management' },
-    { id: 'networking', name: 'Networking' },
-    { id: 'permissions', name: 'Permissions' },
-    { id: 'package-management', name: 'Package Management' },
-    { id: 'system-management', name: 'System Management' },
+    { id: 'ai-framework-clis', name: 'AI Framework CLIs' },
+    { id: 'model-deployment-inference-cli', name: 'Model Deployment & Inference' },
+    { id: 'gpu-cuda-nvidia', name: 'GPU / CUDA / NVIDIA' },
+    { id: 'rocm-amd-gpu', name: 'ROCm / AMD GPU' },
+    { id: 'hugging-face-cli', name: 'Hugging Face CLI' },
+    { id: 'python-env-package-management', name: 'Python Env & Package Mgmt' },
+    { id: 'data-preparation-processing', name: 'Data Preparation & Processing' },
+    { id: 'experiment-tracking-visualization', name: 'Experiment Tracking & Visualization' },
     { id: 'misc', name: 'Miscellaneous' }
   ];
   
@@ -182,10 +197,10 @@ export default function CommandsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-          Linux Commands Library
+          Command Library
         </h1>
         <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
-          Discover and learn about essential Linux commands with syntax, examples, and detailed explanations
+          Explore practical CLI tools across AI frameworks, deployment, GPU tooling, data preparation, and tracking
         </p>
       </div>
       
@@ -372,9 +387,9 @@ export default function CommandsPage() {
       
       <section className="bg-gray-50 rounded-lg p-8 mb-12">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Master Linux Commands</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Master Modern CLI Workflows</h2>
           <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-            Enhance your Linux skills by learning these essential commands. Perfect for beginners and experienced users alike.
+            Discover the most useful commands for AI, data, deployment, GPUs, and experiment tracking — all in one place.
           </p>
           <a 
             href="#commands" 

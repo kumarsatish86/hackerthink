@@ -406,7 +406,7 @@ export default function TaxonomyManagement() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -423,7 +423,7 @@ export default function TaxonomyManagement() {
           
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 flex items-center space-x-2"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center space-x-2"
           >
             <span className="text-lg">+</span>
             <span>Create {activeTab === 'categories' ? 'Category' : 'Tag'}</span>
@@ -434,7 +434,7 @@ export default function TaxonomyManagement() {
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <div className="text-2xl font-bold text-indigo-600">{stats.total_categories}</div>
+              <div className="text-2xl font-bold text-red-600">{stats.total_categories}</div>
               <div className="text-sm text-gray-600">Total Categories</div>
             </div>
             <div className="bg-white p-4 rounded-lg border border-gray-200">
@@ -479,7 +479,7 @@ export default function TaxonomyManagement() {
           onClick={() => setActiveTab('categories')}
           className={`px-4 py-2 rounded-md transition-colors ${
             activeTab === 'categories'
-              ? 'bg-white text-indigo-600 shadow-sm'
+              ? 'bg-white text-red-600 shadow-sm'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
@@ -489,7 +489,7 @@ export default function TaxonomyManagement() {
           onClick={() => setActiveTab('tags')}
           className={`px-4 py-2 rounded-md transition-colors ${
             activeTab === 'tags'
-              ? 'bg-white text-indigo-600 shadow-sm'
+              ? 'bg-white text-red-600 shadow-sm'
               : 'text-gray-600 hover:text-gray-900'
           }`}
         >
@@ -506,7 +506,7 @@ export default function TaxonomyManagement() {
             <select
               value={selectedContentType}
               onChange={(e) => setSelectedContentType(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               {contentTypes.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
@@ -522,7 +522,7 @@ export default function TaxonomyManagement() {
               placeholder={`Search ${activeTab}...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
             />
           </div>
 
@@ -534,7 +534,7 @@ export default function TaxonomyManagement() {
                 <select
                   value={bulkAction}
                   onChange={(e) => setBulkAction(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                 >
                   <option value="">Select Action</option>
                   <option value="delete">Delete</option>
@@ -569,7 +569,7 @@ export default function TaxonomyManagement() {
                         : selectedItems.size === filteredTags.length && filteredTags.length > 0
                     }
                     onChange={handleSelectAll}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -603,7 +603,7 @@ export default function TaxonomyManagement() {
                           type="checkbox"
                           checked={selectedItems.has(category.id)}
                           onChange={() => handleSelectItem(category.id)}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                          className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -630,7 +630,7 @@ export default function TaxonomyManagement() {
                                                  <div className="flex justify-end space-x-2">
                            <button
                              onClick={() => handleEditCategory(category)}
-                             className="text-indigo-600 hover:text-indigo-900"
+                             className="text-red-600 hover:text-red-900"
                            >
                              Edit
                            </button>
@@ -651,7 +651,7 @@ export default function TaxonomyManagement() {
                           type="checkbox"
                           checked={selectedItems.has(tag.id)}
                           onChange={() => handleSelectItem(tag.id)}
-                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                          className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -673,7 +673,7 @@ export default function TaxonomyManagement() {
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => handleEditTag(tag)}
-                            className="text-indigo-600 hover:text-indigo-900"
+                            className="text-red-600 hover:text-red-900"
                           >
                             Edit
                           </button>
@@ -712,7 +712,7 @@ export default function TaxonomyManagement() {
           </p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
           >
             Create {activeTab === 'categories' ? 'Category' : 'Tag'}
           </button>
@@ -735,7 +735,7 @@ export default function TaxonomyManagement() {
                    value={newCategory.content_type}
                    onChange={(e) => setNewCategory(prev => ({ ...prev, content_type: e.target.value }))}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                  >
                    <option value="">Select content type</option>
                    {contentTypes.filter(type => type.value !== 'all').map(type => (
@@ -754,7 +754,7 @@ export default function TaxonomyManagement() {
                    value={newCategory.name}
                    onChange={(e) => handleCategoryNameChange(e.target.value)}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                    placeholder="e.g., Linux Basics"
                  />
                </div>
@@ -770,7 +770,7 @@ export default function TaxonomyManagement() {
                      value={newCategory.slug}
                      onChange={(e) => setNewCategory(prev => ({ ...prev, slug: e.target.value }))}
                      required
-                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                      placeholder="e.g., linux-basics"
                    />
                    <button
@@ -793,7 +793,7 @@ export default function TaxonomyManagement() {
                    value={newCategory.description}
                    onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
                    rows={3}
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                    placeholder="Brief description of what this category covers..."
                  />
                </div>
@@ -817,7 +817,7 @@ export default function TaxonomyManagement() {
                  <button
                    type="submit"
                    disabled={creating}
-                   className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                  >
                    {creating ? 'Creating...' : 'Create Category'}
                  </button>
@@ -843,7 +843,7 @@ export default function TaxonomyManagement() {
                    value={newTag.content_type}
                    onChange={(e) => setNewTag(prev => ({ ...prev, content_type: e.target.value }))}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                  >
                    <option value="">Select content type</option>
                    {contentTypes.filter(type => type.value !== 'all').map(type => (
@@ -862,7 +862,7 @@ export default function TaxonomyManagement() {
                    value={newTag.name}
                    onChange={(e) => handleTagNameChange(e.target.value)}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                    placeholder="e.g., beginner"
                  />
                </div>
@@ -878,7 +878,7 @@ export default function TaxonomyManagement() {
                      value={newTag.slug}
                      onChange={(e) => setNewTag(prev => ({ ...prev, slug: e.target.value }))}
                      required
-                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                      placeholder="e.g., beginner"
                    />
                    <button
@@ -911,7 +911,7 @@ export default function TaxonomyManagement() {
                  <button
                    type="submit"
                    disabled={creating}
-                   className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                  >
                    {creating ? 'Creating...' : 'Create Tag'}
                  </button>
@@ -939,7 +939,7 @@ export default function TaxonomyManagement() {
                    value={editingItem.content_type}
                    onChange={(e) => setEditingItem(prev => prev ? { ...prev, content_type: e.target.value } : null)}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                  >
                    {contentTypes.filter(type => type.value !== 'all').map(type => (
                      <option key={type.value} value={type.value}>{type.label}</option>
@@ -957,7 +957,7 @@ export default function TaxonomyManagement() {
                    value={editingItem.name}
                    onChange={(e) => setEditingItem(prev => prev ? { ...prev, name: e.target.value } : null)}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                  />
                </div>
 
@@ -971,7 +971,7 @@ export default function TaxonomyManagement() {
                    value={editingItem.slug}
                    onChange={(e) => setEditingItem(prev => prev ? { ...prev, slug: e.target.value } : null)}
                    required
-                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                  />
                </div>
 
@@ -985,7 +985,7 @@ export default function TaxonomyManagement() {
                      value={(editingItem as Category).description || ''}
                      onChange={(e) => setEditingItem(prev => prev ? { ...prev, description: e.target.value } : null)}
                      rows={3}
-                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                    />
                  </div>
                )}
@@ -1009,7 +1009,7 @@ export default function TaxonomyManagement() {
                  <button
                    type="submit"
                    disabled={editing}
-                   className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                  >
                    {editing ? 'Saving...' : 'Save Changes'}
                  </button>
@@ -1067,3 +1067,4 @@ export default function TaxonomyManagement() {
      </div>
    );
  }
+

@@ -427,7 +427,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       onChange={handleChange}
                       required
                       placeholder="Enter article title..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -444,7 +444,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       onChange={handleChange}
                       required
                       placeholder="article-slug-url"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -459,7 +459,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.author_id || ''}
                       onChange={handleChange}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
                       <option value="">Select an author...</option>
                       {authors.map((author) => (
@@ -479,7 +479,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowCategoryModal(true)}
-                        className="text-xs text-indigo-600 hover:text-indigo-800"
+                        className="text-xs text-red-600 hover:text-red-800"
                       >
                         + Add New
                       </button>
@@ -489,7 +489,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       name="category_id"
                       value={formData.category_id || ''}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
                       <option value="">Select a category...</option>
                       {categoriesList.map((category) => (
@@ -510,7 +510,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       name="status"
                       value={formData.status}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     >
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
@@ -529,7 +529,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       name="publish_date"
                       value={formData.publish_date}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
 
@@ -544,7 +544,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       name="update_date"
                       value={formData.update_date}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -560,7 +560,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                         name="schedule_date"
                         value={formData.schedule_date}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                       />
                     </div>
                   )}
@@ -656,12 +656,12 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                         value={imageUrl}
                         onChange={handleImageUrlChange}
                         placeholder="/uploads/images/filename.jpg or https://example.com/image.jpg"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                       />
                       <button
                         type="button"
                         onClick={handleImageUrlSubmit}
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       >
                         Set
                       </button>
@@ -681,7 +681,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                         value={formData.featured_image_alt || ''}
                         onChange={handleChange}
                         placeholder="Describe the image for accessibility..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                       />
                     </div>
                   )}
@@ -706,7 +706,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                     value={formData.excerpt}
                     onChange={handleChange}
                     placeholder="Brief summary of the article..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
               </div>
@@ -721,7 +721,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                     onChange={handleTagInputChange}
                     onKeyPress={handleTagInputKeyPress}
                     placeholder="Type a tag and press Enter..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
                   {formData.tags && formData.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -758,7 +758,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                         onFocus={() => setShowCoAuthorDropdown(true)}
                         onBlur={() => setTimeout(() => setShowCoAuthorDropdown(false), 200)}
                         placeholder="Search for authors, admins, or editors..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                       />
                       
                       {/* Co-Author Dropdown */}
@@ -783,8 +783,8 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                               >
                                 <div className="flex items-center space-x-3">
                                   <div className="flex-shrink-0">
-                                    <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                                      <span className="text-sm font-medium text-indigo-600">
+                                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                      <span className="text-sm font-medium text-red-600">
                                         {user.name.charAt(0).toUpperCase()}
                                       </span>
                                     </div>
@@ -857,7 +857,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.seo_title || ''}
                       onChange={handleChange}
                       placeholder="SEO-optimized title (defaults to article title if empty)"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -873,7 +873,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.seo_description || ''}
                       onChange={handleChange}
                       placeholder="SEO-optimized description (defaults to excerpt if empty)"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                     <p className="mt-1 text-xs text-gray-500">
                       Recommended length: 150-160 characters
@@ -892,7 +892,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.seo_keywords || ''}
                       onChange={handleChange}
                       placeholder="Comma-separated keywords"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -908,7 +908,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.seo_graphs || ''}
                       onChange={handleChange}
                       placeholder="Open Graph and Twitter Card metadata..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm"
                     />
                     <p className="mt-1 text-xs text-gray-500">
                       JSON format for Open Graph and Twitter Card metadata
@@ -927,7 +927,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={formData.seo_schema || ''}
                       onChange={handleChange}
                       placeholder="JSON-LD structured data for search engines..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 font-mono text-sm"
                     />
                     <p className="mt-1 text-xs text-gray-500">
                       JSON-LD structured data for search engine optimization
@@ -952,7 +952,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+                  className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
                 >
                   {isSubmitting ? 'Saving...' : 'Save Article'}
                 </button>
@@ -978,7 +978,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       value={newCategoryName}
                       onChange={(e) => setNewCategoryName(e.target.value)}
                       placeholder="Enter category name..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
                   </div>
                   
@@ -998,7 +998,7 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                       type="button"
                       onClick={handleAddCategory}
                       disabled={isAddingCategory || !newCategoryName.trim()}
-                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
                     >
                       {isAddingCategory ? 'Adding...' : 'Add Category'}
                     </button>

@@ -52,8 +52,8 @@ export default function RootLayout({
         <meta httpEquiv="Expires" content="0" />
       </head>
       <body className={inter.className}>
-          {/* Fix for related commands */}
-          <script src="/scripts/related-commands-fix.js" async></script>
+          {/* Fix for related commands - disabled until file is created */}
+          {/* <script src="/scripts/related-commands-fix.js" async></script> */}
         
         <Providers>
           <SiteLayoutWrapper>

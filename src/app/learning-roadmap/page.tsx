@@ -8,7 +8,7 @@ async function getRoadmapData(): Promise<{ categories: RoadmapCategory[], featur
   try {
     // Try to fetch from API first, fall back to mock data if needed
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/roadmaps`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/roadmaps`, {
         cache: 'no-store'
       });
       
@@ -227,7 +227,7 @@ async function getRoadmapData(): Promise<{ categories: RoadmapCategory[], featur
 
 // Generate metadata for the learning roadmaps page
 export async function generateMetadata(): Promise<Metadata> {
-  const title = 'Learning Roadmaps - Master Linux & DevOps Skills | LinuxConcept';
+  const title = 'Learning Roadmaps - Master Linux & DevOps Skills | HackerThink';
   const description = 'Structured learning paths to master Linux administration, DevOps, cloud technologies, and more. Start your journey with our comprehensive roadmaps designed by industry experts.';
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ainews.com';
@@ -248,7 +248,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'devops learning path',
       'container technology training'
     ].join(', '),
-    authors: [{ name: "LinuxConcept Team" }],
+    authors: [{ name: "HackerThink Team" }],
     openGraph: {
       type: 'website',
       title,
@@ -259,10 +259,10 @@ export async function generateMetadata(): Promise<Metadata> {
           url: `${baseUrl}/images/learning-roadmaps-og.png`,
           width: 1200,
           height: 630,
-          alt: 'LinuxConcept Learning Roadmaps',
+          alt: 'HackerThink Learning Roadmaps',
         },
       ],
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       locale: 'en_US',
     },
     twitter: {
@@ -280,7 +280,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'page:type': 'learning-roadmaps',
       'content:categories': '3',
       'content:roadmaps': '7',
-      'education:provider': 'LinuxConcept',
+      'education:provider': 'HackerThink',
       'education:free': 'true',
     },
   };

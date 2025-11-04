@@ -28,7 +28,7 @@ interface LabExercise {
 
 async function getLabExercise(slug: string): Promise<LabExercise | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/lab-exercises/${slug}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3007'}/api/lab-exercises/${slug}`, {
       cache: 'no-store'
     });
         
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   if (!exercise) {
     return {
-      title: 'Lab Exercise Not Found | LinuxConcept',
+      title: 'Lab Exercise Not Found | HackerThink',
       description: 'The requested lab exercise could not be found.',
     };
   }
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const exerciseUrl = `${baseUrl}/lab-exercises/${exercise.slug}`;
   const imageUrl = exercise.featured_image || `${baseUrl}/images/lab-exercise-default.png`;
   
-  const title = `${exercise.title} - Lab Exercise | LinuxConcept`;
+  const title = `${exercise.title} - Lab Exercise | HackerThink`;
   const description = exercise.description || `Complete this ${exercise.difficulty.toLowerCase()} level lab exercise to practice Linux skills.`;
 
   return {
@@ -76,7 +76,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       'system administration',
       ...(exercise.category ? [exercise.category.toLowerCase()] : [])
     ].join(', '),
-    authors: [{ name: exercise.author_name || "LinuxConcept Team" }],
+    authors: [{ name: exercise.author_name || "HackerThink Team" }],
     openGraph: {
       type: 'article',
       title,
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           alt: `${exercise.title} - Lab Exercise`,
         },
       ],
-      siteName: 'LinuxConcept',
+      siteName: 'HackerThink',
       locale: 'en_US',
       ...(exercise.created_at && { publishedTime: exercise.created_at }),
       ...(exercise.updated_at && { modifiedTime: exercise.updated_at }),

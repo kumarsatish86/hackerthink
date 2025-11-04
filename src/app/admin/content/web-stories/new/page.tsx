@@ -248,19 +248,19 @@ function WebStoryContent() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-red-50">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
-              <Link href="/admin/content/web-stories" className="text-indigo-600 hover:text-indigo-700">
+              <Link href="/admin/content/web-stories" className="text-red-600 hover:text-red-700">
                 ← Back to Web Stories
               </Link>
               <h1 className="text-2xl font-bold text-gray-900">Create New Web Story</h1>
@@ -269,7 +269,7 @@ function WebStoryContent() {
               <button
                 onClick={handleSaveStory}
                 disabled={saving}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Story'}
               </button>
@@ -304,7 +304,7 @@ function WebStoryContent() {
                   id="title"
                   value={title}
                   onChange={handleTitleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Enter your story title..."
                 />
               </div>
@@ -318,7 +318,7 @@ function WebStoryContent() {
                   id="slug"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="url-friendly-slug"
                 />
               </div>
@@ -332,7 +332,7 @@ function WebStoryContent() {
                   id="cover"
                   value={coverImage}
                   onChange={(e) => setCoverImage(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>
@@ -350,7 +350,7 @@ function WebStoryContent() {
                </div>
                <button
                  onClick={addNewSlide}
-                 className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                 className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-red-500 to-purple-600 text-white rounded-lg hover:from-red-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                >
                  <PlusIcon className="w-4 h-4" />
                  <span>Add Slide</span>
@@ -363,7 +363,7 @@ function WebStoryContent() {
                    key={slide.id}
                    className={`group relative rounded-xl border-2 transition-all duration-200 cursor-pointer ${
                      currentSlide === index
-                       ? 'border-indigo-400 bg-indigo-50 shadow-lg'
+                       ? 'border-red-400 bg-red-50 shadow-lg'
                        : 'border-gray-200 hover:border-gray-300 bg-white/50'
                    }`}
                    onClick={() => setCurrentSlide(index)}
@@ -500,7 +500,7 @@ function WebStoryContent() {
              {/* Left Controls Panel */}
              <div className="lg:col-span-5 space-y-6 flex flex-col h-full">
                {/* Rich Text Content Editor */}
-               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 flex flex-col">
+               <div className="bg-gradient-to-br from-blue-50 to-red-50 rounded-xl p-4 border border-blue-200 flex flex-col">
                  <div className="flex items-center space-x-2 mb-3">
                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                      <DocumentTextIcon className="w-4 h-4 text-white" />
@@ -1091,26 +1091,26 @@ function WebStoryContent() {
 
 
               {/* Footer Text Control - Compact */}
-              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-3 border border-indigo-200">
+              <div className="bg-gradient-to-br from-red-50 to-blue-50 rounded-lg p-3 border border-red-200">
                 <div className="flex items-center space-x-1 mb-2">
-                  <div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center">
+                  <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
                     <DocumentTextIcon className="w-3 h-3 text-white" />
                </div>
-                  <label className="text-xs font-semibold text-indigo-800">Footer</label>
+                  <label className="text-xs font-semibold text-red-800">Footer</label>
              </div>
                 <div className="space-y-2">
                   <input
                     type="text"
                     value={slides[currentSlide].footer_text}
                     onChange={(e) => updateCurrentSlide('footer_text', e.target.value)}
-                    className="w-full px-2 py-1 border border-indigo-200 rounded focus:ring-1 focus:ring-indigo-500 bg-white/70 text-xs"
+                    className="w-full px-2 py-1 border border-red-200 rounded focus:ring-1 focus:ring-red-500 bg-white/70 text-xs"
                     placeholder="Footer text"
                   />
                   <input
                     type="url"
                     value={slides[currentSlide].footer_url}
                     onChange={(e) => updateCurrentSlide('footer_url', e.target.value)}
-                    className="w-full px-2 py-1 border border-indigo-200 rounded focus:ring-1 focus:ring-indigo-500 bg-white/70 text-xs"
+                    className="w-full px-2 py-1 border border-red-200 rounded focus:ring-1 focus:ring-red-500 bg-white/70 text-xs"
                     placeholder="URL"
                   />
                   <div className="flex items-center space-x-2">
@@ -1118,13 +1118,13 @@ function WebStoryContent() {
                       type="color"
                       value={slides[currentSlide].footer_color}
                       onChange={(e) => updateCurrentSlide('footer_color', e.target.value)}
-                      className="w-8 h-8 border border-indigo-200 rounded cursor-pointer"
+                      className="w-8 h-8 border border-red-200 rounded cursor-pointer"
                     />
                     <input
                       type="text"
                       value={slides[currentSlide].footer_color}
                       onChange={(e) => updateCurrentSlide('footer_color', e.target.value)}
-                      className="flex-1 px-2 py-1 border border-indigo-200 rounded focus:ring-1 focus:ring-indigo-500 bg-white/70 text-xs"
+                      className="flex-1 px-2 py-1 border border-red-200 rounded focus:ring-1 focus:ring-red-500 bg-white/70 text-xs"
                       placeholder="#ffffff"
                     />
                   </div>
@@ -1188,7 +1188,7 @@ export default function CreateWebStory() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         <p className="ml-3 text-lg text-gray-700">Loading editor...</p>
       </div>
     }>
@@ -1196,3 +1196,4 @@ export default function CreateWebStory() {
     </Suspense>
   );
 }
+

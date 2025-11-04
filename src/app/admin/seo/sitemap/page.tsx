@@ -146,7 +146,7 @@ export default function SitemapPage() {
   if (loading && status !== 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
@@ -167,14 +167,14 @@ export default function SitemapPage() {
           <button
             onClick={handleReset}
             disabled={saving || !isDirty}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             Reset
           </button>
           <button
             onClick={handleSave}
             disabled={saving || !isDirty}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
@@ -229,7 +229,7 @@ export default function SitemapPage() {
                       value: e.target.checked ? 'true' : 'false'
                     }
                   } as any)}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                 />
                 <label htmlFor="generate_sitemap" className="ml-2 block text-sm text-gray-900">
                   Generate sitemap.xml automatically
@@ -247,7 +247,7 @@ export default function SitemapPage() {
                 name="sitemap_change_frequency"
                 value={settings.sitemap_change_frequency}
                 onChange={handleInputChange}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               >
                 <option value="always">always</option>
                 <option value="hourly">hourly</option>
@@ -269,7 +269,7 @@ export default function SitemapPage() {
                 name="sitemap_priority"
                 value={settings.sitemap_priority}
                 onChange={handleInputChange}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
               >
                 <option value="0.1">0.1 (Lowest)</option>
                 <option value="0.2">0.2</option>
@@ -298,7 +298,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('courses')}
                       onChange={(e) => handleContentTypeChange('courses', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -315,7 +315,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('scripts')}
                       onChange={(e) => handleContentTypeChange('scripts', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -332,7 +332,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('articles')}
                       onChange={(e) => handleContentTypeChange('articles', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -349,7 +349,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('tools')}
                       onChange={(e) => handleContentTypeChange('tools', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -366,7 +366,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('lab-exercises')}
                       onChange={(e) => handleContentTypeChange('lab-exercises', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -383,7 +383,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('web-stories')}
                       onChange={(e) => handleContentTypeChange('web-stories', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -400,7 +400,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('commands')}
                       onChange={(e) => handleContentTypeChange('commands', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -417,7 +417,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('tutorials')}
                       onChange={(e) => handleContentTypeChange('tutorials', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -434,7 +434,7 @@ export default function SitemapPage() {
                       type="checkbox"
                       checked={isIncluded('lessons')}
                       onChange={(e) => handleContentTypeChange('lessons', e.target.checked)}
-                      className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
                     />
                   </div>
                   <div className="ml-3 text-sm">
@@ -450,7 +450,7 @@ export default function SitemapPage() {
           <button
             onClick={handleSave}
             disabled={saving || !isDirty}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
@@ -468,7 +468,7 @@ export default function SitemapPage() {
               href="/sitemap.xml" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               View Sitemap
               <svg className="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

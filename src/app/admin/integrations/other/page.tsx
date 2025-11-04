@@ -118,7 +118,7 @@ export default function OtherIntegrationsPage() {
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Other Integrations</h1>
         <div className="flex justify-center mt-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
         </div>
       </div>
     );
@@ -187,7 +187,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="pk_test_..."
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'publicKey', integration.config.publicKey)}
                           disabled={saving}
                         >
@@ -218,7 +218,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="sk_test_..."
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'secretKey', integration.config.secretKey)}
                           disabled={saving}
                         >
@@ -236,7 +236,7 @@ export default function OtherIntegrationsPage() {
                         id={`test-mode-${integration.id}`}
                         checked={integration.config.testMode || false}
                         onChange={() => handleUpdateConfig(integration, 'testMode', !integration.config.testMode)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`test-mode-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Enable test mode
@@ -266,7 +266,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="Enter Mailchimp API key"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'apiKey', integration.config.apiKey)}
                           disabled={saving}
                         >
@@ -297,7 +297,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="abcdef1234"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'listId', integration.config.listId)}
                           disabled={saving}
                         >
@@ -332,7 +332,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="https://hooks.slack.com/services/..."
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'webhookUrl', integration.config.webhookUrl)}
                           disabled={saving}
                         >
@@ -363,7 +363,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="#general"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'channel', integration.config.channel)}
                           disabled={saving}
                         >
@@ -381,7 +381,7 @@ export default function OtherIntegrationsPage() {
                         id={`signup-notifications-${integration.id}`}
                         checked={integration.config.signupNotifications || false}
                         onChange={() => handleUpdateConfig(integration, 'signupNotifications', !integration.config.signupNotifications)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                       />
                       <label htmlFor={`signup-notifications-${integration.id}`} className="ml-2 block text-sm text-gray-700">
                         Send notifications for new user signups
@@ -411,7 +411,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="https://api.example.com/webhook"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'endpoint', integration.config.endpoint)}
                           disabled={saving}
                         >
@@ -442,7 +442,7 @@ export default function OtherIntegrationsPage() {
                           placeholder="Enter API key or token"
                         />
                         <button
-                          className="ml-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                           onClick={() => handleUpdateConfig(integration, 'apiKey', integration.config.apiKey)}
                           disabled={saving}
                         >
@@ -479,7 +479,7 @@ export default function OtherIntegrationsPage() {
                           rows={4}
                         />
                         <button
-                          className="ml-2 h-10 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 self-start"
+                          className="ml-2 h-10 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 self-start"
                           onClick={() => handleUpdateConfig(integration, 'headers', integration.config.headers)}
                           disabled={saving}
                         >

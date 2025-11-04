@@ -31,6 +31,11 @@ export default function AdminHeader() {
     if (path.includes('/admin/content/lab-exercises')) return 'Lab Exercises';
     if (path.includes('/admin/content/scripts')) return 'Scripts';
     if (path.includes('/admin/content/commands')) return 'Commands';
+    if (path.includes('/admin/content/interviews')) {
+      if (path.includes('/admin/content/interviews/guests')) return 'Guest Management';
+      if (path.includes('/admin/content/interviews/new') || (path.includes('/admin/content/interviews/') && path !== '/admin/content/interviews')) return 'Edit Interview';
+      return 'Interviews';
+    }
     
     // Administration
     if (path.includes('/admin/users')) return 'Users';

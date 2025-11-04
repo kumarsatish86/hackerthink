@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate SEO title
-    const seo_title = `${title} - Complete Learning Roadmap | LinuxConcept`;
+    const seo_title = `${title} - Complete Learning Roadmap | HackerThink`;
     
     // Generate SEO description
     const seo_description = `Master ${title.toLowerCase()} with our comprehensive learning roadmap. ${description} Perfect for ${level || 'all skill levels'}. Start your journey today!`;
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       "timeRequired": duration ? `P${duration}D` : "Self-paced",
       "provider": {
         "@type": "Organization",
-        "name": "LinuxConcept",
+        "name": "HackerThink",
         "url": "https://ainews.com"
       },
       "learningResourceType": "Learning Path",
