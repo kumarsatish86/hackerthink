@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { MediaPicker, MediaItem } from '../../../../components/MediaPicker';
 import TipTapEditor from '../../../../components/TipTapEditor';
 import toast, { Toaster } from 'react-hot-toast';
@@ -56,6 +57,8 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
   categories,
   authors,
 }) => {
+  const router = useRouter();
+  
   // Form state
   const [formData, setFormData] = useState<NewsItem>({
     title: '',
@@ -90,11 +93,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
   const [showCoAuthorDropdown, setShowCoAuthorDropdown] = useState(false);
   
   // Category state
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const [categoryError, setCategoryError] = useState<string | null>(null);
-  const [categoriesList, setCategoriesList] = useState<Category[]>(categories);
+  const [categoriesList] = useState<Category[]>(categories);
   
   // Calculate reading time and word count
   const calculateStats = (text: string) => {
@@ -230,37 +229,6 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
       featured_image: media.url,
       featured_image_alt: media.alt_text || ''
     }));
-  };
-
-  // Handle category addition
-  const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) {
-      setCategoryError('Category name is required');
-      return;
-    }
-
-    setIsAddingCategory(true);
-    setCategoryError(null);
-
-    try {
-      // Here you would typically make an API call to create the category
-      // For now, we'll just add it to the local list
-      const newCategory = {
-        id: `temp-${Date.now()}`,
-        name: newCategoryName.trim()
-      };
-      
-      setCategoriesList(prev => [...prev, newCategory]);
-      setFormData(prev => ({ ...prev, category_id: newCategory.id }));
-      setNewCategoryName('');
-      setShowCategoryModal(false);
-      toast.success('Category added successfully!');
-    } catch (error) {
-      console.error('Error adding category:', error);
-      setCategoryError('Failed to add category');
-    } finally {
-      setIsAddingCategory(false);
-    }
   };
 
   return (
@@ -511,14 +479,6 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
                       ))}
                     </select>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowCategoryModal(true)}
-                    className="text-sm text-red-600 hover:text-red-800"
-                  >
-                    + Add New Category
-                  </button>
                 </div>
               </div>
 
@@ -629,6 +589,7 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
           <div className="mt-8 flex justify-end space-x-4">
             <button
               type="button"
+              onClick={() => router.push('/admin/content/news')}
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Cancel
@@ -643,58 +604,6 @@ const NewsEditor: React.FC<NewsEditorProps> = ({
           </div>
         </form>
       </div>
-
-      {/* Category Modal */}
-      {showCategoryModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Category</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="newCategoryName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Category Name
-                  </label>
-                  <input
-                    type="text"
-                    id="newCategoryName"
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                    placeholder="Enter category name"
-                  />
-                  {categoryError && (
-                    <p className="mt-1 text-sm text-red-600">{categoryError}</p>
-                  )}
-                </div>
-                
-                <div className="flex justify-end space-x-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCategoryModal(false);
-                      setNewCategoryName('');
-                      setCategoryError(null);
-                    }}
-                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleAddCategory}
-                    disabled={isAddingCategory}
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
-                  >
-                    {isAddingCategory ? 'Adding...' : 'Add Category'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

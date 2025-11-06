@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCalendarAlt, FaUser, FaTag, FaShareAlt, FaBookmark, FaEye } from 'react-icons/fa';
+import CategoryNewsList from '@/components/news/CategoryNewsList';
+import BreakingNewsList from '@/components/news/BreakingNewsList';
 
 interface NewsArticle {
   id: string;
@@ -25,14 +27,85 @@ interface NewsArticle {
   publish_date?: string;
 }
 
+// Process article content to optimize images
+const ArticleContent = ({ content }: { content: string }) => {
+  const processedContent = useMemo(() => {
+    if (typeof window === 'undefined') return content;
+    
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, 'text/html');
+      
+      // Process all images in the content
+      const images = doc.querySelectorAll('img');
+      images.forEach((img) => {
+        // Add loading="lazy" to images that are not in the viewport
+        img.setAttribute('loading', 'lazy');
+        
+        // Add width and height to prevent layout shift
+        if (!img.hasAttribute('width') || !img.hasAttribute('height')) {
+          img.setAttribute('width', '800');
+          img.setAttribute('height', '450');
+          img.style.maxWidth = '100%';
+          img.style.height = 'auto';
+        }
+        
+        // Add decoding="async" for better performance
+        img.setAttribute('decoding', 'async');
+      });
+      
+      return doc.body.innerHTML;
+    } catch (error) {
+      console.error('Error processing article content:', error);
+      return content;
+    }
+  }, [content]);
+
+  return (
+    <div 
+      dangerouslySetInnerHTML={{ __html: processedContent }}
+      className="text-gray-800 leading-relaxed"
+    />
+  );
+};
+
+// Category mapping: URL slug -> (categorySlug, categoryName)
+const categoryMap: Record<string, { slug: string; name: string }> = {
+  tech: { slug: 'technology', name: 'Tech' },
+  business: { slug: 'business', name: 'Business' },
+  research: { slug: 'research', name: 'Research' },
+  opinion: { slug: 'opinion', name: 'Opinion' },
+  world: { slug: 'global-news', name: 'World' },
+};
+
 export default function NewsArticlePage() {
   const params = useParams();
   const slug = params.slug as string;
+  
+  // Check if this is a breaking news page (shows today's news)
+  const categoryLower = slug?.toLowerCase() || '';
+  
+  if (categoryLower === 'breaking') {
+    return <BreakingNewsList />;
+  }
+  
+  // Check if this is a category page
+  const categoryInfo = categoryMap[categoryLower];
   
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<NewsArticle[]>([]);
+
+  // If it's a category, render CategoryNewsList instead
+  if (categoryInfo) {
+    return (
+      <CategoryNewsList
+        categorySlug={categoryInfo.slug}
+        categoryName={categoryInfo.name}
+      />
+    );
+  }
 
   useEffect(() => {
     if (slug) {
@@ -71,13 +144,16 @@ export default function NewsArticlePage() {
 
   const fetchRelatedArticles = async (category: string, currentId: string) => {
     try {
-      const response = await fetch(`/api/news?category=${category}&limit=3`);
-      if (response.ok) {
-        const data = await response.json();
-        // Filter out current article
-        const related = data.news.filter((article: NewsArticle) => article.id !== currentId);
-        setRelatedArticles(related.slice(0, 3));
-      }
+      // Defer related articles loading to improve initial page load
+      setTimeout(async () => {
+        const response = await fetch(`/api/news?category=${category}&limit=3`);
+        if (response.ok) {
+          const data = await response.json();
+          // Filter out current article
+          const related = data.news.filter((article: NewsArticle) => article.id !== currentId);
+          setRelatedArticles(related.slice(0, 3));
+        }
+      }, 100); // Small delay to let main content load first
     } catch (err) {
       console.error('Error fetching related articles:', err);
     }
@@ -94,7 +170,7 @@ export default function NewsArticlePage() {
   };
 
   const handleShare = async () => {
-    if (navigator.share && article) {
+    if (typeof window !== 'undefined' && navigator.share && article) {
       try {
         await navigator.share({
           title: article.title,
@@ -104,7 +180,7 @@ export default function NewsArticlePage() {
       } catch (err) {
         console.log('Error sharing:', err);
       }
-    } else {
+    } else if (typeof window !== 'undefined' && navigator.clipboard) {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
@@ -152,73 +228,69 @@ export default function NewsArticlePage() {
     <div className="min-h-screen bg-gray-50">
       {/* Article Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-            <div className="flex-1">
-          {/* Breadcrumb */}
-          <nav className="flex mb-6" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2">
-              <li>
-                <Link href="/" className="text-gray-500 hover:text-gray-700">
-                  Home
-                </Link>
-              </li>
-              <li className="text-gray-400">/</li>
-              <li>
-                <Link href="/news" className="text-gray-500 hover:text-gray-700">
-                  News
-                </Link>
-              </li>
-              <li className="text-gray-400">/</li>
-              <li className="text-gray-900 font-medium">{article.category_name || 'Article'}</li>
-            </ol>
-          </nav>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-8">
+            <div className="flex-1 w-full">
+              {/* Breadcrumb */}
+              <nav className="flex mb-4 sm:mb-6 overflow-x-auto" aria-label="Breadcrumb">
+                <ol className="flex items-center space-x-2 min-w-max">
+                  <li>
+                    <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm">
+                      Home
+                    </Link>
+                  </li>
+                  <li className="text-gray-400">/</li>
+                  <li>
+                    <Link href="/news" className="text-gray-500 hover:text-gray-700 text-sm">
+                      News
+                    </Link>
+                  </li>
+                  <li className="text-gray-400">/</li>
+                  <li className="text-gray-900 font-medium text-sm truncate">{article.category_name || 'Article'}</li>
+                </ol>
+              </nav>
 
-          {/* Article Meta */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-600">
-            <div className="flex items-center">
-              <FaCalendarAlt className="mr-2" />
-              <span>{formatDate(article.created_at)}</span>
-            </div>
-            {article.author_name && (
-              <div className="flex items-center">
-                <FaUser className="mr-2" />
-                <span>By {article.author_name}</span>
+              {/* Article Meta */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-4 sm:mb-6 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center">
+                  <FaCalendarAlt className="mr-2" />
+                  <span>{formatDate(article.created_at)}</span>
+                </div>
+                {article.author_name && (
+                  <div className="flex items-center">
+                    <FaUser className="mr-2" />
+                    <span>By {article.author_name}</span>
+                  </div>
+                )}
+                {article.category_name && (
+                  <div className="flex items-center">
+                    <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
+                      {article.category_name}
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
-            {article.category_name && (
-              <div className="flex items-center">
-                <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
-                  {article.category_name}
-                </span>
+
+              {/* Article Title */}
+              <div className="relative w-full">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
+                  {article.title}
+                </h1>
+
+                {/* Article Excerpt */}
+                {article.excerpt && (
+                  <p className="text-base sm:text-lg lg:text-xl text-gray-700 leading-relaxed">
+                    {article.excerpt}
+                  </p>
+                )}
               </div>
-            )}
-          </div>
-
-          {/* Article Title */}
-          <div className="relative">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                {article.title}
-              </h1>
-
-              {/* Article Excerpt */}
-              {article.excerpt && (
-                <p className="text-xl text-gray-700 leading-relaxed">
-                  {article.excerpt}
-                </p>
-              )}
-            </div>
-            
-          </div>
-          
             </div>
             
             {/* Newsletter Signup - Part of Hero Section */}
-            <div className="lg:w-80 flex-shrink-0">
-              <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-bold mb-2">Stay Updated</h3>
-                <p className="text-sm opacity-90 mb-4">
+            <div className="w-full lg:w-80 flex-shrink-0">
+              <div className="bg-red-600 text-white p-4 sm:p-6 rounded-lg shadow-lg">
+                <h3 className="text-base sm:text-lg font-bold mb-2">Stay Updated</h3>
+                <p className="text-xs sm:text-sm opacity-90 mb-4">
                   Get the latest AI news delivered to your inbox
                 </p>
                 <div className="space-y-3">
@@ -239,13 +311,13 @@ export default function NewsArticlePage() {
           </div>
           
           {/* Article Actions */}
-          <div className="flex items-center justify-between border-t border-gray-200 pt-6 mt-8">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-gray-200 pt-4 sm:pt-6 mt-6 sm:mt-8">
+            <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
               {/* Social Share Icons */}
-              <div className="flex items-center space-x-3">
-                <span className="text-sm font-medium text-gray-700">Share:</span>
+              <div className="flex items-center space-x-2 sm:space-x-3 flex-wrap">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 hidden sm:inline">Share:</span>
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(window.location.href)}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
@@ -256,7 +328,7 @@ export default function NewsArticlePage() {
                   </svg>
                 </a>
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
@@ -267,7 +339,7 @@ export default function NewsArticlePage() {
                   </svg>
                 </a>
                 <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors"
@@ -278,7 +350,7 @@ export default function NewsArticlePage() {
                   </svg>
                 </a>
                 <a
-                  href={`https://wa.me/?text=${encodeURIComponent(article.title + ' ' + window.location.href)}`}
+                  href={`https://wa.me/?text=${encodeURIComponent(article.title + ' ' + (typeof window !== 'undefined' ? window.location.href : ''))}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
@@ -289,7 +361,7 @@ export default function NewsArticlePage() {
                   </svg>
                 </a>
                 <a
-                  href={`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(article.title)}`}
+                  href={`https://t.me/share/url?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}&text=${encodeURIComponent(article.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
@@ -301,8 +373,10 @@ export default function NewsArticlePage() {
                 </a>
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link copied to clipboard!');
+                    if (typeof window !== 'undefined' && navigator.clipboard) {
+                      navigator.clipboard.writeText(window.location.href);
+                      alert('Link copied to clipboard!');
+                    }
                   }}
                   className="flex items-center justify-center w-8 h-8 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
                   title="Copy Link"
@@ -313,13 +387,13 @@ export default function NewsArticlePage() {
                 </button>
               </div>
               
-              <button className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">
-                <FaBookmark className="mr-2" />
-                Save
+              <button className="flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors">
+                <FaBookmark className="mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Save</span>
               </button>
             </div>
             
-            <div className="flex items-center text-sm text-gray-500">
+            <div className="flex items-center text-xs sm:text-sm text-gray-500">
               <FaEye className="mr-1" />
               <span>Reading time: 5 min</span>
             </div>
@@ -328,42 +402,42 @@ export default function NewsArticlePage() {
       </div>
 
       {/* Article Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 w-full">
             {/* Featured Image */}
             {article.featured_image && (
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8 relative w-full" style={{ aspectRatio: '16/9', minHeight: '200px' }}>
                 <Image
                   src={article.featured_image}
                   alt={article.featured_image_alt || article.title}
-                  width={800}
-                  height={400}
-                  className="w-full h-64 object-cover rounded-lg shadow-lg"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 800px"
+                  className="object-cover rounded-lg shadow-lg"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                 />
               </div>
             )}
 
             {/* Article Content */}
-            <div className="prose prose-lg max-w-none">
-              <div 
-                dangerouslySetInnerHTML={{ __html: article.content }}
-                className="text-gray-800 leading-relaxed"
-              />
+            <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+              <ArticleContent content={article.content} />
             </div>
 
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Tags</h3>
+              <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-200">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Tags</h3>
                 <div className="flex flex-wrap gap-2">
                   {article.tags.map((tag, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
+                      className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
                     >
-                      <FaTag className="mr-1" />
+                      <FaTag className="mr-1 text-xs" />
                       {tag}
                     </span>
                   ))}
@@ -373,20 +447,20 @@ export default function NewsArticlePage() {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8 space-y-6">
+          <div className="lg:col-span-1 w-full">
+            <div className="lg:sticky lg:top-8 space-y-4 sm:space-y-6">
               {/* Related Articles */}
               {relatedArticles.length > 0 && (
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Articles</h3>
-                  <div className="space-y-4">
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Related Articles</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     {relatedArticles.map((relatedArticle) => (
                       <Link
                         key={relatedArticle.id}
                         href={`/news/${relatedArticle.slug}`}
                         className="block group"
                       >
-                        <h4 className="text-sm font-medium text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                        <h4 className="text-xs sm:text-sm font-medium text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
                           {relatedArticle.title}
                         </h4>
                         <p className="text-xs text-gray-500 mt-1">

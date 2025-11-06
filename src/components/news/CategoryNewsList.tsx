@@ -14,6 +14,7 @@ interface NewsItem {
   created_at: string;
   author_name?: string;
   category_name?: string;
+  sourceType?: 'article' | 'news';
 }
 
 interface CategoryNewsListProps {
@@ -34,7 +35,7 @@ export default function CategoryNewsList({ categorySlug, categoryName }: Categor
 
   useEffect(() => {
     fetchNews();
-  }, []);
+  }, [categorySlug]);
 
   const fetchNews = async (page: number = 1) => {
     try {
@@ -94,10 +95,16 @@ export default function CategoryNewsList({ categorySlug, categoryName }: Categor
       {news.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {news.map((item) => (
+            {news.map((item) => {
+              // Determine the correct URL based on sourceType
+              const articleUrl = item.sourceType === 'article' 
+                ? `/articles/${item.slug}` 
+                : `/news/${item.slug}`;
+              
+              return (
               <Link
                 key={item.id}
-                href={`/news/${item.slug}`}
+                href={articleUrl}
                 className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
               >
                 {item.featured_image && (
@@ -134,7 +141,8 @@ export default function CategoryNewsList({ categorySlug, categoryName }: Categor
                   </div>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
 
           {/* Pagination */}

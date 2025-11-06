@@ -44,24 +44,40 @@ interface Author {
   role?: string;
 }
 
-export default function EditNewsPage({ params }: { params: { id: string } }) {
+export default function EditNewsPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [authors, setAuthors] = useState<Author[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [newsId, setNewsId] = useState<string | null>(null);
+
+  // Get the id from params
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setNewsId(resolvedParams.id);
+    });
+  }, [params]);
 
   useEffect(() => {
+    if (!newsId) return;
+
     const fetchData = async () => {
       try {
         // Fetch news item
-        const newsResponse = await fetch(`/api/admin/news/${params.id}`);
+        const newsResponse = await fetch(`/api/admin/news/${newsId}`);
         if (!newsResponse.ok) {
-          throw new Error('Failed to fetch news item');
+          if (newsResponse.status === 404) {
+            setError('News item not found');
+          } else {
+            throw new Error('Failed to fetch news item');
+          }
+          return;
         }
         const newsData = await newsResponse.json();
-        setNewsItem(newsData.news);
+        // API returns the news item directly, not wrapped in a 'news' property
+        setNewsItem(newsData);
 
         // Fetch categories
         const categoriesResponse = await fetch('/api/admin/news-categories');
@@ -70,11 +86,15 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
           setCategories(categoriesData.categories || []);
         }
 
-        // Fetch authors
+        // Fetch authors - only users with admin, editor, or author roles
         const authorsResponse = await fetch('/api/admin/users');
         if (authorsResponse.ok) {
           const authorsData = await authorsResponse.json();
-          setAuthors(authorsData.users || []);
+          // Filter for users with roles that can be authors (admin, editor, author)
+          const authorUsers = (authorsData.users || []).filter((user: Author) => 
+            user.role === 'admin' || user.role === 'editor' || user.role === 'author'
+          );
+          setAuthors(authorUsers);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -85,23 +105,59 @@ export default function EditNewsPage({ params }: { params: { id: string } }) {
     };
 
     fetchData();
-  }, [params.id]);
+  }, [newsId]);
 
   const handleSave = async (newsData: any) => {
+    if (!newsId) return;
+    
     try {
-      const response = await fetch(`/api/admin/news/${params.id}`, {
-        method: 'PUT',
+      // Filter out fields that shouldn't be sent or are read-only
+      const { id, created_at, updated_at, update_date, ...updateData } = newsData;
+      
+      // Clean up the data - ensure proper types and remove undefined values
+      const cleanedData: any = {};
+      
+      if (updateData.title !== undefined) cleanedData.title = updateData.title;
+      if (updateData.slug !== undefined) cleanedData.slug = updateData.slug;
+      if (updateData.excerpt !== undefined) cleanedData.excerpt = updateData.excerpt;
+      if (updateData.content !== undefined) cleanedData.content = updateData.content;
+      if (updateData.author_id !== undefined) cleanedData.author_id = updateData.author_id || null;
+      if (updateData.category_id !== undefined) cleanedData.category_id = updateData.category_id || null;
+      if (updateData.featured_image !== undefined) cleanedData.featured_image = updateData.featured_image || null;
+      if (updateData.featured_image_alt !== undefined) cleanedData.featured_image_alt = updateData.featured_image_alt || '';
+      if (updateData.status !== undefined) cleanedData.status = updateData.status;
+      if (updateData.schedule_date !== undefined) cleanedData.schedule_date = updateData.schedule_date || null;
+      if (updateData.publish_date !== undefined) cleanedData.publish_date = updateData.publish_date || null;
+      if (updateData.seo_title !== undefined) cleanedData.seo_title = updateData.seo_title || '';
+      if (updateData.seo_description !== undefined) cleanedData.seo_description = updateData.seo_description || '';
+      if (updateData.seo_keywords !== undefined) cleanedData.seo_keywords = updateData.seo_keywords || '';
+      if (updateData.seo_graphs !== undefined) cleanedData.seo_graphs = updateData.seo_graphs || '';
+      if (updateData.seo_schema !== undefined) cleanedData.seo_schema = updateData.seo_schema || '';
+      if (updateData.schema_json !== undefined) cleanedData.schema_json = updateData.schema_json || '';
+      if (updateData.tags !== undefined) cleanedData.tags = Array.isArray(updateData.tags) ? updateData.tags : [];
+      if (updateData.co_authors !== undefined) cleanedData.co_authors = Array.isArray(updateData.co_authors) ? updateData.co_authors : [];
+      if (updateData.estimated_reading_time !== undefined) cleanedData.estimated_reading_time = updateData.estimated_reading_time || 0;
+      if (updateData.word_count !== undefined) cleanedData.word_count = updateData.word_count || 0;
+
+      console.log('Saving news item with cleaned data:', cleanedData);
+      
+      const response = await fetch(`/api/admin/news/${newsId}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newsData),
+        body: JSON.stringify(cleanedData),
       });
 
+      const responseData = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to update news item');
+        console.error('API Error Response:', responseData);
+        console.error('Response status:', response.status);
+        throw new Error(responseData.message || responseData.error || 'Failed to update news item');
       }
 
-      const result = await response.json();
+      console.log('News item updated successfully:', responseData);
       router.push('/admin/content/news');
     } catch (error) {
       console.error('Error updating news item:', error);

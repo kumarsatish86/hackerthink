@@ -218,7 +218,7 @@ export default function QuizzesManagement() {
       title: 'Total Quizzes',
       value: analytics.total,
       icon: <FaGraduationCap className="w-5 h-5" />,
-      color: 'blue' as const
+      color: 'red' as const
     },
     {
       title: 'Published',
@@ -244,7 +244,7 @@ export default function QuizzesManagement() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading quizzes...</p>
         </div>
       </div>
@@ -257,7 +257,7 @@ export default function QuizzesManagement() {
         <h1 className="text-3xl font-bold text-gray-900">Quizzes</h1>
         <Link
           href="/admin/content/quizzes/new"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 flex items-center gap-2"
         >
           <FaPlus className="w-4 h-4" />
           New Quiz
@@ -317,14 +317,14 @@ export default function QuizzesManagement() {
               placeholder="Search quizzes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
           </div>
           <div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
               <option value="all">All Status</option>
               <option value="published">Published</option>
@@ -336,7 +336,7 @@ export default function QuizzesManagement() {
             <select
               value={filterDifficulty}
               onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
               <option value="all">All Difficulty</option>
               <option value="Beginner">Beginner</option>
@@ -350,7 +350,7 @@ export default function QuizzesManagement() {
                 <select
                   value={bulkAction}
                   onChange={(e) => setBulkAction(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 >
                   <option value="">Bulk Actions</option>
                   <option value="publish">Publish</option>
@@ -361,7 +361,7 @@ export default function QuizzesManagement() {
                 <button
                   onClick={handleBulkAction}
                   disabled={!bulkAction || bulkActionLoading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
                 >
                   Apply
                 </button>
@@ -463,7 +463,7 @@ export default function QuizzesManagement() {
                   <div className="flex justify-end gap-2">
                     <Link
                       href={`/admin/content/quizzes/${quiz.id}`}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-red-600 hover:text-red-900"
                       title="Edit"
                     >
                       <FaEdit className="w-4 h-4" />

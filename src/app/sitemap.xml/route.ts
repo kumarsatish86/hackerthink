@@ -7,18 +7,16 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
-// Specify Node.js runtime
 export const runtime = 'nodejs';
 
 export async function GET() {
   try {
-    // Get base URL using our utility
     const baseUrl = getSiteUrl();
-    
-    // Get sitemap settings
+
+    // Get sitemap settings from database
     const settingsResult = await pool.query(`
       SELECT setting_key, setting_value
       FROM seo_settings
@@ -27,14 +25,13 @@ export async function GET() {
         'include_in_sitemap'
       )
     `);
-    
-    // Convert to object format
+
     const settings = settingsResult.rows.reduce((acc, row) => {
       acc[row.setting_key] = row.setting_value;
       return acc;
-    }, {});
-    
-    // If sitemap generation is disabled, return 404
+    }, {} as Record<string, string>);
+
+    // Check if sitemap generation is enabled
     if (settings.generate_sitemap === 'false') {
       return new NextResponse('Sitemap generation is disabled', {
         status: 404,
@@ -43,91 +40,123 @@ export async function GET() {
         },
       });
     }
-    
-    // Get content types to include
-    const includeTypes = (settings.include_in_sitemap || 'courses,scripts,articles,lab-exercises,tools,web-stories').split(',');
-    
-    // Last modified date for the index (current time)
-    const lastMod = new Date().toISOString();
-    
-    // Create sitemap index
+
+    // Get included content types
+    let includeInSitemap: string[] = [];
+    if (settings.include_in_sitemap) {
+      includeInSitemap = settings.include_in_sitemap.split(',').map((t: string) => t.trim());
+    }
+
+    // Helper function to check if content type is included
+    const isIncluded = (type: string) => {
+      return includeInSitemap.length === 0 || includeInSitemap.includes(type);
+    };
+
+    // Build sitemap index XML
     let sitemapIndexXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     sitemapIndexXml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    
-    // Add main pages sitemap
-    sitemapIndexXml += `  <sitemap>\n`;
-    sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/main.xml</loc>\n`;
-    sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
-    sitemapIndexXml += `  </sitemap>\n`;
-    
-    // Add content-specific sitemaps
-    if (includeTypes.includes('courses')) {
-      sitemapIndexXml += `  <sitemap>\n`;
-      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/courses.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
-      sitemapIndexXml += `  </sitemap>\n`;
-    }
-    
-    if (includeTypes.includes('scripts')) {
-      sitemapIndexXml += `  <sitemap>\n`;
-      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/scripts.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
-      sitemapIndexXml += `  </sitemap>\n`;
-    }
-    
-    if (includeTypes.includes('articles')) {
+
+    // Add individual content type sitemaps based on include_in_sitemap setting
+    if (isIncluded('articles')) {
       sitemapIndexXml += `  <sitemap>\n`;
       sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/articles.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('lab-exercises')) {
+
+    if (isIncluded('news')) {
       sitemapIndexXml += `  <sitemap>\n`;
-      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/lab-exercises.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/news.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('tools')) {
+
+    if (isIncluded('ai-models')) {
       sitemapIndexXml += `  <sitemap>\n`;
-      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/tools.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/ai-models.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('web-stories')) {
+
+    if (isIncluded('ai-datasets')) {
       sitemapIndexXml += `  <sitemap>\n`;
-      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/web-stories.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/ai-datasets.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('commands')) {
+
+    if (isIncluded('quizzes')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/quizzes.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('interviews')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/interviews.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('commands')) {
       sitemapIndexXml += `  <sitemap>\n`;
       sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/commands.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('tutorials')) {
+
+    if (isIncluded('tutorials')) {
       sitemapIndexXml += `  <sitemap>\n`;
       sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/tutorials.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    if (includeTypes.includes('lessons')) {
+
+    if (isIncluded('lessons')) {
       sitemapIndexXml += `  <sitemap>\n`;
       sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/lessons.xml</loc>\n`;
-      sitemapIndexXml += `    <lastmod>${lastMod}</lastmod>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
       sitemapIndexXml += `  </sitemap>\n`;
     }
-    
-    // Close the XML
+
+    if (isIncluded('tools')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/tools.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('lab-exercises')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/lab-exercises.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('web-stories')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/web-stories.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('courses')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/courses.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
+    if (isIncluded('scripts')) {
+      sitemapIndexXml += `  <sitemap>\n`;
+      sitemapIndexXml += `    <loc>${baseUrl}/sitemaps/scripts.xml</loc>\n`;
+      sitemapIndexXml += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
+      sitemapIndexXml += `  </sitemap>\n`;
+    }
+
     sitemapIndexXml += '</sitemapindex>';
-    
-    // Return the sitemap index XML with proper content type
+
     return new NextResponse(sitemapIndexXml, {
       status: 200,
       headers: {
@@ -137,8 +166,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error generating sitemap index:', error);
-    
-    // Return a simple error-indicating sitemap in case of errors
     return new NextResponse(
       '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</sitemapindex>',
       {
@@ -150,4 +177,5 @@ export async function GET() {
       }
     );
   }
-} 
+}
+

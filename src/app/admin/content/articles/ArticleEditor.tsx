@@ -90,10 +90,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
   const [showCoAuthorDropdown, setShowCoAuthorDropdown] = useState(false);
   
   // Category state
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const [categoryError, setCategoryError] = useState<string | null>(null);
   const [categoriesList, setCategoriesList] = useState<Category[]>(categories);
   
   // Calculate reading time and word count
@@ -221,10 +217,33 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
     !formData.co_authors?.includes(author.name)
   );
   
+  // Generate slug from title
+  const generateSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+  };
+
   // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Auto-generate slug when title changes
+    if (name === 'title' && value.trim()) {
+      const autoSlug = generateSlug(value);
+      setFormData(prev => ({ 
+        ...prev, 
+        [name]: value,
+        // Only auto-generate slug if it's empty or matches the previous auto-generated slug
+        slug: prev.slug === '' || prev.slug === generateSlug(prev.title) ? autoSlug : prev.slug
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
   
   // Handle editor content change
@@ -345,45 +364,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
       co_authors: (prev.co_authors || []).filter(coAuthor => coAuthor !== coAuthorToRemove) 
     }));
   };
-  
-  // Add new category
-  const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) return;
-
-    setIsAddingCategory(true);
-    setCategoryError(null);
-
-    try {
-      const response = await fetch('/api/admin/categories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: newCategoryName.trim(),
-          slug: newCategoryName.trim().toLowerCase().replace(/\s+/g, '-'),
-          description: `Category for ${newCategoryName.trim()}`
-        }),
-      });
-      
-      if (response.ok) {
-        const newCategory = await response.json();
-        setCategoriesList(prev => [...prev, newCategory]);
-        setFormData(prev => ({ ...prev, category_id: newCategory.id }));
-        setNewCategoryName('');
-        setShowCategoryModal(false);
-        toast.success('Category added successfully!');
-      } else {
-        const error = await response.json();
-        setCategoryError(error.message || 'Failed to add category');
-      }
-    } catch (error) {
-      console.error('Error adding category:', error);
-      setCategoryError('Failed to add category. Please try again.');
-    } finally {
-      setIsAddingCategory(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -472,18 +452,9 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
                   
                   {/* Category */}
                   <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">
-                        Category
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => setShowCategoryModal(true)}
-                        className="text-xs text-red-600 hover:text-red-800"
-                      >
-                        + Add New
-                      </button>
-                    </div>
+                    <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
+                      Category
+                    </label>
                     <select
                       id="category_id"
                       name="category_id"
@@ -960,54 +931,6 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({
             </div>
           </div>
         </form>
-      
-        {/* Add Category Modal */}
-        {showCategoryModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-              <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Category</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="newCategoryName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Category Name
-                    </label>
-                    <input
-                      type="text"
-                      id="newCategoryName"
-                      value={newCategoryName}
-                      onChange={(e) => setNewCategoryName(e.target.value)}
-                      placeholder="Enter category name..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    />
-                  </div>
-                  
-                  {categoryError && (
-                    <p className="text-sm text-red-600">{categoryError}</p>
-                  )}
-                  
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowCategoryModal(false)}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleAddCategory}
-                      disabled={isAddingCategory || !newCategoryName.trim()}
-                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
-                    >
-                      {isAddingCategory ? 'Adding...' : 'Add Category'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

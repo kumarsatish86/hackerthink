@@ -19,7 +19,11 @@ export async function generateMetadata() {
       title: settings.site_name || 'AIWeb - AI News, Tools & Learning Platform',
       description: settings.site_description || 'Your comprehensive platform for AI news, tools, learning, and model training',
       icons: {
-        icon: settings.favicon_path || '/favicon.ico',
+        icon: [
+          { url: settings.favicon_path || '/favicon.svg', type: 'image/svg+xml' },
+        ],
+        shortcut: settings.favicon_path || '/favicon.svg',
+        apple: settings.favicon_path || '/favicon.svg',
       },
     };
   } catch (error) {
@@ -30,7 +34,11 @@ export async function generateMetadata() {
       title: 'AIWeb - AI News, Tools & Learning Platform',
       description: 'Your comprehensive platform for AI news, tools, learning, and model training',
       icons: {
-        icon: '/favicon.ico',
+        icon: [
+          { url: '/favicon.svg', type: 'image/svg+xml' },
+        ],
+        shortcut: '/favicon.svg',
+        apple: '/favicon.svg',
       },
     };
   }

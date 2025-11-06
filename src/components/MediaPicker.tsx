@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 export interface MediaItem {
   id: string;
@@ -227,6 +226,7 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
         <div className="flex gap-2">
           {!hasSearched && (
             <button
+              type="button"
               onClick={handleBrowseMedia}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center space-x-2 whitespace-nowrap"
             >
@@ -235,6 +235,7 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
             </button>
           )}
           <button
+            type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 whitespace-nowrap"
@@ -288,14 +289,11 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
       {selectedMedia && (
         <div className="flex items-center justify-between p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
           <div className="flex items-center space-x-3">
-            <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-              <Image
+            <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+              <img
                 src={selectedMedia.url}
                 alt={selectedMedia.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                className="rounded-lg"
-                sizes="48px"
+                className="w-full h-full object-cover rounded-lg"
                 onError={(e) => {
                   console.error('Selected media image error:', selectedMedia.url);
                   e.currentTarget.style.display = 'none';
@@ -308,6 +306,7 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => onSelect(null)}
             className="p-1 text-indigo-400 hover:text-indigo-600"
             title="Clear selection"
@@ -342,34 +341,13 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
               }`}
             >
               <div className="aspect-video bg-gray-100 relative overflow-hidden">
-                <Image
-                  src={media.url}
-                  alt={media.alt || media.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="group-hover:scale-105 transition-transform duration-200"
-                  sizes="(max-width: 768px) 50vw, 33vw"
-                  onError={(e) => {
-                    console.error('MediaPicker image load error:', media.url, e);
-                    // Hide the Next.js Image and show fallback
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.parentElement?.querySelector('.fallback-img') as HTMLImageElement;
-                    if (fallback) {
-                      fallback.style.display = 'block';
-                    }
-                  }}
-                  onLoad={() => {
-                    console.log('MediaPicker image loaded successfully:', media.url);
-                  }}
-                />
-                {/* Fallback regular img element */}
+                {/* Use regular img tag for local uploads to avoid Next.js Image optimization issues */}
                 <img 
                   src={media.url}
                   alt={media.alt || media.title}
-                  className="fallback-img w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                  style={{ display: 'none' }}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   onError={(e) => {
-                    console.error('MediaPicker fallback img load error:', media.url, e);
+                    console.error('MediaPicker image load error:', media.url, e);
                     // Show placeholder
                     e.currentTarget.style.display = 'none';
                     const placeholder = e.currentTarget.parentElement?.querySelector('.image-placeholder') as HTMLElement;
@@ -377,8 +355,11 @@ export function MediaPicker({ onSelect, selectedMedia }: MediaPickerProps) {
                       placeholder.style.display = 'flex';
                     }
                   }}
+                  onLoad={() => {
+                    console.log('MediaPicker image loaded successfully:', media.url);
+                  }}
                 />
-                {/* Final fallback placeholder */}
+                {/* Fallback placeholder */}
                 <div className="image-placeholder w-full h-full flex items-center justify-center bg-gray-200" style={{ display: 'none' }}>
                   <svg className="h-8 w-8 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />

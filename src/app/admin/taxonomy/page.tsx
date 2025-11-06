@@ -11,8 +11,9 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  content_type: 'articles' | 'courses' | 'lab_exercises' | 'scripts' | 'tools' | 'glossary' | 'web_stories' | 'roadmaps' | 'commands' | 'tutorials';
+  content_type: 'articles' | 'courses' | 'tools' | 'glossary' | 'commands' | 'tutorials' | 'news' | 'interviews' | 'quizzes' | 'products';
   item_count: number;
+  parent_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -21,7 +22,7 @@ interface Tag {
   id: string;
   name: string;
   slug: string;
-  content_type: 'articles' | 'courses' | 'lab_exercises' | 'scripts' | 'tools' | 'glossary' | 'web_stories' | 'roadmaps' | 'commands' | 'tutorials';
+  content_type: 'articles' | 'courses' | 'tools' | 'glossary' | 'commands' | 'tutorials' | 'news' | 'interviews' | 'quizzes' | 'products';
   item_count: number;
   created_at: string;
   updated_at: string;
@@ -59,12 +60,17 @@ export default function TaxonomyManagement() {
   const [deletingItem, setDeletingItem] = useState<{ id: string; name: string; type: 'category' | 'tag' } | null>(null);
   const [deleting, setDeleting] = useState(false);
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  
   // Form state for new category
   const [newCategory, setNewCategory] = useState({
     name: '',
     slug: '',
     description: '',
-    content_type: ''
+    content_type: '',
+    parent_id: ''
   });
   
   // Form state for new tag
@@ -74,19 +80,19 @@ export default function TaxonomyManagement() {
     content_type: ''
   });
 
-  // Content type options
+  // Content type options (only content types that use categories) - arranged alphabetically
   const contentTypes = [
     { value: 'all', label: 'All Content Types' },
     { value: 'articles', label: 'Articles' },
+    { value: 'commands', label: 'Commands' },
     { value: 'courses', label: 'Courses' },
-    { value: 'tutorials', label: 'Tutorials' },
-    { value: 'lab_exercises', label: 'Lab Exercises' },
-    { value: 'scripts', label: 'Scripts' },
-    { value: 'tools', label: 'Tools' },
     { value: 'glossary', label: 'Glossary' },
-    { value: 'web_stories', label: 'Web Stories' },
-    { value: 'roadmaps', label: 'Learning Roadmaps' },
-    { value: 'commands', label: 'Commands' }
+    { value: 'interviews', label: 'Interviews' },
+    { value: 'news', label: 'News' },
+    { value: 'products', label: 'Products' },
+    { value: 'quizzes', label: 'Quizzes' },
+    { value: 'tools', label: 'Tools' },
+    { value: 'tutorials', label: 'Tutorials' }
   ];
 
   // Auth check
@@ -149,6 +155,76 @@ export default function TaxonomyManagement() {
     tag.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Organize categories hierarchically (parents first, then children)
+  const organizeCategoriesHierarchically = (cats: Category[]): Category[] => {
+    // Separate parents and children
+    const parents = cats.filter(cat => !cat.parent_id || cat.parent_id === '');
+    const children = cats.filter(cat => cat.parent_id && cat.parent_id !== '');
+    
+    // Sort parents
+    const sortedParents = [...parents].sort((a, b) => 
+      a.name.localeCompare(b.name)
+    );
+    
+    // Build hierarchical list: parents first, then their children
+    const hierarchical: Category[] = [];
+    
+    sortedParents.forEach(parent => {
+      hierarchical.push(parent);
+      // Add children of this parent
+      const parentChildren = children
+        .filter(child => child.parent_id === parent.id)
+        .sort((a, b) => a.name.localeCompare(b.name));
+      hierarchical.push(...parentChildren);
+    });
+    
+    // Add any orphaned children (parent not in filtered list)
+    const orphanedChildren = children.filter(child => 
+      !cats.some(cat => cat.id === child.parent_id)
+    ).sort((a, b) => a.name.localeCompare(b.name));
+    hierarchical.push(...orphanedChildren);
+    
+    return hierarchical;
+  };
+
+  const hierarchicalCategories = organizeCategoriesHierarchically(filteredCategories);
+
+  // Pagination logic
+  const totalItems = activeTab === 'categories' ? hierarchicalCategories.length : filteredTags.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  
+  const paginatedCategories = hierarchicalCategories.slice(startIndex, endIndex);
+  const paginatedTags = filteredTags.slice(startIndex, endIndex);
+
+  // Helper function to check if a category is a child
+  const isChildCategory = (category: Category): boolean => {
+    return !!(category.parent_id && category.parent_id !== '');
+  };
+
+  // Helper function to get parent category name
+  const getParentName = (category: Category): string | null => {
+    if (!isChildCategory(category)) return null;
+    const parent = categories.find(cat => cat.id === category.parent_id);
+    return parent ? parent.name : null;
+  };
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedContentType, activeTab]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+  };
+
   const handleSelectItem = (id: string) => {
     const newSelected = new Set(selectedItems);
     if (newSelected.has(id)) {
@@ -161,16 +237,34 @@ export default function TaxonomyManagement() {
 
   const handleSelectAll = () => {
     if (activeTab === 'categories') {
-      if (selectedItems.size === filteredCategories.length) {
-        setSelectedItems(new Set());
+      const currentPageIds = new Set(paginatedCategories.map(cat => cat.id));
+      const allSelected = paginatedCategories.length > 0 && paginatedCategories.every(cat => selectedItems.has(cat.id));
+      
+      if (allSelected) {
+        // Deselect all items on current page
+        const newSelected = new Set(selectedItems);
+        paginatedCategories.forEach(cat => newSelected.delete(cat.id));
+        setSelectedItems(newSelected);
       } else {
-        setSelectedItems(new Set(filteredCategories.map(cat => cat.id)));
+        // Select all items on current page
+        const newSelected = new Set(selectedItems);
+        paginatedCategories.forEach(cat => newSelected.add(cat.id));
+        setSelectedItems(newSelected);
       }
     } else {
-      if (selectedItems.size === filteredTags.length) {
-        setSelectedItems(new Set());
+      const currentPageIds = new Set(paginatedTags.map(tag => tag.id));
+      const allSelected = paginatedTags.length > 0 && paginatedTags.every(tag => selectedItems.has(tag.id));
+      
+      if (allSelected) {
+        // Deselect all items on current page
+        const newSelected = new Set(selectedItems);
+        paginatedTags.forEach(tag => newSelected.delete(tag.id));
+        setSelectedItems(newSelected);
       } else {
-        setSelectedItems(new Set(filteredTags.map(tag => tag.id)));
+        // Select all items on current page
+        const newSelected = new Set(selectedItems);
+        paginatedTags.forEach(tag => newSelected.add(tag.id));
+        setSelectedItems(newSelected);
       }
     }
   };
@@ -224,7 +318,7 @@ export default function TaxonomyManagement() {
       if (response.ok) {
         const result = await response.json();
         // Reset form and close modal
-        setNewCategory({ name: '', slug: '', description: '', content_type: '' });
+        setNewCategory({ name: '', slug: '', description: '', content_type: '', parent_id: '' });
         setShowCreateModal(false);
         // Refresh data
         fetchTaxonomyData();
@@ -332,7 +426,9 @@ export default function TaxonomyManagement() {
     setEditError(null);
 
     try {
-      const endpoint = editingItem.content_type === 'tutorials'
+      // Check if it's a category (has description property) or a tag
+      const isCategory = (editingItem as Category).description !== undefined;
+      const endpoint = isCategory
         ? `/api/admin/taxonomy/categories`
         : `/api/admin/taxonomy/tags`;
       
@@ -365,7 +461,7 @@ export default function TaxonomyManagement() {
   const handleCloseModal = () => {
     setShowCreateModal(false);
     setCreateError(null);
-    setNewCategory({ name: '', slug: '', description: '', content_type: '' });
+    setNewCategory({ name: '', slug: '', description: '', content_type: '', parent_id: '' });
     setNewTag({ name: '', slug: '', content_type: '' });
   };
 
@@ -565,8 +661,8 @@ export default function TaxonomyManagement() {
                     type="checkbox"
                     checked={
                       activeTab === 'categories'
-                        ? selectedItems.size === filteredCategories.length && filteredCategories.length > 0
-                        : selectedItems.size === filteredTags.length && filteredTags.length > 0
+                        ? selectedItems.size === paginatedCategories.length && paginatedCategories.length > 0
+                        : selectedItems.size === paginatedTags.length && paginatedTags.length > 0
                     }
                     onChange={handleSelectAll}
                     className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
@@ -596,8 +692,13 @@ export default function TaxonomyManagement() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {activeTab === 'categories'
-                ? filteredCategories.map((category) => (
-                    <tr key={category.id} className="hover:bg-gray-50">
+                ? paginatedCategories.map((category) => {
+                    const isChild = isChildCategory(category);
+                    return (
+                    <tr 
+                      key={category.id} 
+                      className={`hover:bg-gray-50 ${isChild ? 'bg-gray-50/50' : ''}`}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <input
                           type="checkbox"
@@ -607,8 +708,38 @@ export default function TaxonomyManagement() {
                         />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900">{category.name}</div>
-                        <div className="text-sm text-gray-500">/{category.slug}</div>
+                        <div className="flex items-center gap-2">
+                          {isChild ? (
+                            <>
+                              <div className="w-6 flex items-center justify-center">
+                                <span className="text-gray-400 text-lg">└─</span>
+                              </div>
+                              <div className="flex-1 pl-2 border-l-2 border-gray-300">
+                                <div className="font-medium text-gray-700 flex items-center gap-2">
+                                  <span className="text-xs px-1.5 py-0.5 bg-orange-100 text-orange-700 rounded">Child</span>
+                                  {category.name}
+                                </div>
+                                <div className="text-sm text-gray-500">/{category.slug}</div>
+                                <div className="text-xs text-gray-400 mt-1">
+                                  Parent: <span className="font-medium text-gray-600">{getParentName(category) || 'Unknown'}</span>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-6 flex items-center justify-center">
+                                <span className="text-blue-600 text-lg">📁</span>
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-gray-900 flex items-center gap-2">
+                                  <span className="text-xs px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded">Parent</span>
+                                  {category.name}
+                                </div>
+                                <div className="text-sm text-gray-500">/{category.slug}</div>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -627,24 +758,25 @@ export default function TaxonomyManagement() {
                         {formatDate(category.created_at)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                 <div className="flex justify-end space-x-2">
-                           <button
-                             onClick={() => handleEditCategory(category)}
-                             className="text-red-600 hover:text-red-900"
-                           >
-                             Edit
-                           </button>
-                           <button 
-                             onClick={() => handleDeleteCategory(category.id, category.name)}
-                             className="text-red-600 hover:text-red-900"
-                           >
-                             Delete
-                           </button>
-                         </div>
+                        <div className="flex justify-end space-x-2">
+                          <button
+                            onClick={() => handleEditCategory(category)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteCategory(category.id, category.name)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                : filteredTags.map((tag) => (
+                  );
+                  })
+                : paginatedTags.map((tag) => (
                     <tr key={tag.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <input
@@ -691,6 +823,97 @@ export default function TaxonomyManagement() {
           </table>
         </div>
       </div>
+
+      {/* Pagination */}
+      {totalItems > 0 && (
+        <div className="bg-white p-4 rounded-lg border border-gray-200 mt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            {/* Items per page selector */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-700">Items per page:</label>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+              <span className="text-sm text-gray-600">
+                Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of {totalItems} {activeTab}
+              </span>
+            </div>
+
+            {/* Pagination controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  First
+                </button>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  Previous
+                </button>
+                
+                {/* Page numbers */}
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum: number;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`px-3 py-1 border rounded-md text-sm ${
+                          currentPage === pageNum
+                            ? 'bg-red-600 text-white border-red-600'
+                            : 'border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  Next
+                </button>
+                <button
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                >
+                  Last
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Empty State */}
       {!loading && (
@@ -783,6 +1006,37 @@ export default function TaxonomyManagement() {
                    </button>
                  </div>
                </div>
+
+               {/* Parent Category */}
+               {newCategory.content_type && (
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                     Parent Category
+                   </label>
+                   <select
+                     value={newCategory.parent_id}
+                     onChange={(e) => setNewCategory(prev => ({ ...prev, parent_id: e.target.value }))}
+                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                   >
+                     <option value="">None (Top-level category)</option>
+                     {categories
+                       .filter(cat => {
+                         // Only show categories of the same content type
+                         // Exclude categories that already have a parent (to prevent deep nesting)
+                         // Exclude the current category being edited (if any)
+                         return cat.content_type === newCategory.content_type;
+                       })
+                       .map(cat => (
+                         <option key={cat.id} value={cat.id}>
+                           {cat.name}
+                         </option>
+                       ))}
+                   </select>
+                   <p className="text-xs text-gray-500 mt-1">
+                     Select a parent category to create a hierarchical structure (optional)
+                   </p>
+                 </div>
+               )}
 
                {/* Description */}
                <div>
@@ -926,7 +1180,7 @@ export default function TaxonomyManagement() {
          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
              <h3 className="text-lg font-medium mb-4">
-               Edit {editingItem.content_type === 'tutorials' ? 'Category' : 'Tag'}
+               Edit {(editingItem as Category).description !== undefined ? 'Category' : 'Tag'}
              </h3>
              
              <form onSubmit={handleEditSubmit} className="space-y-4">
@@ -950,7 +1204,7 @@ export default function TaxonomyManagement() {
                {/* Name */}
                <div>
                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                   {editingItem.content_type === 'tutorials' ? 'Category' : 'Tag'} Name *
+                   {(editingItem as Category).description !== undefined ? 'Category' : 'Tag'} Name *
                  </label>
                  <input
                    type="text"
@@ -975,8 +1229,30 @@ export default function TaxonomyManagement() {
                  />
                </div>
 
+               {/* Parent Category Display (for categories only, read-only) */}
+               {(editingItem as Category).description !== undefined && (
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                     Parent Category
+                   </label>
+                   <div className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600">
+                     {(() => {
+                       const category = editingItem as Category;
+                       if (!category.parent_id || category.parent_id === '') {
+                         return 'None (Top-level category)';
+                       }
+                       const parentCategory = categories.find(cat => cat.id === category.parent_id);
+                       return parentCategory ? parentCategory.name : 'Unknown';
+                     })()}
+                   </div>
+                   <p className="text-xs text-gray-500 mt-1">
+                     Parent category cannot be changed here. To change it, delete and recreate the category.
+                   </p>
+                 </div>
+               )}
+
                {/* Description (for categories only) */}
-               {editingItem.content_type === 'tutorials' && (
+               {(editingItem as Category).description !== undefined && (
                  <div>
                    <label className="block text-sm font-medium text-gray-700 mb-1">
                      Description
@@ -986,6 +1262,7 @@ export default function TaxonomyManagement() {
                      onChange={(e) => setEditingItem(prev => prev ? { ...prev, description: e.target.value } : null)}
                      rows={3}
                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                     placeholder="Brief description of what this category covers..."
                    />
                  </div>
                )}

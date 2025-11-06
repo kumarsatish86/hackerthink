@@ -23,7 +23,8 @@ export async function GET() {
       WHERE setting_key IN (
         'generate_sitemap',
         'sitemap_change_frequency',
-        'sitemap_priority'
+        'sitemap_priority',
+        'include_in_sitemap'
       )
     `);
     
@@ -34,6 +35,17 @@ export async function GET() {
     
     if (settings.generate_sitemap === 'false') {
       return new NextResponse('Sitemap generation is disabled', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      });
+    }
+
+    // Check if quizzes are included in sitemap
+    const includeInSitemap = settings.include_in_sitemap || '';
+    if (!includeInSitemap.includes('quizzes')) {
+      return new NextResponse('Quizzes are not included in sitemap', {
         status: 404,
         headers: {
           'Content-Type': 'text/plain',

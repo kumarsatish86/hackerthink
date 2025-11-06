@@ -7,7 +7,7 @@ const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432'),
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'ainews',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
 // Specify Node.js runtime
@@ -25,7 +25,8 @@ export async function GET() {
       WHERE setting_key IN (
         'generate_sitemap',
         'sitemap_change_frequency',
-        'sitemap_priority'
+        'sitemap_priority',
+        'include_in_sitemap'
       )
     `);
     
@@ -38,6 +39,17 @@ export async function GET() {
     // If sitemap generation is disabled, return 404
     if (settings.generate_sitemap === 'false') {
       return new NextResponse('Sitemap generation is disabled', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      });
+    }
+
+    // Check if commands are included in sitemap
+    const includeInSitemap = settings.include_in_sitemap || '';
+    if (!includeInSitemap.includes('commands')) {
+      return new NextResponse('Commands are not included in sitemap', {
         status: 404,
         headers: {
           'Content-Type': 'text/plain',

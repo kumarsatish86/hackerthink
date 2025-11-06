@@ -15,16 +15,25 @@ interface User {
   updated_at: string;
 }
 
-export default function UserDetailsPage({ params }: { params: { id: string } }) {
-  const userId = params.id;
+export default function UserDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchUser();
+    // Resolve params Promise
+    params.then((resolvedParams) => {
+      setUserId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchUser();
+    }
   }, [userId]);
 
   const fetchUser = async () => {
@@ -122,12 +131,14 @@ export default function UserDetailsPage({ params }: { params: { id: string } }) 
           >
             Back to Users
           </Link>
-          <Link 
-            href={`/admin/users/${userId}/edit`} 
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Edit User
-          </Link>
+          {userId && (
+            <Link 
+              href={`/admin/users/${userId}/edit`} 
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Edit User
+            </Link>
+          )}
         </div>
       </div>
 

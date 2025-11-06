@@ -33,11 +33,15 @@ export default function CreateNewsPage() {
           setCategories(categoriesData.categories || []);
         }
 
-        // Fetch authors (you can reuse the existing users API)
+        // Fetch authors - only users with admin, editor, or author roles
         const authorsResponse = await fetch('/api/admin/users');
         if (authorsResponse.ok) {
           const authorsData = await authorsResponse.json();
-          setAuthors(authorsData.users || []);
+          // Filter for users with roles that can be authors (admin, editor, author)
+          const authorUsers = (authorsData.users || []).filter((user: Author) => 
+            user.role === 'admin' || user.role === 'editor' || user.role === 'author'
+          );
+          setAuthors(authorUsers);
         }
       } catch (error) {
         console.error('Error fetching data:', error);

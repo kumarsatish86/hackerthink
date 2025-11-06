@@ -25,7 +25,8 @@ export async function GET() {
       WHERE setting_key IN (
         'generate_sitemap',
         'sitemap_change_frequency',
-        'sitemap_priority'
+        'sitemap_priority',
+        'include_in_sitemap'
       )
     `);
     
@@ -44,6 +45,17 @@ export async function GET() {
         },
       });
     }
+
+    // Check if articles are included in sitemap
+    const includeInSitemap = settings.include_in_sitemap || '';
+    if (!includeInSitemap.includes('articles')) {
+      return new NextResponse('Articles are not included in sitemap', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+      });
+    }
     
     // Default values if not set
     const changeFreq = settings.sitemap_change_frequency || 'weekly';
@@ -55,16 +67,18 @@ export async function GET() {
     
     // Get articles
     const articlesResult = await pool.query(`
-      SELECT slug, updated_at 
+      SELECT slug, updated_at, publish_date 
       FROM articles 
       WHERE published = true
+      ORDER BY COALESCE(publish_date, updated_at) DESC
+      LIMIT 10000
     `);
     
     // Add articles to sitemap
     for (const article of articlesResult.rows) {
       sitemapXml += `  <url>\n`;
       sitemapXml += `    <loc>${baseUrl}/articles/${article.slug}</loc>\n`;
-      sitemapXml += `    <lastmod>${new Date(article.updated_at).toISOString()}</lastmod>\n`;
+      sitemapXml += `    <lastmod>${new Date(article.publish_date || article.updated_at || new Date()).toISOString()}</lastmod>\n`;
       sitemapXml += `    <changefreq>${changeFreq}</changefreq>\n`;
       sitemapXml += `    <priority>${priority}</priority>\n`;
       sitemapXml += `  </url>\n`;

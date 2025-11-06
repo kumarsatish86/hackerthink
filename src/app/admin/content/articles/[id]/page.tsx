@@ -19,6 +19,8 @@ interface Article {
   featured_image?: string | null;
   featured_image_alt?: string;
   status: 'draft' | 'published' | 'scheduled';
+  publish_date?: string;
+  update_date?: string;
   schedule_date?: string;
   category_id?: string | null;
   author_id: string;
@@ -139,6 +141,24 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
     
     // Transform database article to match the new ArticleEditor format
     // Use optional chaining and nullish coalescing to handle missing properties safely
+    // Format dates for datetime-local input (YYYY-MM-DDTHH:mm)
+    const formatDateForInput = (dateString: string | null | undefined): string => {
+      if (!dateString) return '';
+      try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        // Format as YYYY-MM-DDTHH:mm for datetime-local input
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+      } catch (e) {
+        return '';
+      }
+    };
+    
     const transformedArticle: Article = {
       id: data.article?.id,
       title: data.article?.title || '',
@@ -148,7 +168,9 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
       featured_image: data.article?.featured_image || null,
       featured_image_alt: data.article?.featured_image_alt || '',
       status: status,
-      schedule_date: data.article?.schedule_date || undefined,
+      publish_date: formatDateForInput(data.article?.publish_date),
+      update_date: formatDateForInput(data.article?.update_date),
+      schedule_date: formatDateForInput(data.article?.schedule_date),
       category_id: data.article?.category_id || null,
       author_id: data.article?.author_id || '',
       tags: Array.isArray(data.article?.tags) ? data.article.tags : [],
@@ -207,6 +229,7 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
     try {
       // Log the schema data being sent to API
       console.log('Schema JSON being sent to API:', updatedArticle.schema_json);
+      console.log('Update date being sent:', updatedArticle.update_date);
       
       // Transform the article data to match the API expectations
       const apiArticle = {
@@ -217,8 +240,11 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
         featured_image: updatedArticle.featured_image,
         featured_image_alt: updatedArticle.featured_image_alt,
         author_id: updatedArticle.author_id,
+        status: updatedArticle.status,
         published: updatedArticle.status === 'published',
-        // Add schedule handling if needed
+        publish_date: updatedArticle.publish_date && updatedArticle.publish_date.trim() !== '' ? updatedArticle.publish_date : null,
+        update_date: updatedArticle.update_date && updatedArticle.update_date.trim() !== '' ? updatedArticle.update_date : null,
+        schedule_date: updatedArticle.schedule_date && updatedArticle.schedule_date.trim() !== '' ? updatedArticle.schedule_date : null,
         tags: updatedArticle.tags,
         meta_title: updatedArticle.seo_title,
         meta_description: updatedArticle.seo_description,
@@ -226,6 +252,8 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
         category_id: updatedArticle.category_id,
         schema_json: updatedArticle.schema_json
       };
+      
+      console.log('API Article being sent:', JSON.stringify(apiArticle, null, 2));
       
       const url = isNew 
         ? '/api/admin/articles' 
@@ -247,19 +275,14 @@ export default function ArticleEditPage({ params }: { params: { id: string } }) 
       }
       
       const data = await response.json();
+      console.log('Article saved, response:', data);
       
       if (isNew) {
         // Redirect to edit page if new article was created
         router.push(`/admin/content/articles/${data.article.id}`);
       } else {
-        // Update the local article state
-        const transformedArticle: Article = {
-          ...updatedArticle,
-          id: data.article.id,
-          created_at: data.article.created_at,
-          updated_at: data.article.updated_at
-        };
-        setArticle(transformedArticle);
+        // Refetch the article to get the updated data including dates
+        await fetchArticle();
       }
       
       return data.article;

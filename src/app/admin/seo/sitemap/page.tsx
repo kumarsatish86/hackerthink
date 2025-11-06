@@ -18,7 +18,7 @@ export default function SitemapPage() {
     generate_sitemap: 'true',
     sitemap_change_frequency: 'weekly',
     sitemap_priority: '0.8',
-    include_in_sitemap: 'courses,scripts,articles,tools,lab-exercises,web-stories,commands,tutorials,lessons'
+    include_in_sitemap: 'courses,scripts,articles,tools,lab-exercises,web-stories,commands,tutorials,lessons,ai-models,ai-datasets,quizzes,interviews,news'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -440,6 +440,91 @@ export default function SitemapPage() {
                   <div className="ml-3 text-sm">
                     <label htmlFor="include_lessons" className="font-medium text-gray-700">Lessons</label>
                     <p className="text-gray-500">Include all published lesson pages</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="include_ai_models"
+                      name="include_ai_models"
+                      type="checkbox"
+                      checked={isIncluded('ai-models')}
+                      onChange={(e) => handleContentTypeChange('ai-models', e.target.checked)}
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="include_ai_models" className="font-medium text-gray-700">AI Models</label>
+                    <p className="text-gray-500">Include all published AI model pages</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="include_ai_datasets"
+                      name="include_ai_datasets"
+                      type="checkbox"
+                      checked={isIncluded('ai-datasets')}
+                      onChange={(e) => handleContentTypeChange('ai-datasets', e.target.checked)}
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="include_ai_datasets" className="font-medium text-gray-700">AI Datasets</label>
+                    <p className="text-gray-500">Include all published AI dataset pages</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="include_quizzes"
+                      name="include_quizzes"
+                      type="checkbox"
+                      checked={isIncluded('quizzes')}
+                      onChange={(e) => handleContentTypeChange('quizzes', e.target.checked)}
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="include_quizzes" className="font-medium text-gray-700">Quizzes</label>
+                    <p className="text-gray-500">Include all published quiz pages</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="include_interviews"
+                      name="include_interviews"
+                      type="checkbox"
+                      checked={isIncluded('interviews')}
+                      onChange={(e) => handleContentTypeChange('interviews', e.target.checked)}
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="include_interviews" className="font-medium text-gray-700">Interviews</label>
+                    <p className="text-gray-500">Include all published interview pages</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="include_news"
+                      name="include_news"
+                      type="checkbox"
+                      checked={isIncluded('news')}
+                      onChange={(e) => handleContentTypeChange('news', e.target.checked)}
+                      className="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label htmlFor="include_news" className="font-medium text-gray-700">News</label>
+                    <p className="text-gray-500">Include all published news pages</p>
                   </div>
                 </div>
               </div>

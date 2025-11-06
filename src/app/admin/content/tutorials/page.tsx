@@ -390,7 +390,7 @@ const TutorialsPage = () => {
     const iconMap: { [key: string]: React.ReactNode } = {
       'linux': <FaLinux className="text-green-600" />,
       'code': <FaCode className="text-blue-600" />,
-      'server': <FaServer className="text-purple-600" />,
+      'server': <FaServer className="text-red-600" />,
       'security': <FaShieldAlt className="text-red-600" />,
       'devops': <FaRocket className="text-orange-600" />,
     };
@@ -475,7 +475,7 @@ const TutorialsPage = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       ), 
-      color: 'purple' as const
+      color: 'red' as const
     },
     { 
       title: 'Total Sections', 
@@ -532,7 +532,7 @@ const TutorialsPage = () => {
           </button>
             <Link
               href="/admin/content/tutorials/create-tutorial"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               <FaPlus className="mr-2 h-4 w-4" />
               Create Tutorial
@@ -833,7 +833,7 @@ const TutorialsPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                         {tutorial.category_name}
                       </span>
                     </td>
@@ -950,7 +950,7 @@ const TutorialsPage = () => {
                 <div className="mt-6">
             <Link
               href="/admin/content/tutorials/create-tutorial"
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               <FaPlus className="mr-2 h-4 w-4" />
               Create Tutorial

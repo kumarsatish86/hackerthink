@@ -30,6 +30,8 @@ export async function GET(
         a.schema_json,
         a.created_at,
         a.updated_at,
+        a.publish_date,
+        a.update_date,
         u.name as author_name
       FROM articles a
       LEFT JOIN users u ON a.author_id = u.id
@@ -46,6 +48,8 @@ export async function GET(
     // Format dates
     article.created_at = new Date(article.created_at).toISOString();
     article.updated_at = new Date(article.updated_at).toISOString();
+    article.publish_date = article.publish_date ? new Date(article.publish_date).toISOString() : null;
+    article.update_date = article.update_date ? new Date(article.update_date).toISOString() : null;
 
     // Get related articles (same category or tags if implemented)
     const relatedArticles = await pool.query(

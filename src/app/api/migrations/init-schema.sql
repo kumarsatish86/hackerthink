@@ -1,6 +1,6 @@
 -- Drop and recreate the database (warning: this deletes all data)
--- DROP DATABASE IF EXISTS linuxconcept;
--- CREATE DATABASE linuxconcept;
+-- DROP DATABASE IF EXISTS hackerthink;
+-- CREATE DATABASE hackerthink;
 
 -- Create tables
 CREATE TABLE IF NOT EXISTS users (

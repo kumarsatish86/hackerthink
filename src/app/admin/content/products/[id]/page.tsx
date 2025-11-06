@@ -89,6 +89,55 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
   const [newFeature, setNewFeature] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [newTag, setNewTag] = useState('');
+  const [availableCategories, setAvailableCategories] = useState<Array<{ id: string; name: string; icon: any }>>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // Fetch product categories from Taxonomy API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/admin/taxonomy/categories?content_type=products');
+        if (response.ok) {
+          const data = await response.json();
+          // Map categories to the format expected by the form
+          const categoryIcons: { [key: string]: any } = {
+            'ai models': FaBrain,
+            'developer tools': FaCog,
+            'productivity': FaChartLine,
+            'startups': FaRocket,
+            'research': FaLightbulb,
+            'global': FaGlobe,
+            'ai coding': FaBrain,
+            'language processing': FaBrain,
+            // Default icon for unknown categories
+          };
+          
+          const mappedCategories = (data.categories || []).map((cat: any) => ({
+            id: cat.name, // Use name as id since products store categories as strings
+            name: cat.name,
+            icon: categoryIcons[cat.name.toLowerCase()] || FaBox
+          }));
+          
+          setAvailableCategories(mappedCategories);
+        }
+      } catch (error) {
+        console.error('Error fetching product categories:', error);
+        // Fallback to default categories if API fails
+        setAvailableCategories([
+          { id: 'AI Models', name: 'AI Models', icon: FaBrain },
+          { id: 'Developer Tools', name: 'Developer Tools', icon: FaCog },
+          { id: 'Productivity', name: 'Productivity', icon: FaChartLine },
+          { id: 'Startups', name: 'Startups', icon: FaRocket },
+          { id: 'Research', name: 'Research', icon: FaLightbulb },
+          { id: 'Global', name: 'Global', icon: FaGlobe }
+        ]);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Auto-generate SEO data
   const generateSEOData = () => {
@@ -118,15 +167,6 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
     }));
   };
 
-  // Product categories
-  const availableCategories = [
-    { id: 'ai-models', name: 'AI Models', icon: FaBrain },
-    { id: 'developer-tools', name: 'Developer Tools', icon: FaCog },
-    { id: 'productivity', name: 'Productivity', icon: FaChartLine },
-    { id: 'startups', name: 'Startups', icon: FaRocket },
-    { id: 'research', name: 'Research', icon: FaLightbulb },
-    { id: 'global', name: 'Global', icon: FaGlobe }
-  ];
 
   const pricingTypes = [
     { value: 'free', label: 'Free', color: 'green' },
@@ -798,35 +838,46 @@ const EditProductPage = ({ params }: { params: { id: string } }) => {
             {/* Categories */}
             <div className="bg-white shadow rounded-lg p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">Categories</h2>
-              <div className="space-y-2">
-                {availableCategories.map(category => (
-                  <div key={category.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`category-${category.id}`}
-                      checked={formData.categories.includes(category.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setFormData(prev => ({
-                            ...prev,
-                            categories: [...prev.categories, category.id]
-                          }));
-                        } else {
-                          setFormData(prev => ({
-                            ...prev,
-                            categories: prev.categories.filter(c => c !== category.id)
-                          }));
-                        }
-                      }}
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor={`category-${category.id}`} className="ml-2 block text-sm text-gray-900 flex items-center">
-                      <category.icon className="mr-2 h-4 w-4" />
-                      {category.name}
-                    </label>
-                  </div>
-                ))}
-              </div>
+              {loadingCategories ? (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-red-500 mx-auto"></div>
+                  <p className="text-sm text-gray-500 mt-2">Loading categories...</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {availableCategories.length > 0 ? (
+                    availableCategories.map(category => (
+                      <div key={category.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`category-${category.id}`}
+                          checked={formData.categories.includes(category.name)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                categories: [...prev.categories, category.name]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                categories: prev.categories.filter(c => c !== category.name)
+                              }));
+                            }
+                          }}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor={`category-${category.id}`} className="ml-2 block text-sm text-gray-900 flex items-center">
+                          <category.icon className="mr-2 h-4 w-4" />
+                          {category.name}
+                        </label>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500">No categories available. Create categories in Taxonomy page.</p>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Tags */}

@@ -12,8 +12,7 @@ interface User {
   bio?: string;
 }
 
-export default function EditUserPage({ params }: { params: { id: string } }) {
-  const userId = params.id;
+export default function EditUserPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   
   const [formData, setFormData] = useState({
@@ -28,9 +27,19 @@ export default function EditUserPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchUser();
+    // Resolve params Promise
+    params.then((resolvedParams) => {
+      setUserId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchUser();
+    }
   }, [userId]);
 
   const fetchUser = async () => {

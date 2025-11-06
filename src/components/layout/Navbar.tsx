@@ -22,6 +22,7 @@ export function Navbar() {
     site_name: 'HackerThink'
   });
   const [logoLoaded, setLogoLoaded] = useState(false);
+  const [breakingNews, setBreakingNews] = useState<Array<{ title: string; slug: string; sourceType?: string }>>([]);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const moreDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -45,13 +46,42 @@ export function Navbar() {
     fetchSettings();
   }, []);
 
+  // Fetch breaking news for ticker
+  useEffect(() => {
+    async function fetchBreakingNews() {
+      try {
+        const response = await fetch('/api/home');
+        if (response.ok) {
+          const data = await response.json();
+          // Get the latest 3-5 breaking news items (top story + breaking news)
+          const breakingItems = [
+            ...(data.topStory ? [data.topStory] : []),
+            ...(data.breakingNews || []).slice(0, 4)
+          ].slice(0, 5);
+          
+          setBreakingNews(breakingItems.map((item: any) => ({
+            title: item.title,
+            slug: item.slug,
+            sourceType: item.sourceType || 'article'
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching breaking news:', error);
+        // Fallback to empty array or default headlines
+        setBreakingNews([]);
+      }
+    }
+    
+    fetchBreakingNews();
+  }, []);
+
   const navigation = [
-    { name: 'Breaking', href: '/breaking', isBreaking: true },
-    { name: 'Tech', href: '/tech' },
-    { name: 'Business', href: '/business' },
-    { name: 'Research', href: '/research' },
-    { name: 'Opinion', href: '/opinion' },
-    { name: 'World', href: '/world' },
+    { name: 'Breaking', href: '/news/breaking', isBreaking: true },
+    { name: 'Tech', href: '/news/tech' },
+    { name: 'Business', href: '/news/business' },
+    { name: 'Research', href: '/news/research' },
+    { name: 'Opinion', href: '/news/opinion' },
+    { name: 'World', href: '/news/world' },
     { name: 'Articles', href: '/articles' },
     { name: 'More', href: '#', isDropdown: true },
   ];
@@ -340,20 +370,29 @@ export function Navbar() {
       </div>
       
       {/* Breaking News Ticker */}
-      <div className="bg-red-600 text-white py-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <span className="bg-red-700 px-2 py-1 text-xs font-bold mr-3">BREAKING</span>
-            <div className="flex-1 overflow-hidden">
-              <div className="animate-marquee whitespace-nowrap text-sm">
-                <span className="mr-8">OpenAI Announces GPT-5 with Multimodal Capabilities</span>
-                <span className="mr-8">Google's Gemini Pro 2.0 Surpasses Human Performance in Coding</span>
-                <span className="mr-8">EU AI Act Implementation Begins: What It Means for Developers</span>
+      {breakingNews.length > 0 && (
+        <div className="bg-red-600 text-white py-1">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center">
+              <span className="bg-red-700 px-2 py-1 text-xs font-bold mr-3">BREAKING</span>
+              <div className="flex-1 overflow-hidden relative">
+                <div className="animate-marquee whitespace-nowrap text-sm">
+                  {/* Duplicate content for seamless loop */}
+                  {[...breakingNews, ...breakingNews].map((news, index) => (
+                    <Link
+                      key={index}
+                      href={news.sourceType === 'news' ? `/news/${news.slug}` : `/articles/${news.slug}`}
+                      className="mr-8 hover:underline inline-block"
+                    >
+                      {news.title}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile menu */}
       {isMenuOpen && (

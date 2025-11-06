@@ -274,8 +274,8 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       headline: article.title,
       description: article.excerpt,
       image: article.featured_image,
-      datePublished: article.created_at,
-      dateModified: article.updated_at || article.created_at,
+      datePublished: article.publish_date || article.created_at,
+      dateModified: article.update_date || article.updated_at || article.created_at,
       author: {
         '@type': 'Person',
         name: article.author_name
@@ -783,14 +783,16 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     );
   }
 
-  // Format dates for display
-  const publishedDate = new Date(article.created_at).toLocaleDateString('en-US', {
+  // Format dates for display - use publish_date if available, otherwise created_at
+  const effectivePublishDate = article.publish_date || article.created_at;
+  const publishedDate = new Date(effectivePublishDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
   
-  const updatedDate = article.updated_at ? new Date(article.updated_at).toLocaleDateString('en-US', {
+  const effectiveUpdateDate = article.update_date || article.updated_at;
+  const updatedDate = effectiveUpdateDate ? new Date(effectiveUpdateDate).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
