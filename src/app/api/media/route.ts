@@ -115,11 +115,15 @@ export async function POST(request: NextRequest) {
     
     // Save file metadata to database
     const fileId = uuidv4();
+    const filepath = `/uploads/${category}/${uniqueFilename}`;
     const uploadedFile = {
       id: fileId,
       filename: uniqueFilename,
       originalFilename,
-      filepath: `/uploads/${category}/${uniqueFilename}`,
+      // Use API route for dynamic file serving (works immediately without rebuild)
+      filepath: `/api/uploads/${category}/${uniqueFilename}`,
+      // Also include the original path for backward compatibility
+      originalPath: filepath,
       type: category.slice(0, -1), // Remove 's' from the end (e.g., 'images' -> 'image')
       size: file.size,
       mimeType: fileType,
@@ -209,6 +213,10 @@ export async function GET(request: NextRequest) {
       
       const mediaItems = result.rows.map(item => ({
         ...item,
+        // Convert filepath to use API route for dynamic serving (works without rebuild)
+        filepath: item.filepath?.startsWith('/uploads/') 
+          ? item.filepath.replace('/uploads/', '/api/uploads/')
+          : item.filepath,
         // Format the response to match the expected structure
         uploadedBy: item.uploadedBy || 'Unknown',
         uploadedAt: item.uploadedAt ? item.uploadedAt.toISOString() : new Date().toISOString(),
