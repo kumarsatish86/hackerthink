@@ -66,20 +66,11 @@ const nextConfig = {
     
     return config;
   },
-  // Server runtime configuration
-  serverRuntimeConfig: {
-    // Will only be available on the server side
-    // Needed for database connections
-    DB_HOST: process.env.DB_HOST || 'localhost',
-    DB_PORT: process.env.DB_PORT || '5432',
-    DB_USER: process.env.DB_USER || 'postgres',
-    DB_PASSWORD: process.env.DB_PASSWORD || 'Admin1234',
-    DB_NAME: process.env.DB_NAME || 'hackerthink',
-  },
-  publicRuntimeConfig: {
-    // Will be available on both server and client
-    // Empty for now, but can be used for public variables
-  }
+  // Add empty turbopack config to silence the error in Next.js 16
+  // The webpack config is still needed for compatibility
+  turbopack: {},
+  // Note: serverRuntimeConfig and publicRuntimeConfig have been removed in Next.js 16
+  // Use environment variables directly via process.env instead
 };
 
 module.exports = nextConfig; 

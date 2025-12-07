@@ -2,21 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/authOptions';
-import getConfig from 'next/config';
 
 // Mark the route as dynamic
 export const dynamic = 'force-dynamic';
 
-// Get server runtime config
-const { serverRuntimeConfig } = getConfig() || { serverRuntimeConfig: {} };
-
-// Create a database connection pool using server runtime config
+// Create a database connection pool using environment variables
+// Note: In Next.js 16, next/config has been removed. Use process.env directly.
 const pool = new Pool({
-  host: serverRuntimeConfig.DB_HOST || process.env.DB_HOST || 'localhost',
-  port: parseInt(serverRuntimeConfig.DB_PORT || process.env.DB_PORT || '5432'),
-  user: serverRuntimeConfig.DB_USER || process.env.DB_USER || 'postgres',
-  password: serverRuntimeConfig.DB_PASSWORD || process.env.DB_PASSWORD || 'Admin1234',
-  database: serverRuntimeConfig.DB_NAME || process.env.DB_NAME || 'hackerthink',
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5432'),
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'Admin1234',
+  database: process.env.DB_NAME || 'hackerthink',
 });
 
 // GET /api/admin/roadmaps/[id]/modules - Get all modules for a roadmap
