@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 import { randomUUID } from 'crypto';
 
@@ -20,7 +21,7 @@ export async function POST(
     const { slug } = await params;
     
     // Get session (optional - for logged in users)
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userId = session?.user?.id ? parseInt(session.user.id.toString()) : null;
 
     // Get quiz

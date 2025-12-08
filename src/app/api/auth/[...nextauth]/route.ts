@@ -1,8 +1,11 @@
 import NextAuth from 'next-auth';
-import { authOptions } from '../authConfig';
+import { authConfig } from '../authOptions';
 
-const handler = NextAuth(authOptions);
+// Initialize NextAuth
+const nextAuth = NextAuth(authConfig);
 
-export { handler as GET, handler as POST };
-// Export authOptions so it can be imported by other files
-export { authOptions }; 
+if (!nextAuth.handlers) {
+  throw new Error('NextAuth handlers are not available. Please ensure AUTH_SECRET or NEXTAUTH_SECRET is set.');
+}
+
+export const { GET, POST } = nextAuth.handlers; 

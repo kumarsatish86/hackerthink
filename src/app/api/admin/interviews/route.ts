@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth/next';
+import { auth } from '@/auth';
+
 import { authOptions } from '../../auth/[...nextauth]/route';
 
 const pool = new Pool({
@@ -14,7 +15,7 @@ const pool = new Pool({
 export async function GET(request: Request) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -59,7 +60,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

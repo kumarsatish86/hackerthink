@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
@@ -61,7 +61,7 @@ async function ensureSiteSettingsTable() {
 export async function GET() {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
@@ -94,7 +94,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }

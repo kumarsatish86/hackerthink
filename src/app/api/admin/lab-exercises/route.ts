@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 
 function slugify(text: string, options: { lower?: boolean, strict?: boolean } = {}) {
   let result = text.toString();
@@ -40,7 +41,7 @@ const pool = new Pool({
 export async function GET(request: Request) {
   try {
     // Check authentication - only verify the user is logged in
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
@@ -171,7 +172,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     // Check authentication - only verify that the user is logged in
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
@@ -467,7 +468,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -74,7 +75,7 @@ export async function GET(request: Request) {
     // Check session (but don't block if not authenticated for debugging)
     let session;
     try {
-      session = await getServerSession();
+      session = await auth();
       console.log('Session check:', session ? 'Authenticated' : 'Not authenticated');
     } catch (error) {
       console.error('Error checking session:', error);
@@ -253,7 +254,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

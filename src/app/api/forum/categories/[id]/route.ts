@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 import slugify from 'slugify';
 
@@ -76,7 +77,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -202,7 +203,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json(
         { error: 'Unauthorized' },

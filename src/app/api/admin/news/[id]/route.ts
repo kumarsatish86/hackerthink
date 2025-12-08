@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const pool = new Pool({
@@ -20,7 +21,7 @@ export async function GET(
     const { id } = await params;
 
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -93,7 +94,7 @@ export async function PATCH(
     const { id } = await params;
 
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -375,7 +376,7 @@ export async function DELETE(
     console.log('[DELETE /api/admin/news/[id]] Received ID:', id);
 
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       console.log('[DELETE /api/admin/news/[id]] Unauthorized - no session');
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });

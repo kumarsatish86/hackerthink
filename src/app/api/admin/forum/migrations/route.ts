@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 import { createForumTables } from '@/app/api/migrations/create-forum-tables';
 import { extendUsersForForum } from '@/app/api/migrations/extend-users-for-forum';
@@ -7,7 +8,7 @@ import { extendUsersForForum } from '@/app/api/migrations/extend-users-for-forum
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

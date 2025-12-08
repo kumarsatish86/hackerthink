@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 
 // Mark the route as dynamic
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     console.log('[GET /api/admin/products] Starting fetch request');
     
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       console.log('[GET /api/admin/products] Unauthorized - no session');
       return NextResponse.json(
@@ -216,7 +217,7 @@ export async function POST(request: NextRequest) {
     console.log('[POST /api/admin/products] Starting create request');
     
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       console.log('[POST /api/admin/products] Unauthorized - no session');
       return NextResponse.json(

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -12,7 +13,7 @@ const pool = new Pool({
 
 export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = await auth();
     
     let dbUser = null;
     if (session?.user?.email) {

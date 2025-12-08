@@ -1,5 +1,4 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/authOptions';
+import { auth } from '@/auth';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -24,7 +23,7 @@ export async function getForumPermissions(
   categoryId?: number,
   threadUserId?: number
 ): Promise<UserPermissions> {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const isAuthenticated = !!session?.user;
   const isAdmin = session?.user?.role === 'admin';
   const currentUserId = session?.user?.id ? parseInt(session.user.id as string) : null;
@@ -120,7 +119,7 @@ export async function getForumPermissions(
 }
 
 export async function requireAuth(): Promise<{ id: number | string; role: string }> {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   
   if (!session?.user) {
     throw new Error('Unauthorized');
@@ -155,7 +154,7 @@ export async function requireAdmin(): Promise<{ id: number | string; role: strin
 
 export async function requireModerator(): Promise<{ id: number | string; role: string }> {
   const user = await requireAuth();
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   
   // Admins are always moderators
   if (user.role === 'admin') {

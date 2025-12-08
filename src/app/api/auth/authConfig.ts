@@ -1,3 +1,3 @@
-import { authOptions } from './authOptions';
+import { authConfig } from './authOptions';
 
-export { authOptions }; 
+export { authConfig }; 

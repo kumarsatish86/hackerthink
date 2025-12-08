@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
+import { auth } from '@/auth';
+
 import { authOptions } from '../auth/[...nextauth]/route';
 import { Pool } from 'pg';
 

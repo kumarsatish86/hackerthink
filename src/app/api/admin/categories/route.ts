@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
     await ensureCategoriesTableExists();
     
     // Check if user is authenticated (optional)
-    const session = await getServerSession();
+    const session = await auth();
     
     // If you want this to be admin-only, uncomment this
     // if (!session || session.user.role !== 'admin') {
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
     await ensureCategoriesTableExists();
     
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

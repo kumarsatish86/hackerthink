@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '../../db/postgres';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '../../auth/authOptions';
 
 // Helper function to check admin permissions
 async function checkAdminPermission() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     console.log("Session data in admin check:", JSON.stringify(session, null, 2));
     if (!session || !session.user || session.user.role !== 'admin') {
       return false;

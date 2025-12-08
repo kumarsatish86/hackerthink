@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 import { requireAuth, requireAdmin } from '@/lib/forum-auth';
 
@@ -22,7 +23,7 @@ export async function GET(
     const threadId = parseInt(id);
     const isSlug = isNaN(threadId);
 
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userId = session?.user?.id ? parseInt(session.user.id as string) : null;
 
     // Build query based on whether it's an ID or slug

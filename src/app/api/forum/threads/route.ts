@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import { authOptions } from '@/app/api/auth/authOptions';
 import slugify from 'slugify';
 import { requireAuth, isUserBanned } from '@/lib/forum-auth';
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
     const isSticky = searchParams.get('isSticky');
     const isSolved = searchParams.get('isSolved');
 
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     const userId = session?.user?.id ? parseInt(session.user.id as string) : null;
 
     let query = `

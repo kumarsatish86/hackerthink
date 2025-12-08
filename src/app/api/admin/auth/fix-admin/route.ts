@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 import bcrypt from 'bcryptjs';
 
 const pool = new Pool({
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
     }
     
     // Get current session
-    const session = await getServerSession();
+    const session = await auth();
     
     // If there's a logged-in user, update their role
     if (session?.user?.email) {

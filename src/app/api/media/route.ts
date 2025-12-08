@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import { authOptions } from '../auth/authConfig';
 import { query, queryOne } from '../../../lib/db.js';
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     await ensureMediaTable();
     
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || session.user?.role !== 'admin') {
       return NextResponse.json(
         { error: 'You must be an admin to upload files' },
@@ -182,7 +182,7 @@ export async function GET(request: NextRequest) {
     await ensureMediaTable();
     
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || session.user?.role !== 'admin') {
       return NextResponse.json(
         { error: 'You must be an admin to view media files' },
@@ -245,7 +245,7 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -293,7 +293,7 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

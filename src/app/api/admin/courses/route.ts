@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { Pool } from 'pg';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
+
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -13,7 +14,7 @@ const pool = new Pool({
 export async function GET() {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
     console.log('Creating new course - started');
     
     // Check authentication
-    const session = await getServerSession();
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }

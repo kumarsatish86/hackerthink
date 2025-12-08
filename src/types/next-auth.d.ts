@@ -1,5 +1,4 @@
 import { DefaultSession } from 'next-auth';
-import NextAuth from "next-auth";
 
 declare module 'next-auth' {
   interface Session {
@@ -9,7 +8,7 @@ declare module 'next-auth' {
       email: string;
       role: string;
       image?: string;
-    };
+    } & DefaultSession['user'];
   }
 
   interface User {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/auth';
+
+
 import { createRoadmapModulesTable } from '../create-roadmap-modules-table';
 import { createRoadmapResourcesTable } from '../create-roadmap-resources-table';
 import { createRoadmapsTable } from '../create-roadmaps-table';
@@ -8,7 +9,7 @@ import { createRoadmapsTable } from '../create-roadmaps-table';
 export async function GET(request) {
   try {
     // Check authentication and authorization
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
