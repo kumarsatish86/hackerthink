@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -235,7 +235,7 @@ const CodeBlockRenderer = ({ htmlContent }: { htmlContent: string }) => {
   );
 };
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
+export default function ArticlePage({ params }: { params: Promise<{ slug: string }> | { slug: string } }) {
   const router = useRouter();
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<RelatedArticle[]>([]);
@@ -248,8 +248,9 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   const articleRef = useRef<HTMLDivElement>(null);
   const headingsRef = useRef<{ id: string; top: number; text: string }[]>([]);
 
-  // Use params directly
-  const slug = params.slug;
+  // Unwrap params using React.use() for Next.js 16 compatibility
+  const resolvedParams = params instanceof Promise ? use(params) : params;
+  const slug = resolvedParams.slug || '';
 
   // Table of contents state
   const [tableOfContents, setTableOfContents] = useState<TocItem[]>([]);
@@ -292,22 +293,36 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   }, [article]);
 
   useEffect(() => {
+    if (!slug) return; // Don't fetch if slug is not available yet
+    
     const fetchArticle = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await fetch(`/api/articles/${slug}`);
         
         if (!response.ok) {
           if (response.status === 404) {
-            router.push('/articles');
+            setError('Article not found');
+            // Don't redirect immediately, show error first
+            setTimeout(() => {
+              router.push('/articles');
+            }, 2000);
             return;
           }
           throw new Error('Failed to fetch article');
         }
         
         const data = await response.json();
-        setArticle(data.article);
-        setRelatedArticles(data.relatedArticles || []);
+        if (data.article) {
+          setArticle(data.article);
+          setRelatedArticles(data.relatedArticles || []);
+        } else {
+          setError('Article not found');
+          setTimeout(() => {
+            router.push('/articles');
+          }, 2000);
+        }
       } catch (err) {
         console.error('Error fetching article:', err);
         setError('Failed to load article. Please try again later.');
