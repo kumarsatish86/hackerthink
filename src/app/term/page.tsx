@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 // Skip static generation for this page
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 
 interface Term {
   id: string;

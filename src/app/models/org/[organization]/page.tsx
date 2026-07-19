@@ -4,9 +4,10 @@ import { FaBrain, FaArrowLeft, FaBuilding } from 'react-icons/fa';
 import ModelsOrganizationClient from '@/components/models/ModelsOrganizationClient';
 
 export async function generateMetadata(
-  { params }: { params: { organization: string } }
+  { params }: { params: Promise<{ organization: string }> }
 ): Promise<Metadata> {
-  const orgName = params.organization.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const { organization } = await params;
+  const orgName = organization.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   const orgLower = orgName.toLowerCase();
   
   return {
@@ -40,13 +41,18 @@ export async function generateMetadata(
       description: `Browse all AI models developed by ${orgName}.`,
     },
     alternates: {
-      canonical: `/models/org/${params.organization}`
+      canonical: `/models/org/${organization}`
     }
   };
 }
 
-export default function ModelOrganizationPage({ params }: { params: { organization: string } }) {
-  const orgName = params.organization.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+export default async function ModelOrganizationPage({
+  params,
+}: {
+  params: Promise<{ organization: string }>;
+}) {
+  const { organization } = await params;
+  const orgName = organization.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
@@ -72,7 +78,7 @@ export default function ModelOrganizationPage({ params }: { params: { organizati
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <ModelsOrganizationClient organization={params.organization} />
+        <ModelsOrganizationClient organization={organization} />
       </div>
     </div>
   );

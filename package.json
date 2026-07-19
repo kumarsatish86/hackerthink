@@ -99,6 +99,7 @@
     "@types/react-color": "^3.0.13",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.15",
+    "baseline-browser-mapping": "^2.10.43",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "node-loader": "^2.1.0",

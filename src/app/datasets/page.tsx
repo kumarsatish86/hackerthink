@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { FaDatabase } from 'react-icons/fa';
 import DatasetsListClient from '@/components/datasets/DatasetsListClient';
 

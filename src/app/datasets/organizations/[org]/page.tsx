@@ -4,9 +4,10 @@ import { FaDatabase, FaArrowLeft, FaUsers } from 'react-icons/fa';
 import DatasetsOrganizationClient from '@/components/datasets/DatasetsOrganizationClient';
 
 export async function generateMetadata(
-  { params }: { params: { org: string } }
+  { params }: { params: Promise<{ org: string }> }
 ): Promise<Metadata> {
-  const orgName = decodeURIComponent(params.org).replace(/-/g, ' ');
+  const { org } = await params;
+  const orgName = decodeURIComponent(org).replace(/-/g, ' ');
   
   return {
     title: `${orgName} Datasets - HackerThink`,
@@ -23,8 +24,13 @@ export async function generateMetadata(
   };
 }
 
-export default function DatasetsOrganizationPage({ params }: { params: { org: string } }) {
-  const orgName = decodeURIComponent(params.org).replace(/-/g, ' ');
+export default async function DatasetsOrganizationPage({
+  params,
+}: {
+  params: Promise<{ org: string }>;
+}) {
+  const { org } = await params;
+  const orgName = decodeURIComponent(org).replace(/-/g, ' ');
   
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">

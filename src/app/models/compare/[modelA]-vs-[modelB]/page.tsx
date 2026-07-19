@@ -1,13 +1,18 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { FaBrain, FaArrowLeft, FaChartLine } from 'react-icons/fa';
+import { FaArrowLeft, FaChartLine } from 'react-icons/fa';
 import StaticComparisonClient from '@/components/models/StaticComparisonClient';
 
+function formatModelName(slug: string) {
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export async function generateMetadata(
-  { params }: { params: { modelA: string; modelB: string } }
+  { params }: { params: Promise<{ modelA: string; modelB: string }> }
 ): Promise<Metadata> {
-  const modelAName = params.modelA.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const modelBName = params.modelB.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const { modelA, modelB } = await params;
+  const modelAName = formatModelName(modelA);
+  const modelBName = formatModelName(modelB);
   const modelALower = modelAName.toLowerCase();
   const modelBLower = modelBName.toLowerCase();
   
@@ -44,12 +49,18 @@ export async function generateMetadata(
       description: `Compare ${modelAName} and ${modelBName} side-by-side.`,
     },
     alternates: {
-      canonical: `/models/compare/${params.modelA}-vs-${params.modelB}`
+      canonical: `/models/compare/${modelA}-vs-${modelB}`
     }
   };
 }
 
-export default function StaticComparisonPage({ params }: { params: { modelA: string; modelB: string } }) {
+export default async function StaticComparisonPage({
+  params,
+}: {
+  params: Promise<{ modelA: string; modelB: string }>;
+}) {
+  const { modelA, modelB } = await params;
+
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
@@ -64,8 +75,7 @@ export default function StaticComparisonPage({ params }: { params: { modelA: str
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                {params.modelA.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} vs{' '}
-                {params.modelB.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {formatModelName(modelA)} vs {formatModelName(modelB)}
               </h1>
               <p className="text-xl text-red-100">
                 Detailed side-by-side comparison
@@ -77,9 +87,8 @@ export default function StaticComparisonPage({ params }: { params: { modelA: str
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <StaticComparisonClient modelASlug={params.modelA} modelBSlug={params.modelB} />
+        <StaticComparisonClient modelASlug={modelA} modelBSlug={modelB} />
       </div>
     </div>
   );
 }
-

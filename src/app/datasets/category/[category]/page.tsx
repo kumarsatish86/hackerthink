@@ -3,10 +3,15 @@ import Link from 'next/link';
 import { FaDatabase, FaArrowLeft } from 'react-icons/fa';
 import DatasetsCategoryClient from '@/components/datasets/DatasetsCategoryClient';
 
+function formatCategoryName(category: string) {
+  return category.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export async function generateMetadata(
-  { params }: { params: { category: string } }
+  { params }: { params: Promise<{ category: string }> }
 ): Promise<Metadata> {
-  const categoryName = params.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const { category } = await params;
+  const categoryName = formatCategoryName(category);
   const categoryLower = categoryName.toLowerCase();
   
   return {
@@ -34,13 +39,18 @@ export async function generateMetadata(
       description: `Discover the best ${categoryName} datasets with detailed information.`,
     },
     alternates: {
-      canonical: `/datasets/category/${params.category}`
+      canonical: `/datasets/category/${category}`
     }
   };
 }
 
-export default function DatasetCategoryPage({ params }: { params: { category: string } }) {
-  const categoryName = params.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+export default async function DatasetCategoryPage({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}) {
+  const { category } = await params;
+  const categoryName = formatCategoryName(category);
   
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
@@ -59,7 +69,7 @@ export default function DatasetCategoryPage({ params }: { params: { category: st
                 {categoryName} Datasets
               </h1>
               <p className="text-xl text-red-100">
-                Explore datasets specialized for {params.category.replace(/-/g, ' ')}
+                Explore datasets specialized for {category.replace(/-/g, ' ')}
               </p>
             </div>
           </div>
@@ -68,9 +78,8 @@ export default function DatasetCategoryPage({ params }: { params: { category: st
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <DatasetsCategoryClient category={params.category} />
+        <DatasetsCategoryClient category={category} />
       </div>
     </div>
   );
 }
-

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   FaBrain, FaDownload, FaStar, FaSearch, FaFilter, FaSort,
-  FaTimes, FaTh, FaList, FaEye, FaCode
+  FaTimes, FaTh, FaList, FaEye, FaCode, FaChartLine
 } from 'react-icons/fa';
 
 interface AIModel {

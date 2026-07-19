@@ -3,10 +3,15 @@ import Link from 'next/link';
 import { FaBrain, FaArrowLeft } from 'react-icons/fa';
 import ModelsCategoryClient from '@/components/models/ModelsCategoryClient';
 
+function formatCategoryName(category: string) {
+  return category.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export async function generateMetadata(
-  { params }: { params: { category: string } }
+  { params }: { params: Promise<{ category: string }> }
 ): Promise<Metadata> {
-  const categoryName = params.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const { category } = await params;
+  const categoryName = formatCategoryName(category);
   const categoryLower = categoryName.toLowerCase();
   
   return {
@@ -40,12 +45,19 @@ export async function generateMetadata(
       description: `Discover the best ${categoryName} AI models with detailed comparisons.`,
     },
     alternates: {
-      canonical: `/models/category/${params.category}`
+      canonical: `/models/category/${category}`
     }
   };
 }
 
-export default function ModelCategoryPage({ params }: { params: { category: string } }) {
+export default async function ModelCategoryPage({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}) {
+  const { category } = await params;
+  const categoryName = formatCategoryName(category);
+
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
@@ -60,10 +72,10 @@ export default function ModelCategoryPage({ params }: { params: { category: stri
             </div>
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                {params.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Models
+                {categoryName} Models
               </h1>
               <p className="text-xl text-red-100">
-                Explore AI models specialized for {params.category.replace(/-/g, ' ')}
+                Explore AI models specialized for {category.replace(/-/g, ' ')}
               </p>
             </div>
           </div>
@@ -72,9 +84,8 @@ export default function ModelCategoryPage({ params }: { params: { category: stri
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <ModelsCategoryClient category={params.category} />
+        <ModelsCategoryClient category={category} />
       </div>
     </div>
   );
 }
-

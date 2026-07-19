@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { FaBrain } from 'react-icons/fa';
 import ModelsListClient from '@/components/models/ModelsListClient';
 

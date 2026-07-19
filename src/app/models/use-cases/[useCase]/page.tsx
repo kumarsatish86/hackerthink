@@ -4,9 +4,10 @@ import { FaBrain, FaArrowLeft, FaRocket } from 'react-icons/fa';
 import ModelsUseCaseClient from '@/components/models/ModelsUseCaseClient';
 
 export async function generateMetadata(
-  { params }: { params: { useCase: string } }
+  { params }: { params: Promise<{ useCase: string }> }
 ): Promise<Metadata> {
-  const useCaseName = params.useCase.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const { useCase } = await params;
+  const useCaseName = useCase.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   const useCaseLower = useCaseName.toLowerCase();
   
   return {
@@ -41,13 +42,18 @@ export async function generateMetadata(
       description: `Compare top AI models optimized for ${useCaseName}.`,
     },
     alternates: {
-      canonical: `/models/use-cases/${params.useCase}`
+      canonical: `/models/use-cases/${useCase}`
     }
   };
 }
 
-export default function ModelUseCasePage({ params }: { params: { useCase: string } }) {
-  const useCaseName = params.useCase.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+export default async function ModelUseCasePage({
+  params,
+}: {
+  params: Promise<{ useCase: string }>;
+}) {
+  const { useCase } = await params;
+  const useCaseName = useCase.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   
   return (
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
@@ -73,7 +79,7 @@ export default function ModelUseCasePage({ params }: { params: { useCase: string
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <ModelsUseCaseClient useCase={params.useCase} />
+        <ModelsUseCaseClient useCase={useCase} />
       </div>
     </div>
   );

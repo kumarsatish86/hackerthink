@@ -11,14 +11,15 @@ const pool = new Pool({
 });
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   try {
+    const { slug } = await params;
     const result = await pool.query(
       `SELECT name, description, developer, model_type, parameters, license, download_count 
        FROM ai_models 
        WHERE slug = $1 AND status = 'published'`,
-      [params.slug]
+      [slug]
     );
 
     if (result.rows.length === 0) {
@@ -67,7 +68,12 @@ export async function generateMetadata(
   }
 }
 
-export default function ModelDetailPage({ params }: { params: { slug: string } }) {
-  return <ModelDetailClient slug={params.slug} />;
+export default async function ModelDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  return <ModelDetailClient slug={slug} />;
 }
 

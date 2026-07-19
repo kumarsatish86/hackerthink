@@ -11,13 +11,14 @@ const pool = new Pool({
 });
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   try {
+    const { slug } = await params;
     const result = await pool.query(
       `SELECT name, description, seo_title, seo_description, provider, dataset_type, license, version
        FROM datasets WHERE slug = $1 AND status = 'published'`,
-      [params.slug]
+      [slug]
     );
 
     if (result.rows.length === 0) {
@@ -59,7 +60,12 @@ export async function generateMetadata(
   }
 }
 
-export default function DatasetDetailPage({ params }: { params: { slug: string } }) {
-  return <DatasetDetailClient slug={params.slug} />;
+export default async function DatasetDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  return <DatasetDetailClient slug={slug} />;
 }
 
