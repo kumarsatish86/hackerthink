@@ -63,7 +63,21 @@ Also install the new dependency if not already on prod build:
 ### Option A — CLI from a machine that can reach prod DB (recommended)
 
 1. Checkout the same commit you will deploy.
-2. Point env at **production** DB (temporary `.env.local` or export vars — do **not** commit secrets):
+2. Point env at **production** DB.
+
+`scripts/apply-models-migrations.mjs` loads (later overrides earlier):
+`.env` → `.env.production` → `.env.local`. Shell-exported `DB_*` always win.
+
+On the server (`/opt/hackerthink`), put real DB credentials in `.env.production` (or `.env`). If `DB_HOST` is missing, `pg` defaults to `127.0.0.1:5432` and you get `ECONNREFUSED`.
+
+```bash
+# On the production host — uses .env.production automatically after pulling the fixed script
+cd /opt/hackerthink
+node scripts/apply-models-migrations.mjs
+# Should print: Connecting to postgres://user@host:port/db (ssl=...)
+```
+
+Or export vars explicitly (do **not** commit secrets):
 
 ```bash
 # Example (PowerShell)
