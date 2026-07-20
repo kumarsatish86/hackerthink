@@ -166,7 +166,7 @@ export default function FixedTableEditorPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="w-full p-6 px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500">Loading article...</p>
         </div>
@@ -175,7 +175,7 @@ export default function FixedTableEditorPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="w-full p-6 px-4 sm:px-6 lg:px-8 xl:px-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Fixed Table Editor</h1>
         <Link 

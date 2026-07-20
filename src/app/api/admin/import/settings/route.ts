@@ -39,15 +39,26 @@ export async function POST(request: NextRequest) {
 
     let result;
     if (existing.rows.length > 0) {
-      // Update existing
-      result = await pool.query(
-        `UPDATE import_settings 
-         SET enabled = $1, api_key = $2, auto_approval = $3, import_limit = $4,
-             import_interval = $5, schedule_cron = $6, filters = $7, updated_at = CURRENT_TIMESTAMP
-         WHERE source_name = $8
-         RETURNING *`,
-        [enabled, api_key, auto_approval, import_limit, import_interval, schedule_cron, JSON.stringify(filters), source_name]
-      );
+      // Update existing — keep api_key when not provided
+      if (api_key !== undefined) {
+        result = await pool.query(
+          `UPDATE import_settings 
+           SET enabled = $1, api_key = $2, auto_approval = $3, import_limit = $4,
+               import_interval = $5, schedule_cron = $6, filters = $7, updated_at = CURRENT_TIMESTAMP
+           WHERE source_name = $8
+           RETURNING *`,
+          [enabled, api_key, auto_approval, import_limit, import_interval, schedule_cron, JSON.stringify(filters || {}), source_name]
+        );
+      } else {
+        result = await pool.query(
+          `UPDATE import_settings 
+           SET enabled = $1, auto_approval = $2, import_limit = $3,
+               import_interval = $4, schedule_cron = $5, filters = $6, updated_at = CURRENT_TIMESTAMP
+           WHERE source_name = $7
+           RETURNING *`,
+          [enabled, auto_approval, import_limit, import_interval, schedule_cron, JSON.stringify(filters || {}), source_name]
+        );
+      }
     } else {
       // Create new
       result = await pool.query(
@@ -55,7 +66,7 @@ export async function POST(request: NextRequest) {
          (source_name, enabled, api_key, auto_approval, import_limit, import_interval, schedule_cron, filters)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING *`,
-        [source_name, enabled, api_key, auto_approval, import_limit, import_interval, schedule_cron, JSON.stringify(filters)]
+        [source_name, enabled, api_key || null, auto_approval, import_limit, import_interval, schedule_cron, JSON.stringify(filters || {})]
       );
     }
 

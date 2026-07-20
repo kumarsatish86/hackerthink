@@ -59,7 +59,7 @@ export default async function ModelCategoryPage({
   const categoryName = formatCategoryName(category);
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
+    <div className="models-scope bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

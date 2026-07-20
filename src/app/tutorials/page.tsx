@@ -157,7 +157,7 @@ export default function TutorialsPage() {
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-24">
           <div className="text-center">
             {/* Futuristic Icon */}
             <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mb-8 relative">
@@ -204,7 +204,7 @@ export default function TutorialsPage() {
         
       {/* Category Filter */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Choose Your AI Path</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Select from cutting-edge AI technologies and start your journey</p>
@@ -238,7 +238,7 @@ export default function TutorialsPage() {
 
       {/* Tutorial Modules Grid */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Tutorial Modules</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Comprehensive AI learning modules from our database</p>
@@ -328,7 +328,7 @@ export default function TutorialsPage() {
 
       {/* Popular Topics */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Trending AI Topics</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Explore the most popular AI technologies and frameworks</p>
@@ -352,7 +352,7 @@ export default function TutorialsPage() {
 
       {/* Learning Paths */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
            <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Learning Paths</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Structured learning journeys for different AI specializations</p>
@@ -469,7 +469,7 @@ export default function TutorialsPage() {
 
       {/* Call to Action */}
       <div className="relative py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
                  <div className="text-center">
             <div className="relative">
               {/* Background Elements */}

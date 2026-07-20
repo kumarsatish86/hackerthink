@@ -4106,7 +4106,7 @@ export default async function CommandPage({ params }: { params: { slug: string }
   });
   
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
       {/* Add comprehensive structured data */}
       <CommandStructuredData command={command} />
       

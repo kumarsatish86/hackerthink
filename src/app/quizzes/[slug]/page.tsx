@@ -48,7 +48,7 @@ export default function QuizIntroPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading quiz...</p>
@@ -59,7 +59,7 @@ export default function QuizIntroPage() {
 
   if (error || !quiz) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Quiz not found'}</p>
           <Link href="/quizzes" className="text-blue-600 hover:underline">
@@ -77,7 +77,7 @@ export default function QuizIntroPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <Link
         href="/quizzes"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"

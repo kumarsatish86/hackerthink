@@ -97,7 +97,7 @@ export default function AboutUs() {
       </div>
       
       {/* Our Story Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 md:py-24">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 40 }}
@@ -161,7 +161,7 @@ export default function AboutUs() {
       
       {/* Our Mission Section */}
       <div className="bg-gradient-to-r from-teal-50 to-emerald-50 py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 40 }}
@@ -236,7 +236,7 @@ export default function AboutUs() {
       </div>
       
       {/* Our Team Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 md:py-24">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 40 }}
@@ -410,7 +410,7 @@ export default function AboutUs() {
       
       {/* Stats Section */}
       <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -456,7 +456,7 @@ export default function AboutUs() {
       </div>
       
       {/* Contact/CTA Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 md:py-24">
         <div className="bg-gray-50 rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2">
             <div className="p-8 md:p-12 lg:p-16">

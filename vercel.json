@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/huggingface-models",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

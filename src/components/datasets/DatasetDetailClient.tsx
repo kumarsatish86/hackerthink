@@ -204,7 +204,7 @@ export default function DatasetDetailClient({ slug }: { slug: string }) {
       <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
             <div className="flex items-center gap-6 flex-wrap">
               {dataset.logo_url ? (
                 <img src={dataset.logo_url} alt={dataset.name} className="w-20 h-20 rounded-lg" />
@@ -258,7 +258,7 @@ export default function DatasetDetailClient({ slug }: { slug: string }) {
 
         {/* Tabs Navigation */}
         <div className="bg-white border-b sticky top-0 z-10 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
             <div className="flex space-x-1 overflow-x-auto">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -282,7 +282,7 @@ export default function DatasetDetailClient({ slug }: { slug: string }) {
         </div>
 
         {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
           {/* Overview Tab - Section 1: Basic Overview */}
           {activeTab === 'overview' && (
             <div className="space-y-6">

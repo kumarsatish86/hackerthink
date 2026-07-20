@@ -247,7 +247,7 @@ export default function ScriptPageClient({ script }: ScriptPageClientProps) {
       {/* Hero section with gradient background - Full Width */}
       <div className="bg-gradient-to-br from-indigo-900 via-blue-800 to-indigo-700 text-white shadow-2xl overflow-hidden mb-8">
         <div className="px-8 py-10 backdrop-blur-sm bg-black bg-opacity-10">
-          <div className="container mx-auto max-w-6xl">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
             <div className="mb-6">
               <Link href="/scripts" className="text-indigo-200 hover:text-white inline-flex items-center transition-all duration-200 group">
                 <svg className="h-5 w-5 mr-1 transform group-hover:-translate-x-1 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -418,7 +418,7 @@ export default function ScriptPageClient({ script }: ScriptPageClientProps) {
         </div>
       </div>
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
         {/* Script content with improved styling */}
         <div className="bg-white shadow-xl rounded-xl overflow-hidden mb-8 hover:shadow-2xl transition-shadow duration-300">
           <div className="p-6">

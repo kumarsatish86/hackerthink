@@ -80,7 +80,7 @@ export default function QuizzesPage() {
 
   if (loading && quizzes.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading quizzes...</p>
@@ -90,7 +90,7 @@ export default function QuizzesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">AI Quizzes</h1>

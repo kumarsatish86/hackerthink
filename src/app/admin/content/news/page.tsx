@@ -383,7 +383,7 @@ const NewsPage = () => {
   console.log('🎯 [NEWS PAGE] Rendering main content, news count:', news.length);
   
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">News Management</h1>

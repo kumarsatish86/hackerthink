@@ -89,7 +89,7 @@ export default function CategoryPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="animate-pulse">Loading...</div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function CategoryPage() {
   if (error || !category) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md mb-4">
             <p className="text-sm text-red-700">{error || 'Category not found'}</p>
           </div>
@@ -118,7 +118,7 @@ export default function CategoryPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
           <Link
             href="/interviews"
             className="text-indigo-600 hover:text-indigo-900 mb-4 inline-block"
@@ -143,7 +143,7 @@ export default function CategoryPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
         {interviews.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <FaMicrophone className="mx-auto h-12 w-12 text-gray-400 mb-4" />

@@ -98,7 +98,7 @@ export default function CourseDetail() {
   
   if (!course) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Course Not Found</h1>
         <p className="text-gray-600 mb-8">The course you are looking for does not exist or has been removed.</p>
         <Link href="/courses" className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
@@ -109,7 +109,7 @@ export default function CourseDetail() {
   }
   
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       {/* Course Header */}
       <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="md:flex">

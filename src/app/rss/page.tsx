@@ -17,7 +17,7 @@ export default function RSSPage() {
     <div className="bg-gradient-to-b from-red-50 via-white to-gray-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
               <FaRss className="w-10 h-10" />
@@ -33,7 +33,7 @@ export default function RSSPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16">
         {/* What is RSS */}
         <section className="bg-white rounded-xl shadow-md p-8 border border-gray-200 mb-8">
           <h2 className="text-2xl font-bold text-red-700 mb-4">What is RSS?</h2>

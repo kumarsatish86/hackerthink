@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { ThemeProvider } from 'next-themes';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { Toaster } from 'react-hot-toast';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
@@ -16,21 +17,23 @@ export default function Providers({ children }: { children: ReactNode }) {
   const providerKey = recaptchaSiteKey || '0000000000000000000000000000000000000000';
 
   return (
-    <AuthProvider>
-      <SessionKeepAlive />
-      <ClientIntegrations />
-      <GoogleReCaptchaProvider
-        reCaptchaKey={providerKey}
-        scriptProps={{
-          async: false,
-          defer: false,
-          appendTo: 'head',
-          nonce: undefined,
-        }}
-      >
-        {children}
-      </GoogleReCaptchaProvider>
-      <Toaster position="top-right" />
-    </AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem storageKey="ht-theme">
+      <AuthProvider>
+        <SessionKeepAlive />
+        <ClientIntegrations />
+        <GoogleReCaptchaProvider
+          reCaptchaKey={providerKey}
+          scriptProps={{
+            async: false,
+            defer: false,
+            appendTo: 'head',
+            nonce: undefined,
+          }}
+        >
+          {children}
+        </GoogleReCaptchaProvider>
+        <Toaster position="top-right" />
+      </AuthProvider>
+    </ThemeProvider>
   );
 } 

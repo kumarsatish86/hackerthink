@@ -94,7 +94,7 @@ export default function NewCourseCatalog() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 pt-16 pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex justify-center my-16">
             <div className="relative">
               <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 opacity-50 blur"></div>
@@ -115,7 +115,7 @@ export default function NewCourseCatalog() {
     <div className="min-h-screen bg-gray-50 pt-16 pb-24">
       {/* Header section with gradient background */}
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 py-12 mb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
             Expand Your IT Skills
           </h1>
@@ -141,7 +141,7 @@ export default function NewCourseCatalog() {
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
         {error && (
           <div className="mb-8 bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-sm">
             <div className="flex">

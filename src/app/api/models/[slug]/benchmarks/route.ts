@@ -1,59 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'hackerthink',
-});
+import { query, queryOne } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-// GET benchmarks for a specific model
+async function getModelId(slug: string) {
+  const row = await queryOne(`SELECT id FROM ai_models WHERE slug = $1 AND status = 'published'`, [slug]);
+  return row?.id as string | undefined;
+}
+
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
-
-    // First get the model ID
-    const modelResult = await pool.query(
-      `SELECT id FROM ai_models WHERE slug = $1 AND status = 'published'`,
-      [slug]
-    );
-
-    if (modelResult.rows.length === 0) {
-      return NextResponse.json(
-        { error: 'Model not found' },
-        { status: 404 }
-      );
-    }
-
-    const modelId = modelResult.rows[0].id;
-
-    // Get benchmarks from model_benchmarks table
-    const benchmarksResult = await pool.query(
-      `SELECT * FROM model_benchmarks 
-       WHERE model_id = $1 
-       ORDER BY category, benchmark_name`,
+    const { slug } = await params;
+    const modelId = await getModelId(slug);
+    if (!modelId) return NextResponse.json({ error: 'Model not found' }, { status: 404 });
+    const result = await query(
+      `SELECT * FROM model_benchmarks WHERE model_id = $1 ORDER BY benchmark_name`,
       [modelId]
     );
-
     return NextResponse.json({
       model_slug: slug,
       model_id: modelId,
-      benchmarks: benchmarksResult.rows,
-      total: benchmarksResult.rowCount
+      benchmarks: result.rows,
+      total: result.rowCount,
     });
-  } catch (error) {
-    console.error('Error fetching benchmarks:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch benchmarks', details: (error as Error).message },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

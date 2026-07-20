@@ -1,0 +1,49 @@
+/* Models module design tokens — light + dark */
+.models-scope {
+  --m-bg: #f8fafc;
+  --m-surface: #ffffff;
+  --m-surface-2: #f1f5f9;
+  --m-border: #e2e8f0;
+  --m-text: #0f172a;
+  --m-text-muted: #64748b;
+  --m-brand: #dc2626;
+  --m-brand-hover: #b91c1c;
+  --m-brand-soft: #fef2f2;
+  --m-success: #059669;
+  --m-warning: #d97706;
+  --m-radius: 0.75rem;
+  --m-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  color: var(--m-text);
+  background: var(--m-bg);
+}
+
+.dark .models-scope,
+.models-scope.dark {
+  --m-bg: #0b1220;
+  --m-surface: #111827;
+  --m-surface-2: #1f2937;
+  --m-border: #374151;
+  --m-text: #f8fafc;
+  --m-text-muted: #94a3b8;
+  --m-brand: #f87171;
+  --m-brand-hover: #ef4444;
+  --m-brand-soft: #450a0a;
+  --m-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.models-scope a:focus-visible,
+.models-scope button:focus-visible,
+.models-scope input:focus-visible,
+.models-scope select:focus-visible,
+.models-scope textarea:focus-visible {
+  outline: 2px solid var(--m-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .models-scope * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

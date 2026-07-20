@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { HuggingFaceService } from '@/services/import/HuggingFaceService';
 import { AIEnrichmentService } from '@/services/import/AIEnrichmentService';
+import { enrichModelDocsBySlug } from '@/services/enrichment/ModelDocsEnrichment';
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -13,10 +14,27 @@ const pool = new Pool({
 
 export const dynamic = 'force-dynamic';
 
+// Parse a parameter-count label like "7B", "1.5B", "340M", "70K" into billions (numeric).
+function parseParamCountB(label?: string | null): number | null {
+  if (!label) return null;
+  const match = String(label).match(/([\d.]+)\s*([bmk])?/i);
+  if (!match) return null;
+  const value = parseFloat(match[1]);
+  if (!Number.isFinite(value)) return null;
+  const unit = (match[2] || '').toLowerCase();
+  if (unit === 'b') return value;
+  if (unit === 'm') return value / 1000;
+  if (unit === 'k') return value / 1_000_000;
+  return value;
+}
+
 // POST import model from HuggingFace
 export async function POST(request: NextRequest) {
+  let identifier: string | undefined;
   try {
-    const { identifier, auto_approval = false, apply_enrichment = true } = await request.json();
+    const body = await request.json();
+    identifier = body.identifier;
+    const { auto_approval = false, apply_enrichment = true } = body;
 
     console.log('Import request received:', { identifier, auto_approval, apply_enrichment });
 
@@ -95,13 +113,27 @@ export async function POST(request: NextRequest) {
     // Ensure arrays are always arrays, not undefined
     const categoriesArray = Array.isArray(fetchedData.categories) ? fetchedData.categories : [];
     const tagsArray = Array.isArray(fetchedData.tags) ? fetchedData.tags : [];
+    const capabilitiesArray = Array.isArray(fetchedData.capabilities) && fetchedData.capabilities.length > 0
+      ? fetchedData.capabilities
+      : tagsArray.slice(0, 24);
+    const useCasesArray = Array.isArray((enrichment as any).use_cases)
+      ? (enrichment as any).use_cases
+      : [];
+
+    // Lightly enrich the new models-module columns when present (external_model_id,
+    // task, framework, param_count_b). These are additive and optional - if the
+    // columns don't exist yet (pre-migration), the import still succeeds unchanged.
+    const externalModelIdValue = fetchedData.metadata?.modelId || identifier || null;
+    const taskValue = fetchedData.model_type || fetchedData.metadata?.task || null;
+    const frameworkValue = trainingFramework || fetchedData.metadata?.library_name || null;
+    const paramCountBValue = parseParamCountB(parameters || fetchedData.metadata?.extracted?.parameters);
 
     // Check which optional columns exist in the database
     const columnCheck = await pool.query(`
       SELECT column_name 
       FROM information_schema.columns 
       WHERE table_name = 'ai_models' 
-      AND column_name IN ('tokenizer', 'vocabulary_size', 'training_framework', 'quantized_versions', 'detailed_metadata')
+      AND column_name IN ('tokenizer', 'vocabulary_size', 'training_framework', 'quantized_versions', 'detailed_metadata', 'capabilities', 'use_cases', 'external_model_id', 'task', 'framework', 'param_count_b')
     `);
     const existingColumns = new Set(columnCheck.rows.map((r: any) => r.column_name));
     const hasTokenizer = existingColumns.has('tokenizer');
@@ -109,6 +141,12 @@ export async function POST(request: NextRequest) {
     const hasTrainingFramework = existingColumns.has('training_framework');
     const hasQuantizedVersions = existingColumns.has('quantized_versions');
     const hasDetailedMetadata = existingColumns.has('detailed_metadata');
+    const hasCapabilities = existingColumns.has('capabilities');
+    const hasUseCases = existingColumns.has('use_cases');
+    const hasExternalModelId = existingColumns.has('external_model_id');
+    const hasTask = existingColumns.has('task');
+    const hasFramework = existingColumns.has('framework');
+    const hasParamCountB = existingColumns.has('param_count_b');
 
     // Build detailed_metadata with new fields
     const detailedMetadata = {
@@ -166,6 +204,36 @@ export async function POST(request: NextRequest) {
       if (hasDetailedMetadata) {
         updateFields.push(`detailed_metadata = $${paramIndex}`);
         updateValues.push(Object.keys(detailedMetadata).length > 0 ? JSON.stringify(detailedMetadata) : null);
+        paramIndex++;
+      }
+      if (hasCapabilities) {
+        updateFields.push(`capabilities = $${paramIndex}`);
+        updateValues.push(JSON.stringify(capabilitiesArray));
+        paramIndex++;
+      }
+      if (hasUseCases) {
+        updateFields.push(`use_cases = $${paramIndex}`);
+        updateValues.push(JSON.stringify(useCasesArray));
+        paramIndex++;
+      }
+      if (hasExternalModelId) {
+        updateFields.push(`external_model_id = $${paramIndex}`);
+        updateValues.push(externalModelIdValue);
+        paramIndex++;
+      }
+      if (hasTask) {
+        updateFields.push(`task = $${paramIndex}`);
+        updateValues.push(taskValue);
+        paramIndex++;
+      }
+      if (hasFramework) {
+        updateFields.push(`framework = $${paramIndex}`);
+        updateValues.push(frameworkValue);
+        paramIndex++;
+      }
+      if (hasParamCountB) {
+        updateFields.push(`param_count_b = $${paramIndex}`);
+        updateValues.push(paramCountBValue);
         paramIndex++;
       }
 
@@ -289,6 +357,30 @@ export async function POST(request: NextRequest) {
         insertFields.push('detailed_metadata');
         insertValues.push(Object.keys(detailedMetadata).length > 0 ? JSON.stringify(detailedMetadata) : null);
       }
+      if (hasCapabilities) {
+        insertFields.push('capabilities');
+        insertValues.push(JSON.stringify(capabilitiesArray));
+      }
+      if (hasUseCases) {
+        insertFields.push('use_cases');
+        insertValues.push(JSON.stringify(useCasesArray));
+      }
+      if (hasExternalModelId) {
+        insertFields.push('external_model_id');
+        insertValues.push(externalModelIdValue);
+      }
+      if (hasTask) {
+        insertFields.push('task');
+        insertValues.push(taskValue);
+      }
+      if (hasFramework) {
+        insertFields.push('framework');
+        insertValues.push(frameworkValue);
+      }
+      if (hasParamCountB) {
+        insertFields.push('param_count_b');
+        insertValues.push(paramCountBValue);
+      }
 
       insertFields.push(
         'github_url', 'huggingface_url', 'download_count', 'categories', 'tags',
@@ -341,10 +433,26 @@ export async function POST(request: NextRequest) {
       ['huggingface', 'model', result.rows[0].id, 'success', JSON.stringify(fetchedData)]
     );
 
+    // Fill AI Summary, Overview Guidance, FAQs, Install guides, etc.
+    let docsEnrichment: any = null;
+    if (apply_enrichment && result.rows[0]?.slug) {
+      try {
+        docsEnrichment = await enrichModelDocsBySlug(result.rows[0].slug);
+        // Reload model so response includes freshly written ai_summary / overview_guidance
+        const refreshed = await pool.query(`SELECT * FROM ai_models WHERE id = $1`, [result.rows[0].id]);
+        if (refreshed.rows[0]) {
+          result.rows[0] = refreshed.rows[0];
+        }
+      } catch (docsError) {
+        console.error('Model docs enrichment failed (import still succeeded):', docsError);
+      }
+    }
+
     return NextResponse.json({
       model: result.rows[0],
       message: existingCheck.rows.length > 0 ? 'Model updated successfully' : 'Model imported successfully',
       enrichment_applied: apply_enrichment,
+      docs_enrichment: docsEnrichment?.counts || null,
       is_update: existingCheck.rows.length > 0
     });
   } catch (error) {

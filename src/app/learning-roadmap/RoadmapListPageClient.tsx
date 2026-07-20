@@ -86,7 +86,7 @@ export default function RoadmapListPageClient({ categories, featuredRoadmaps }: 
           }}></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-24">
           <motion.div 
             className="text-center"
             variants={fadeIn}
@@ -132,7 +132,7 @@ export default function RoadmapListPageClient({ categories, featuredRoadmaps }: 
 
       {/* Featured Roadmaps */}
       <div className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <motion.div
             variants={fadeIn}
             initial="hidden"
@@ -214,7 +214,7 @@ export default function RoadmapListPageClient({ categories, featuredRoadmaps }: 
 
       {/* Categories Section */}
       <div className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <motion.div
             variants={fadeIn}
             initial="hidden"
@@ -366,7 +366,7 @@ export default function RoadmapListPageClient({ categories, featuredRoadmaps }: 
 
       {/* Call to Action */}
       <div className="py-16 bg-gradient-to-r from-purple-600 to-indigo-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 text-center">
           <motion.div
             variants={fadeIn}
             initial="hidden"

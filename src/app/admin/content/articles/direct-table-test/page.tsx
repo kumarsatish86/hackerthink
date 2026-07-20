@@ -13,7 +13,7 @@ export default function DirectTableTest() {
   const [content, setContent] = useState('<p>This is a test for the direct table editor.</p>');
   
   return (
-    <div className="container mx-auto p-6">
+    <div className="w-full p-6 px-4 sm:px-6 lg:px-8 xl:px-10">
       <h1 className="text-2xl font-bold mb-4">TipTap Table Editor Test</h1>
       <p className="mb-4">This is a simplified test page for the TipTap table editor.</p>
       

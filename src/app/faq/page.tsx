@@ -44,7 +44,7 @@ export default function FAQPage() {
 
   return (
     <div className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row gap-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 flex flex-col md:flex-row gap-12">
         {/* Floating Table of Contents */}
         <aside className="md:w-1/4 mb-8 md:mb-0 sticky top-28 self-start z-10">
           <motion.div

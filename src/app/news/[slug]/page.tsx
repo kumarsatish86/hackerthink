@@ -190,7 +190,7 @@ export default function NewsArticlePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded mb-4"></div>
             <div className="h-4 bg-gray-200 rounded mb-2"></div>
@@ -228,7 +228,7 @@ export default function NewsArticlePage() {
     <div className="min-h-screen bg-gray-50">
       {/* Article Header */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-8">
             <div className="flex-1 w-full">
               {/* Breadcrumb */}
@@ -402,7 +402,7 @@ export default function NewsArticlePage() {
       </div>
 
       {/* Article Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3 w-full">

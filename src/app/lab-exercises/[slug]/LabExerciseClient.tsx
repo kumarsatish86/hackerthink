@@ -162,7 +162,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
           </div>
           
           {/* Content */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 relative z-10">
             <div className="md:flex md:items-start">
               <div className="flex-1">
                 {/* Breadcrumb navigation */}
@@ -276,7 +276,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
       </div>
       
       {/* Lab Exercise Content Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="lg:flex lg:gap-12">
           {/* Main content */}
           <div className="lg:w-2/3">
@@ -520,7 +520,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
       
       {/* Completion Tracking */}
       <div className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Track Your Progress</h2>
             <div className="max-w-3xl mx-auto mb-8">
@@ -601,7 +601,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
 
       {/* Similar Lab Exercises Section */}
       <div className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900">Similar Lab Exercises</h2>
             <p className="mt-4 text-xl text-gray-600">Continue your learning journey with these related labs</p>
@@ -669,7 +669,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
 
       {/* Comments Section */}
       <div className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Comments & Discussion</h2>
             <CommentsSection contentId={exercise.id} contentType="lab-exercise" />
@@ -679,7 +679,7 @@ export default function LabExerciseClient({ exercise }: LabExerciseClientProps) 
       
       {/* Subscription Form Section */}
       <div className="border-t border-gray-200 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Stay Updated with New Lab Exercises</h2>
             <p className="text-lg opacity-90">Subscribe to our newsletter to receive notifications about new lab exercises, tutorials, and learning resources.</p>

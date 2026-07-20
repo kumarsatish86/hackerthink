@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import { query } from '@/lib/db';
 import { getSiteUrl } from '../../lib/getSiteUrl';
-
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'hackerthink',
-});
 
 // Specify Node.js runtime
 export const runtime = 'nodejs';
@@ -17,9 +9,9 @@ export async function GET() {
   try {
     // Get base URL using our utility
     const baseUrl = getSiteUrl();
-    
+
     // Get sitemap settings
-    const settingsResult = await pool.query(`
+    const settingsResult = await query(`
       SELECT setting_key, setting_value
       FROM seo_settings
       WHERE setting_key IN (
@@ -29,13 +21,13 @@ export async function GET() {
         'include_in_sitemap'
       )
     `);
-    
+
     // Convert to object format
-    const settings = settingsResult.rows.reduce((acc, row) => {
+    const settings = settingsResult.rows.reduce((acc: Record<string, string>, row: any) => {
       acc[row.setting_key] = row.setting_value;
       return acc;
-    }, {});
-    
+    }, {} as Record<string, string>);
+
     // If sitemap generation is disabled, return 404
     if (settings.generate_sitemap === 'false') {
       return new NextResponse('Sitemap generation is disabled', {
@@ -56,50 +48,50 @@ export async function GET() {
         },
       });
     }
-    
+
     // Default values if not set
     const changeFreq = settings.sitemap_change_frequency || 'weekly';
     const priority = settings.sitemap_priority || '0.8';
-    
+
     // XML header
     let sitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     sitemapXml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    
+
     // Add static model pages
     sitemapXml += `  <url>\n`;
     sitemapXml += `    <loc>${baseUrl}/models</loc>\n`;
     sitemapXml += `    <changefreq>daily</changefreq>\n`;
     sitemapXml += `    <priority>0.9</priority>\n`;
     sitemapXml += `  </url>\n`;
-    
+
     sitemapXml += `  <url>\n`;
     sitemapXml += `    <loc>${baseUrl}/models/compare</loc>\n`;
     sitemapXml += `    <changefreq>weekly</changefreq>\n`;
     sitemapXml += `    <priority>0.8</priority>\n`;
     sitemapXml += `  </url>\n`;
-    
+
     sitemapXml += `  <url>\n`;
     sitemapXml += `    <loc>${baseUrl}/models/leaderboard</loc>\n`;
     sitemapXml += `    <changefreq>daily</changefreq>\n`;
     sitemapXml += `    <priority>0.8</priority>\n`;
     sitemapXml += `  </url>\n`;
-    
+
     sitemapXml += `  <url>\n`;
     sitemapXml += `    <loc>${baseUrl}/models/timeline</loc>\n`;
     sitemapXml += `    <changefreq>weekly</changefreq>\n`;
     sitemapXml += `    <priority>0.7</priority>\n`;
     sitemapXml += `  </url>\n`;
-    
-    // Add category pages
+
+    // Add category pages — these live under /models/category/[category]
     const categories = ['text-generation', 'vision', 'multimodal', 'audio', 'nlp', 'code', 'embeddings'];
     for (const category of categories) {
       sitemapXml += `  <url>\n`;
-      sitemapXml += `    <loc>${baseUrl}/models/${category}</loc>\n`;
+      sitemapXml += `    <loc>${baseUrl}/models/category/${category}</loc>\n`;
       sitemapXml += `    <changefreq>weekly</changefreq>\n`;
       sitemapXml += `    <priority>0.7</priority>\n`;
       sitemapXml += `  </url>\n`;
     }
-    
+
     // Add use case pages
     const useCases = ['chatbots', 'code-generation', 'text-generation', 'image-generation', 'translation', 'summarization', 'question-answering', 'classification'];
     for (const useCase of useCases) {
@@ -109,16 +101,16 @@ export async function GET() {
       sitemapXml += `    <priority>0.7</priority>\n`;
       sitemapXml += `  </url>\n`;
     }
-    
+
     // Get published AI models
-    const modelsResult = await pool.query(`
+    const modelsResult = await query(`
       SELECT slug, updated_at 
       FROM ai_models 
       WHERE status = 'published'
       ORDER BY updated_at DESC
       LIMIT 10000
     `);
-    
+
     // Add AI models to sitemap
     for (const model of modelsResult.rows) {
       sitemapXml += `  <url>\n`;
@@ -128,15 +120,15 @@ export async function GET() {
       sitemapXml += `    <priority>${priority}</priority>\n`;
       sitemapXml += `  </url>\n`;
     }
-    
+
     // Get organization pages
-    const orgResult = await pool.query(`
+    const orgResult = await query(`
       SELECT DISTINCT developer 
       FROM ai_models 
       WHERE status = 'published' AND developer IS NOT NULL 
       LIMIT 100
     `);
-    
+
     // Add organization pages to sitemap
     for (const org of orgResult.rows) {
       sitemapXml += `  <url>\n`;
@@ -145,10 +137,10 @@ export async function GET() {
       sitemapXml += `    <priority>0.6</priority>\n`;
       sitemapXml += `  </url>\n`;
     }
-    
+
     // Close the XML
     sitemapXml += '</urlset>';
-    
+
     // Return the sitemap XML with proper content type
     return new NextResponse(sitemapXml, {
       status: 200,
@@ -159,7 +151,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error generating AI models sitemap:', error);
-    
+
     // Return a simple error-indicating sitemap in case of errors
     return new NextResponse(
       '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>',
@@ -173,4 +165,3 @@ export async function GET() {
     );
   }
 }
-

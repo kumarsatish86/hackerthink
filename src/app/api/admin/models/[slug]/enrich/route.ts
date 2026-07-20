@@ -17,10 +17,10 @@ const enrichmentService = new ModelEnrichmentService();
 // POST enrich a single model by slug
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     // First get the model ID from slug
     const modelResult = await pool.query(

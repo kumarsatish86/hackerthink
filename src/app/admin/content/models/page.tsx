@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaBrain, FaCheckCircle, FaTimesCircle, FaStar, FaDownload } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaBrain, FaCheckCircle, FaTimesCircle, FaStar, FaDownload, FaMagic, FaFileAlt } from 'react-icons/fa';
 
 interface AIModel {
   id: string;
@@ -31,12 +31,39 @@ export default function AdminModelsPage() {
   const [sortBy, setSortBy] = useState<'created_at' | 'name' | 'rating' | 'view_count'>('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [bulkRegenerating, setBulkRegenerating] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    pages: 1,
+    page: 1,
+    limit: 10,
+    hasNext: false,
+    hasPrev: false,
+  });
+  const [stats, setStats] = useState({
+    total: 0,
+    published: 0,
+    drafts: 0,
+    featured: 0,
+  });
 
   useEffect(() => {
     fetchModels();
-  }, [currentPage, statusFilter, typeFilter, sortBy, sortOrder]);
+  }, [currentPage, itemsPerPage, statusFilter, typeFilter, sortBy, sortOrder]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentPage !== 1) {
+        setCurrentPage(1);
+      } else {
+        fetchModels();
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const fetchModels = async () => {
     try {
@@ -56,6 +83,12 @@ export default function AdminModelsPage() {
       
       const data = await response.json();
       setModels(data.models || []);
+      if (data.pagination) {
+        setPagination(data.pagination);
+      }
+      if (data.stats) {
+        setStats(data.stats);
+      }
     } catch (error) {
       console.error('Error fetching models:', error);
     } finally {
@@ -102,17 +135,26 @@ export default function AdminModelsPage() {
     }
   };
 
-  const filteredModels = models.filter(model => {
-    const matchesSearch = !searchTerm || 
-      model.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      model.developer?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      model.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || model.status === statusFilter;
-    const matchesType = typeFilter === 'all' || model.model_type === typeFilter;
-    
-    return matchesSearch && matchesStatus && matchesType;
-  });
+  const filteredModels = models;
+
+  const bulkRegenerateDocs = async () => {
+    if (!confirm('Regenerate AI docs (summary, quick facts, FAQs, install guides, usage examples, security notes) for the most recently updated models? This may take a while.')) return;
+    try {
+      setBulkRegenerating(true);
+      const res = await fetch('/api/admin/models/regenerate-docs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ limit: 100 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to regenerate docs');
+      alert(data.message || 'Docs regenerated');
+    } catch (error: any) {
+      alert(error.message || 'Failed to regenerate docs');
+    } finally {
+      setBulkRegenerating(false);
+    }
+  };
 
   return (
     <div className="p-6">
@@ -123,6 +165,28 @@ export default function AdminModelsPage() {
           <p className="text-gray-600 mt-1">Manage AI models directory</p>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch('/api/admin/models/refresh-facets', { method: 'POST' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Failed');
+                alert(data.message || 'Facets refreshed');
+              } catch (e: any) {
+                alert(e.message || 'Failed to refresh filter facets');
+              }
+            }}
+            className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg"
+          >
+            Refresh Filter Tags
+          </button>
+          <button
+            onClick={bulkRegenerateDocs}
+            disabled={bulkRegenerating}
+            className="bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-lg flex items-center gap-2 disabled:opacity-50"
+          >
+            <FaMagic /> {bulkRegenerating ? 'Regenerating...' : 'Regenerate Docs'}
+          </button>
           <Link
             href="/admin/content/models/create"
             className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
@@ -144,7 +208,7 @@ export default function AdminModelsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Models</p>
-              <p className="text-2xl font-bold text-gray-900">{models.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
             <FaBrain className="text-4xl text-red-600 opacity-50" />
           </div>
@@ -154,7 +218,7 @@ export default function AdminModelsPage() {
             <div>
               <p className="text-sm text-gray-600">Published</p>
               <p className="text-2xl font-bold text-green-600">
-                {models.filter(m => m.status === 'published').length}
+                {stats.published}
               </p>
             </div>
             <FaCheckCircle className="text-4xl text-green-600 opacity-50" />
@@ -165,7 +229,7 @@ export default function AdminModelsPage() {
             <div>
               <p className="text-sm text-gray-600">Drafts</p>
               <p className="text-2xl font-bold text-yellow-600">
-                {models.filter(m => m.status === 'draft').length}
+                {stats.drafts}
               </p>
             </div>
             <FaTimesCircle className="text-4xl text-yellow-600 opacity-50" />
@@ -176,7 +240,7 @@ export default function AdminModelsPage() {
             <div>
               <p className="text-sm text-gray-600">Featured</p>
               <p className="text-2xl font-bold text-purple-600">
-                {models.filter(m => m.featured).length}
+                {stats.featured}
               </p>
             </div>
             <FaStar className="text-4xl text-purple-600 opacity-50" />
@@ -196,7 +260,10 @@ export default function AdminModelsPage() {
           />
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
+            onChange={(e) => {
+              setCurrentPage(1);
+              setStatusFilter(e.target.value as any);
+            }}
             className="border rounded-lg px-4 py-2"
           >
             <option value="all">All Status</option>
@@ -345,13 +412,22 @@ export default function AdminModelsPage() {
                       <Link
                         href={`/admin/content/models/${model.slug}`}
                         className="text-blue-600 hover:text-blue-800"
+                        title="Edit core fields"
                       >
                         <FaEdit />
+                      </Link>
+                      <Link
+                        href={`/admin/content/models/${model.slug}/edit`}
+                        className="text-purple-600 hover:text-purple-800"
+                        title="Edit docs"
+                      >
+                        <FaFileAlt />
                       </Link>
                       <Link
                         href={`/models/${model.slug}`}
                         target="_blank"
                         className="text-green-600 hover:text-green-800"
+                        title="View public page"
                       >
                         <FaEye />
                       </Link>
@@ -368,6 +444,58 @@ export default function AdminModelsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white rounded-lg shadow px-4 py-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <p className="text-sm text-gray-600">
+            Showing{' '}
+            <span className="font-medium">
+              {pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1}
+            </span>
+            –
+            <span className="font-medium">
+              {Math.min(pagination.page * pagination.limit, pagination.total)}
+            </span>{' '}
+            of <span className="font-medium">{pagination.total}</span> models
+          </p>
+          <label className="flex items-center gap-2 text-sm text-gray-600">
+            <span>Per page</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border rounded-lg px-2 py-1.5 text-sm bg-white"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </label>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={!pagination.hasPrev || loading}
+            className="px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {pagination.page} of {pagination.pages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => p + 1)}
+            disabled={!pagination.hasNext || loading}
+            className="px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

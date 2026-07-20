@@ -166,7 +166,7 @@ export default function LearnCoursePage() {
         </div>
         
         {/* Content */}
-        <div className="relative container mx-auto px-4 py-16 z-10">
+        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16 z-10">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
               {/* Animated Title */}
@@ -239,7 +239,7 @@ export default function LearnCoursePage() {
         </div>
       </div>
       
-      <div className="container mx-auto px-4 py-8" ref={courseContentRef}>
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8" ref={courseContentRef}>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Course Navigation Sidebar */}
           <div className="lg:col-span-1">
@@ -366,7 +366,7 @@ export default function LearnCoursePage() {
       
       {/* Resources Section */}
       <section className="bg-gradient-to-r from-gray-50 to-gray-100 py-16">
-        <div className="container mx-auto px-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">Additional Resources</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Enhance your learning experience with these carefully selected resources that complement your course material.</p>
@@ -438,7 +438,7 @@ export default function LearnCoursePage() {
       
       {/* Testimonials Section */}
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">What Students Are Saying</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Hear from other learners who have completed this course and applied their knowledge.</p>
@@ -534,7 +534,7 @@ export default function LearnCoursePage() {
       
       {/* FAQ Section */}
       <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Find answers to common questions about this course and your learning journey.</p>
@@ -646,7 +646,7 @@ export default function LearnCoursePage() {
       
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-        <div className="container mx-auto px-4 text-center">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to continue your learning journey?</h2>
           <p className="text-xl text-indigo-100 max-w-2xl mx-auto mb-8">Apply your new knowledge with our advanced courses and specialized workshops.</p>
           

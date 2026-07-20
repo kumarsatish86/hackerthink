@@ -239,7 +239,7 @@ export default function ToolsPage() {
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-24">
           <div className="text-center">
             {/* Futuristic Icon */}
             <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 to-cyan-600 rounded-full mb-8 relative">
@@ -286,7 +286,7 @@ export default function ToolsPage() {
 
       {/* Category Filter */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">AI Tool Categories</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Explore tools by category and find the perfect solution for your AI needs</p>
@@ -320,7 +320,7 @@ export default function ToolsPage() {
 
       {/* Featured Tools */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Featured AI Tools</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Hand-picked tools that are revolutionizing the AI landscape</p>
@@ -390,7 +390,7 @@ export default function ToolsPage() {
 
       {/* Search and Filters */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
             <div className="mb-6">
               <div className="relative">
@@ -445,7 +445,7 @@ export default function ToolsPage() {
 
       {/* Tools Grid */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           {filteredTools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredTools.map((tool) => (
@@ -551,7 +551,7 @@ export default function ToolsPage() {
 
       {/* Popular Topics */}
       <div className="relative py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Trending AI Tools</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">Explore the most popular AI tools and frameworks</p>
@@ -575,7 +575,7 @@ export default function ToolsPage() {
 
       {/* Call to Action */}
       <div className="relative py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center">
             <div className="relative">
               {/* Background Elements */}

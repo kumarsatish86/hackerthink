@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AdminSMTPConfigsPage() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="w-full py-8 px-4 sm:px-6 lg:px-8 xl:px-10">
       <SMTPConfigsManagement />
     </div>
   );

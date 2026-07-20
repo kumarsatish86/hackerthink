@@ -137,7 +137,7 @@ export default function InterviewEditPage() {
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="animate-pulse">Loading...</div>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function InterviewEditPage() {
   if (error && !isNew) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
             <p className="text-sm text-red-700">{error}</p>
           </div>
@@ -164,7 +164,7 @@ export default function InterviewEditPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="mb-6">
           <Link
             href="/admin/content/interviews"

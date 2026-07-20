@@ -18,7 +18,7 @@ export default function CommunityPage() {
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
               <FaUsers className="w-10 h-10" />
@@ -34,7 +34,7 @@ export default function CommunityPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <div className="bg-white rounded-lg shadow-md p-6 text-center">

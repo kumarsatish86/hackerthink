@@ -185,7 +185,7 @@ export default function NewHomePage() {
         </div>
         
         <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center z-10 h-full">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Updated hero content */}
             <div className="z-10 transform transition-all duration-1000" style={{ transform: `translateY(${scrollY * 0.1}px)` }}>
               <div className="relative">
@@ -408,7 +408,7 @@ export default function NewHomePage() {
 
       {/* Stats Section - Modern cards with hover effects */}
       <div className="w-full py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {stats.map((stat, index) => (
               <div 
@@ -432,7 +432,7 @@ export default function NewHomePage() {
 
       {/* Features section with interactive cards */}
       <div className="w-full py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Learning Experience</h2>
             <p className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
@@ -467,7 +467,7 @@ export default function NewHomePage() {
       
       {/* Popular Courses Section with modern cards */}
       <div className="w-full py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
             <div>
               <h2 className="text-3xl font-extrabold text-gray-900">Top-Rated Courses</h2>
@@ -562,7 +562,7 @@ export default function NewHomePage() {
       
       {/* CTA Section */}
       <div className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 flex flex-col md:flex-row items-center justify-between">
           <div className="text-center md:text-left mb-8 md:mb-0 md:max-w-xl">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
               Ready to accelerate your IT career?

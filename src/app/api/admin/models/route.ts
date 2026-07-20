@@ -98,16 +98,32 @@ export async function GET(request: NextRequest) {
     queryParams.push(limit, offset);
     const modelsResult = await pool.query(modelsQuery, queryParams);
 
+    // Overall stats (unfiltered) for dashboard cards
+    const statsResult = await pool.query(`
+      SELECT
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE status = 'published')::int AS published,
+        COUNT(*) FILTER (WHERE status = 'draft')::int AS drafts,
+        COUNT(*) FILTER (WHERE featured = true)::int AS featured
+      FROM ai_models
+    `);
+
     return NextResponse.json({
       models: modelsResult.rows,
       pagination: {
         total,
-        pages: Math.ceil(total / limit),
+        pages: Math.ceil(total / limit) || 1,
         page,
         limit,
         hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1
-      }
+      },
+      stats: statsResult.rows[0] || {
+        total: 0,
+        published: 0,
+        drafts: 0,
+        featured: 0,
+      },
     });
 
   } catch (error) {

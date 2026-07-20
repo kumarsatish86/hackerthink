@@ -14,7 +14,7 @@ export default function NewsletterArchivePage() {
     <div className="bg-gradient-to-b from-red-50 via-white to-gray-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
               <FaEnvelope className="w-10 h-10" />
@@ -30,7 +30,7 @@ export default function NewsletterArchivePage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="space-y-4">
           {newsletters.map((newsletter, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200">

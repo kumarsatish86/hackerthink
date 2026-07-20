@@ -145,7 +145,7 @@ export default function QuizTaker({ attempt, questions, onComplete }: QuizTakerP
 
   if (!currentQuestion) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="text-center">
           <p className="text-gray-600">No questions available</p>
         </div>
@@ -154,7 +154,7 @@ export default function QuizTaker({ attempt, questions, onComplete }: QuizTakerP
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <div className="max-w-4xl mx-auto">
         {/* Progress */}
         <ProgressIndicator

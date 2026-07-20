@@ -6,8 +6,31 @@ import Link from 'next/link';
 import { 
   FaBrain, FaSave, FaArrowLeft, FaCog, FaChartLine, FaDatabase,
   FaProjectDiagram, FaHistory, FaFileCode, FaGlobe, FaInfoCircle,
-  FaExclamationTriangle, FaCheckCircle, FaPlus, FaTrash, FaEye
+  FaExclamationTriangle, FaCheckCircle, FaPlus, FaTrash, FaEye,
+  FaRobot, FaMagic, FaSpinner, FaDownload, FaQuestionCircle, FaFileAlt, FaLock, FaExternalLinkAlt,
 } from 'react-icons/fa';
+import RelationsManager from '@/components/admin/models/RelationsManager';
+
+type JsonRecord = Record<string, any>;
+
+function parseJsonObject(value: unknown): JsonRecord {
+  if (!value) return {};
+  if (typeof value === 'object' && !Array.isArray(value)) return value as JsonRecord;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return typeof parsed === 'object' && parsed && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  return {};
+}
+
+function parseStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String);
+  return [];
+}
 
 export default function EditModelPage() {
   const router = useRouter();
@@ -15,10 +38,14 @@ export default function EditModelPage() {
   const slug = params.slug as string;
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('basic');
   const [modelId, setModelId] = useState<string>('');
   const [overrideFields, setOverrideFields] = useState<Set<string>>(new Set());
   const [arrayInputValues, setArrayInputValues] = useState<Record<string, string>>({});
+  const [aiSummary, setAiSummary] = useState<JsonRecord>({});
+  const [overviewGuidance, setOverviewGuidance] = useState<JsonRecord>({});
   
   const [formData, setFormData] = useState({
     // Basic Info
@@ -80,6 +107,12 @@ export default function EditModelPage() {
 
   const tabs = [
     { id: 'basic', label: 'Basic Info', icon: FaBrain },
+    { id: 'ai_summary', label: 'AI Summary', icon: FaRobot },
+    { id: 'guidance', label: 'Overview Guidance', icon: FaCheckCircle },
+    { id: 'install', label: 'Install', icon: FaDownload },
+    { id: 'faqs', label: 'FAQs', icon: FaQuestionCircle },
+    { id: 'papers', label: 'Papers', icon: FaFileAlt },
+    { id: 'security', label: 'Security', icon: FaLock },
     { id: 'technical', label: 'Technical Specs', icon: FaCog },
     { id: 'links', label: 'Links & URLs', icon: FaGlobe },
     { id: 'metadata', label: 'Metadata', icon: FaInfoCircle },
@@ -98,12 +131,16 @@ export default function EditModelPage() {
 
   const fetchModel = async () => {
     try {
+      setFetchError(null);
       const response = await fetch(`/api/admin/models/${slug}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch model');
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.details || data.error || 'Failed to fetch model');
+      }
       const model = data.model;
+      if (!model) {
+        throw new Error('Model data missing from API response');
+      }
       
       setModelId(model.id);
       
@@ -171,13 +208,17 @@ export default function EditModelPage() {
         changelog: [],
       });
 
+      setAiSummary(parseJsonObject(model.ai_summary));
+      setOverviewGuidance(parseJsonObject(model.overview_guidance));
+
       // Check for override flags (if stored in database)
       if (model.override_fields) {
         const overrides = parseArray(model.override_fields);
         setOverrideFields(new Set(overrides));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching model:', error);
+      setFetchError(error?.message || 'Failed to load model');
     } finally {
       setLoading(false);
     }
@@ -193,6 +234,8 @@ export default function EditModelPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          ai_summary: aiSummary,
+          overview_guidance: overviewGuidance,
           override_fields: Array.from(overrideFields),
         }),
       });
@@ -202,7 +245,8 @@ export default function EditModelPage() {
         throw new Error(errorData.error || 'Failed to update model');
       }
 
-      router.push('/admin/content/models');
+      alert('Model saved successfully.');
+      await fetchModel();
     } catch (error: any) {
       console.error('Error updating model:', error);
       alert(error.message || 'Failed to update model');
@@ -241,6 +285,94 @@ export default function EditModelPage() {
   const removeArrayItem = (field: string, index: number) => {
     const current = formData[field as keyof typeof formData] as string[];
     handleArrayChange(field, current.filter((_, i) => i !== index));
+  };
+
+  const regenerateDocs = async () => {
+    if (!confirm('Regenerate AI Summary, Overview Guidance, FAQs, install guides, and usage examples from templates? This overwrites auto-generated overview content.')) return;
+    setRegenerating(true);
+    try {
+      const res = await fetch(`/api/admin/models/${slug}/regenerate-docs`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.details || data.error || 'Failed to regenerate');
+      await fetchModel();
+      alert(data.message || 'Documentation regenerated. Review AI Summary and Overview Guidance tabs.');
+    } catch (error: any) {
+      alert(error.message || 'Failed to regenerate docs');
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
+  const addJsonArrayItem = (
+    target: 'aiSummary' | 'overviewGuidance',
+    field: string,
+    value: string,
+    inputKey: string
+  ) => {
+    if (!value.trim()) return;
+    const setter = target === 'aiSummary' ? setAiSummary : setOverviewGuidance;
+    const source = target === 'aiSummary' ? aiSummary : overviewGuidance;
+    const current = parseStringArray(source[field]);
+    setter({ ...source, [field]: [...current, value.trim()] });
+    setArrayInputValues((prev) => ({ ...prev, [inputKey]: '' }));
+    setOverrideFields((prev) => new Set(prev).add(target === 'aiSummary' ? 'ai_summary' : 'overview_guidance'));
+  };
+
+  const removeJsonArrayItem = (target: 'aiSummary' | 'overviewGuidance', field: string, index: number) => {
+    const setter = target === 'aiSummary' ? setAiSummary : setOverviewGuidance;
+    const source = target === 'aiSummary' ? aiSummary : overviewGuidance;
+    const current = parseStringArray(source[field]);
+    setter({ ...source, [field]: current.filter((_, i) => i !== index) });
+    setOverrideFields((prev) => new Set(prev).add(target === 'aiSummary' ? 'ai_summary' : 'overview_guidance'));
+  };
+
+  const renderJsonArrayField = (
+    target: 'aiSummary' | 'overviewGuidance',
+    field: string,
+    label: string
+  ) => {
+    const source = target === 'aiSummary' ? aiSummary : overviewGuidance;
+    const items = parseStringArray(source[field]);
+    const inputKey = `${target}_${field}`;
+    const inputValue = arrayInputValues[inputKey] || '';
+
+    return (
+      <div key={field}>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+        <div className="flex gap-2 mb-2">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setArrayInputValues((prev) => ({ ...prev, [inputKey]: e.target.value }))}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                addJsonArrayItem(target, field, inputValue, inputKey);
+              }
+            }}
+            placeholder={`Add ${label.toLowerCase()}...`}
+            className="flex-1 border rounded-lg px-4 py-2"
+          />
+          <button
+            type="button"
+            onClick={() => addJsonArrayItem(target, field, inputValue, inputKey)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <FaPlus />
+          </button>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {items.map((item, index) => (
+            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg flex items-center gap-2">
+              {item}
+              <button type="button" onClick={() => removeJsonArrayItem(target, field, index)} className="text-red-600 hover:text-red-800">
+                <FaTrash className="text-xs" />
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   const isOverridden = (field: string) => overrideFields.has(field);
@@ -390,6 +522,46 @@ export default function EditModelPage() {
     );
   }
 
+  if (fetchError) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <Link href="/admin/content/models" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+          <FaArrowLeft className="mr-2" /> Back to Models
+        </Link>
+        <div className="bg-white rounded-lg shadow p-8 text-center">
+          <FaExclamationTriangle className="mx-auto text-red-500 text-3xl mb-3" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Could not load model</h1>
+          <p className="text-gray-600 mb-4">{fetchError}</p>
+          <button
+            onClick={() => {
+              setLoading(true);
+              fetchModel();
+            }}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const modelTypeOptions = Array.from(
+    new Set([
+      'LLM',
+      'Vision',
+      'Audio',
+      'Multimodal',
+      'NLP',
+      'Code',
+      'Embeddings',
+      'image-text-to-text',
+      'text-generation',
+      'text-to-image',
+      ...(formData.model_type ? [formData.model_type] : []),
+    ])
+  );
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="mb-6">
@@ -401,14 +573,45 @@ export default function EditModelPage() {
             <FaBrain className="text-red-600" />
             Edit AI Model
           </h1>
-          <Link
-            href={`/models/${slug}`}
-            target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-          >
-            <FaEye />
-            View Public Page
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/admin/content/models/${slug}/edit`}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-red-200 text-red-700 rounded-lg hover:bg-red-50"
+            >
+              <FaExternalLinkAlt />
+              Full Docs Editor
+            </Link>
+            <button
+              type="button"
+              onClick={regenerateDocs}
+              disabled={regenerating}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+            >
+              {regenerating ? <FaSpinner className="animate-spin" /> : <FaMagic />}
+              {regenerating ? 'Regenerating...' : 'Regenerate AI Docs'}
+            </button>
+            <Link
+              href={`/models/${slug}`}
+              target="_blank"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+            >
+              <FaEye />
+              View Public Page
+            </Link>
+          </div>
+        </div>
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Public content map:</strong>{' '}
+          <button type="button" onClick={() => setActiveTab('ai_summary')} className="font-semibold underline">AI Summary</button>
+          {' · '}
+          <button type="button" onClick={() => setActiveTab('guidance')} className="font-semibold underline">Overview Guidance</button>
+          {' · '}
+          <button type="button" onClick={() => setActiveTab('install')} className="font-semibold underline">Install</button>
+          {' (Docker, ONNX, pip…) · '}
+          <button type="button" onClick={() => setActiveTab('faqs')} className="font-semibold underline">FAQs</button>
+          {' · '}
+          <button type="button" onClick={() => setActiveTab('examples')} className="font-semibold underline">Usage Examples</button>
+          . Short Description is only the markdown blurb — not those Overview cards.
         </div>
       </div>
 
@@ -446,13 +649,16 @@ export default function EditModelPage() {
               {renderField('Model Name *', 'name', 'text', undefined, 'e.g., Llama 3.1 70B', true)}
               {renderField('Slug *', 'slug', 'text', undefined, 'e.g., llama-3-70b', true)}
               {renderField('Developer / Organization', 'developer', 'text', undefined, 'e.g., Meta')}
-              {renderField('Model Type', 'model_type', 'select', ['LLM', 'Vision', 'Audio', 'Multimodal', 'NLP', 'Code', 'Embeddings'])}
+              {renderField('Model Type', 'model_type', 'select', modelTypeOptions)}
               {renderField('Version', 'version', 'text', undefined, 'e.g., 1.0')}
               {renderField('Release Date', 'release_date', 'text', undefined, 'YYYY-MM-DD')}
             </div>
             
             <div>
               {renderField('Short Description', 'description', 'textarea', undefined, 'Brief description...')}
+              <p className="mt-1 text-xs text-gray-500">
+                Shown as markdown in Overview only if filled. The &quot;What it is&quot; card uses <strong>AI Summary → What it is</strong>, not this field.
+              </p>
             </div>
             
             <div>
@@ -472,6 +678,173 @@ export default function EditModelPage() {
                 <label className="text-sm font-medium text-gray-700">Featured Model</label>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* AI Summary — maps to public Overview: What / Who / When / Advantages / Limitations / Ideal use cases */}
+        {activeTab === 'ai_summary' && (
+          <div className="p-6 space-y-6">
+            <div>
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <FaRobot className="text-red-600" /> AI Summary
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                These fields appear on the public model page under <strong>Overview</strong> — the &quot;What it is&quot;, &quot;Who it&apos;s for&quot;, and list cards.
+              </p>
+            </div>
+            {(['what', 'who', 'when_to_use', 'when_not_to_use'] as const).map((key) => (
+              <div key={key}>
+                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                  {key.replace(/_/g, ' ')}
+                </label>
+                <textarea
+                  value={String(aiSummary[key] || '')}
+                  onChange={(e) => {
+                    setAiSummary((prev) => ({ ...prev, [key]: e.target.value }));
+                    setOverrideFields((prev) => new Set(prev).add('ai_summary'));
+                  }}
+                  rows={3}
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+              </div>
+            ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+              <select
+                value={String(aiSummary.difficulty || 'beginner')}
+                onChange={(e) => {
+                  setAiSummary((prev) => ({ ...prev, difficulty: e.target.value }));
+                  setOverrideFields((prev) => new Set(prev).add('ai_summary'));
+                }}
+                className="w-full md:w-64 border rounded-lg px-4 py-2"
+              >
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+            {renderJsonArrayField('aiSummary', 'advantages', 'Advantages')}
+            {renderJsonArrayField('aiSummary', 'limitations', 'Limitations')}
+            {renderJsonArrayField('aiSummary', 'ideal_use_cases', 'Ideal Use Cases')}
+          </div>
+        )}
+
+        {/* Overview Guidance — Strengths / Weaknesses / Best practices / Common mistakes */}
+        {activeTab === 'guidance' && (
+          <div className="p-6 space-y-6">
+            <div>
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <FaCheckCircle className="text-red-600" /> Overview Guidance
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                These list cards appear below Advantages/Limitations on the public <strong>Overview</strong> section.
+              </p>
+            </div>
+            {renderJsonArrayField('overviewGuidance', 'strengths', 'Strengths')}
+            {renderJsonArrayField('overviewGuidance', 'weaknesses', 'Weaknesses')}
+            {renderJsonArrayField('overviewGuidance', 'best_practices', 'Best Practices')}
+            {renderJsonArrayField('overviewGuidance', 'common_mistakes', 'Common Mistakes')}
+            {renderJsonArrayField('overviewGuidance', 'requirements', 'Requirements')}
+            {renderJsonArrayField('overviewGuidance', 'dependencies', 'Dependencies')}
+            {renderJsonArrayField('overviewGuidance', 'features', 'Features')}
+            {renderJsonArrayField('overviewGuidance', 'known_limitations', 'Known Limitations')}
+            {(['expected_performance', 'commercial_usage', 'ethical_considerations'] as const).map((key) => (
+              <div key={key}>
+                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                  {key.replace(/_/g, ' ')}
+                </label>
+                <textarea
+                  value={String(overviewGuidance[key] || '')}
+                  onChange={(e) => {
+                    setOverviewGuidance((prev) => ({ ...prev, [key]: e.target.value }));
+                    setOverrideFields((prev) => new Set(prev).add('overview_guidance'));
+                  }}
+                  rows={3}
+                  className="w-full border rounded-lg px-4 py-2"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'install' && (
+          <div className="p-6">
+            <RelationsManager
+              slug={slug}
+              type="install_guides"
+              title="Install Guides"
+              description="These power the public Installation section (Docker, ONNX, pip, conda, vLLM, TGI, etc.). Edit title, description, and code for each target."
+              fields={[
+                { key: 'target', label: 'Target', required: true, placeholder: 'e.g. docker, onnx, pip, vllm' },
+                { key: 'title', label: 'Title', placeholder: 'e.g. Run with Docker' },
+                { key: 'command', label: 'Command' },
+                { key: 'code', label: 'Full Code', type: 'code', span: 2 },
+                { key: 'description', label: 'Description', type: 'textarea', span: 2 },
+                { key: 'version_label', label: 'Version Label', placeholder: 'e.g. latest, optimum>=1.19' },
+                { key: 'sort_order', label: 'Sort Order', type: 'number' },
+              ]}
+              listColumns={['target', 'title', 'version_label']}
+              emptyLabel="No install guides yet. Use Regenerate AI Docs or add one manually."
+            />
+          </div>
+        )}
+
+        {activeTab === 'faqs' && (
+          <div className="p-6">
+            <RelationsManager
+              slug={slug}
+              type="faqs"
+              title="FAQs"
+              description="Shown on the public FAQ section."
+              fields={[
+                { key: 'question', label: 'Question', required: true, span: 2 },
+                { key: 'answer', label: 'Answer', type: 'textarea', required: true, span: 2 },
+                { key: 'sort_order', label: 'Sort Order', type: 'number' },
+              ]}
+              listColumns={['question', 'sort_order']}
+              emptyLabel="No FAQs yet."
+            />
+          </div>
+        )}
+
+        {activeTab === 'papers' && (
+          <div className="p-6">
+            <RelationsManager
+              slug={slug}
+              type="papers"
+              title="Research Papers"
+              description="Shown on the public Papers section."
+              fields={[
+                { key: 'title', label: 'Title', required: true, span: 2 },
+                { key: 'authors', label: 'Authors' },
+                { key: 'conference', label: 'Conference' },
+                { key: 'published_at', label: 'Published', type: 'date' },
+                { key: 'url', label: 'URL' },
+                { key: 'bibtex', label: 'BibTeX', type: 'code', span: 2 },
+                { key: 'paper_type', label: 'Type', placeholder: 'original / follow-up' },
+              ]}
+              listColumns={['title', 'conference', 'paper_type']}
+              emptyLabel="No papers yet."
+            />
+          </div>
+        )}
+
+        {activeTab === 'security' && (
+          <div className="p-6">
+            <RelationsManager
+              slug={slug}
+              type="security_notes"
+              title="Security Notes"
+              description="Shown on the public Security section (risks, biases, commercial use, export)."
+              fields={[
+                { key: 'note_type', label: 'Type', required: true, placeholder: 'risk / bias / license / commercial / export' },
+                { key: 'title', label: 'Title' },
+                { key: 'severity', label: 'Severity', type: 'select', options: ['info', 'low', 'medium', 'high'] },
+                { key: 'body', label: 'Body', type: 'textarea', span: 2 },
+              ]}
+              listColumns={['note_type', 'title', 'severity']}
+              emptyLabel="No security notes yet."
+            />
           </div>
         )}
 
@@ -613,7 +986,7 @@ export default function EditModelPage() {
               </div>
             </div>
             <Link
-              href={`/models/${slug}#usage`}
+              href={`/models/${slug}`}
               target="_blank"
               className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
             >

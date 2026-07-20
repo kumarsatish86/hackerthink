@@ -14,10 +14,10 @@ export const dynamic = 'force-dynamic';
 // POST submit rating for a model
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
     const { rating, review, user_id } = await request.json();
 
     if (!rating || rating < 1 || rating > 5) {

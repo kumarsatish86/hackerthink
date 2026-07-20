@@ -318,7 +318,7 @@ function CoursesContent() {
 
   // Return component UI
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{getPageTitle()}</h1>
@@ -870,7 +870,7 @@ function CoursesContent() {
 export default function CoursesManagement() {
   return (
     <Suspense fallback={
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
           <p className="ml-3 text-lg text-gray-700">Loading courses...</p>

@@ -36,7 +36,7 @@ export default function DatasetsLeaderboardPage() {
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
           <Link href="/datasets" className="inline-flex items-center text-red-100 hover:text-white mb-4 transition-colors">
             <FaArrowLeft className="mr-2" /> Back to All Datasets
           </Link>
@@ -55,7 +55,7 @@ export default function DatasetsLeaderboardPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <DatasetsLeaderboardClient />
       </div>
     </div>

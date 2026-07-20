@@ -1,0 +1,139 @@
+# Models Schema Inventory
+
+Generated: 2026-07-20T07:45:17.160Z
+
+## Live model-related tables (26)
+- ai_model_benchmarks
+- ai_model_versions
+- ai_models
+- import_logs
+- import_settings
+- model_api_docs
+- model_architecture_nodes
+- model_benchmarks
+- model_bookmarks
+- model_changelog
+- model_comments
+- model_community_links
+- model_comparisons
+- model_download_daily
+- model_faqs
+- model_install_guides
+- model_papers
+- model_ratings
+- model_reports
+- model_security_notes
+- model_training_data
+- model_tutorials
+- model_usage_examples
+- model_use_case_cards
+- model_variants
+- model_versions
+
+## ai_models columns (95)
+- `id` (uuid)
+- `name` (character varying)
+- `slug` (character varying)
+- `developer` (character varying)
+- `description` (text)
+- `full_description` (text)
+- `model_type` (character varying)
+- `architecture` (character varying)
+- `parameters` (character varying)
+- `context_length` (integer)
+- `training_data` (text)
+- `release_date` (date)
+- `last_updated` (date)
+- `version` (character varying)
+- `license` (character varying)
+- `pricing_type` (character varying)
+- `pricing_details` (jsonb)
+- `capabilities` (jsonb)
+- `languages` (jsonb)
+- `use_cases` (jsonb)
+- `limitations` (jsonb)
+- `benchmarks` (jsonb)
+- `api_endpoint` (character varying)
+- `documentation_url` (character varying)
+- `demo_url` (character varying)
+- `github_url` (character varying)
+- `paper_url` (character varying)
+- `huggingface_url` (character varying)
+- `download_url` (character varying)
+- `logo_url` (character varying)
+- `featured_image` (character varying)
+- `status` (character varying)
+- `featured` (boolean)
+- `rating` (numeric)
+- `rating_count` (integer)
+- `view_count` (integer)
+- `download_count` (integer)
+- `categories` (jsonb)
+- `tags` (jsonb)
+- `seo_title` (character varying)
+- `seo_description` (text)
+- `seo_keywords` (text)
+- `schema_json` (jsonb)
+- `created_at` (timestamp with time zone)
+- `updated_at` (timestamp with time zone)
+- `created_by` (uuid)
+- `updated_by` (uuid)
+- `ideal_hardware` (text)
+- `risk_score` (integer)
+- `comparison_notes` (text)
+- `tutorial_links` (jsonb)
+- `community_links` (jsonb)
+- `research_papers` (jsonb)
+- `alternative_models` (jsonb)
+- `deployment_guide` (text)
+- `cost_estimate` (jsonb)
+- `import_source` (character varying)
+- `import_metadata` (jsonb)
+- `enrichment_applied` (boolean)
+- `verified` (boolean)
+- `security_badge` (boolean)
+- `compatibility_badge` (boolean)
+- `external_model_id` (character varying)
+- `task` (character varying)
+- `framework` (character varying)
+- `input_types` (jsonb)
+- `output_types` (jsonb)
+- `param_count_b` (numeric)
+- `model_size_bytes` (bigint)
+- `trending_rank` (integer)
+- `likes_count` (integer)
+- `stars_count` (integer)
+- `playground_config` (jsonb)
+- `ai_summary` (jsonb)
+- `quick_facts` (jsonb)
+- `compatibility_matrix` (jsonb)
+- `homepage_url` (character varying)
+- `tokenizer` (character varying)
+- `vocabulary_size` (integer)
+- `training_framework` (character varying)
+- `quantized_versions` (jsonb)
+- `hardware_requirements` (jsonb)
+- `inference_speed` (text)
+- `memory_footprint` (text)
+- `model_family` (character varying)
+- `variant_parent_id` (uuid)
+- `architecture_family` (character varying)
+- `detailed_metadata` (jsonb)
+- `community_stats` (jsonb)
+- `github_stats` (jsonb)
+- `evaluation_summary` (text)
+- `known_biases` (jsonb)
+- `safety_results` (jsonb)
+- `ethical_risks` (jsonb)
+- `overview_guidance` (jsonb)
+
+## Missing expected tables
+- none
+
+## Missing expected core columns
+- none
+
+## Gaps
+- Dual benchmark table naming (`ai_model_benchmarks` vs `model_benchmarks`)
+- Many satellite tables defined in code but not applied
+- Enrichment JSON blobs need backfill into child tables

@@ -329,7 +329,7 @@ export default function TermPageClient({ term, relatedTerms }: TermPageClientPro
           </div>
           
           {/* Main Content Container */}
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-32 relative z-10">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-32 relative z-10">
             <motion.div 
               className="flex flex-col md:flex-row items-center md:items-start justify-between"
               style={{
@@ -538,7 +538,7 @@ export default function TermPageClient({ term, relatedTerms }: TermPageClientPro
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12 pb-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Main Content Area */}
             <motion.div 
@@ -945,7 +945,7 @@ export default function TermPageClient({ term, relatedTerms }: TermPageClientPro
 
         {/* Comments Section */}
         <div className="bg-gray-50 py-12 border-t border-gray-100">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
             <CommentsSection contentId={term.id} contentType="term" />
           </div>
         </div>

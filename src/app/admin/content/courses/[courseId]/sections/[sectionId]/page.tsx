@@ -272,7 +272,7 @@ export default function SectionEditor() {
 
   if (!section && !loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -298,7 +298,7 @@ export default function SectionEditor() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       {/* Breadcrumb Navigation */}
       <nav className="mb-6" aria-label="Breadcrumb">
         <ol className="flex space-x-2 text-sm text-gray-500">

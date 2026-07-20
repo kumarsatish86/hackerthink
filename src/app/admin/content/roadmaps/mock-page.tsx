@@ -45,7 +45,7 @@ export default function MockRoadmapsPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 w-full">
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Learning Roadmaps (Mock Data)</h1>
         <Link

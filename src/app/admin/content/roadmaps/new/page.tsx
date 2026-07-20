@@ -129,7 +129,7 @@ export default function NewRoadmapPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Create New Roadmap</h1>
         <p className="text-gray-600">Add a new learning roadmap to help users navigate their learning journey</p>

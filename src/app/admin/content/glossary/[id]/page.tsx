@@ -215,7 +215,7 @@ export default function TermEditor({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
       <div className="mb-6">
         <Link href="/admin/content/glossary" className="text-indigo-600 hover:text-indigo-900">
           &larr; Back to Glossary

@@ -27,10 +27,10 @@ function parseJsonField(field: any) {
 // GET single dataset by slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await params;
 
     const result = await pool.query(
       `SELECT * FROM datasets WHERE slug = $1 AND status = 'published'`,

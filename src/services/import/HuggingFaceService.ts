@@ -1,3 +1,8 @@
+import {
+  classifyHuggingFaceTags,
+  flattenFacets,
+} from '@/lib/huggingfaceTaxonomy';
+
 interface HuggingFaceModel {
   id: string;
   modelId: string;
@@ -21,6 +26,7 @@ interface ImportResult {
   download_count: number;
   categories: string[];
   tags: string[];
+  capabilities?: string[];
   metadata: any;
   files?: { filename: string; size?: number }[];
   benchmarks?: any;
@@ -289,11 +295,9 @@ export class HuggingFaceService {
         }
       }
 
-      // Extract architecture from multiple sources
-      architecture = config.architectures?.[0] || 
-                     config.model_type || 
-                     data.model_type ||
-                     data.pipeline_tag ||
+      // Extract architecture from config (do not fall back to pipeline_tag — that is model_type)
+      architecture = config.architectures?.[0] ||
+                     config.model_type ||
                      undefined;
 
       // Extract context length from multiple sources
@@ -449,33 +453,63 @@ export class HuggingFaceService {
         });
       }
 
-      // Extract safetensors information from files and README
+      // Extract safetensors information from HF API, files, and README
       safetensorsInfo = {};
       const safetensorFiles = files.filter(f => f.filename.includes('.safetensors'));
-      
-      // Extract model size - try README first, then config, then files
-      if (readmeMd) {
-        // Look for "Model size 229B params" or similar patterns
-        const sizeMatch = readmeMd.match(/model\s*size[:\s]+(\d+(?:\.\d+)?[bB])\s*params?/i);
-        if (sizeMatch) {
-          safetensorsInfo.model_size = sizeMatch[1];
-        } else if (parameters) {
-          safetensorsInfo.model_size = parameters;
+
+      // Prefer native HuggingFace API safetensors summary when present
+      if (data.safetensors && typeof data.safetensors === 'object') {
+        const hfSafe = data.safetensors;
+        const totalParams = typeof hfSafe.total === 'number'
+          ? hfSafe.total
+          : (typeof hfSafe.parameters === 'number' ? hfSafe.parameters : null);
+
+        if (totalParams && totalParams > 0) {
+          if (totalParams >= 1e9) {
+            safetensorsInfo.model_size = `${(totalParams / 1e9).toFixed(1)}B`;
+          } else if (totalParams >= 1e6) {
+            safetensorsInfo.model_size = `${(totalParams / 1e6).toFixed(1)}M`;
+          } else if (totalParams >= 1e3) {
+            safetensorsInfo.model_size = `${(totalParams / 1e3).toFixed(1)}K`;
+          } else {
+            safetensorsInfo.model_size = String(totalParams);
+          }
+          if (!parameters) {
+            parameters = safetensorsInfo.model_size;
+          }
         }
-        
-        // Extract tensor type from README (e.g., "Tensor type F32 BF16 F8_E4M3")
-        const tensorTypeMatch = readmeMd.match(/tensor\s*type[:\s]+([A-Z0-9_\s]+)/i);
-        if (tensorTypeMatch) {
-          safetensorsInfo.tensor_type = tensorTypeMatch[1].trim();
+
+        const dtypeKeys = Object.keys(hfSafe).filter(
+          (k) => !['parameters', 'total', 'sharded'].includes(k)
+        );
+        if (dtypeKeys.length > 0) {
+          safetensorsInfo.tensor_type = dtypeKeys.map((k) => k.toUpperCase()).join(' ');
         }
       }
       
-      // If not found in README, try to get from files/config
+      // Fallback: extract model size / tensor type from README
+      if (readmeMd) {
+        if (!safetensorsInfo.model_size) {
+          const sizeMatch = readmeMd.match(/model\s*size[:\s]+(\d+(?:\.\d+)?[bB])\s*params?/i);
+          if (sizeMatch) {
+            safetensorsInfo.model_size = sizeMatch[1];
+          } else if (parameters) {
+            safetensorsInfo.model_size = parameters;
+          }
+        }
+        
+        if (!safetensorsInfo.tensor_type) {
+          const tensorTypeMatch = readmeMd.match(/tensor\s*type[:\s]+([A-Z0-9_\s]+)/i);
+          if (tensorTypeMatch) {
+            safetensorsInfo.tensor_type = tensorTypeMatch[1].trim();
+          }
+        }
+      }
+      
       if (!safetensorsInfo.model_size && parameters) {
         safetensorsInfo.model_size = parameters;
       }
       
-      // Extract tensor types from file names if not found in README
       if (!safetensorsInfo.tensor_type && safetensorFiles.length > 0) {
         const tensorTypes: string[] = [];
         safetensorFiles.forEach(file => {
@@ -686,21 +720,32 @@ export class HuggingFaceService {
           throw new Error('No valid model ID found in API response');
         }
 
+      const tagList = Array.isArray(data.tags) ? data.tags.map((t: any) => String(t)) : [];
+      const filterFacets = classifyHuggingFaceTags(tagList, {
+        pipeline_tag: data.pipeline_tag || data.task,
+        library_name: data.library_name,
+        license: license || undefined,
+      });
+      const enrichedTags = Array.from(new Set([...tagList, ...flattenFacets(filterFacets)]));
+
       const result: ImportResult = {
           name: modelIdValue,
           slug: modelIdValue.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
           developer: data.author || data.model_creator || 'Unknown',
-          description: this.extractDescription(data) || '',
+          description: this.extractDescription(data, readmeMd) || '',
           model_type: data.pipeline_tag || data.task || 'general',
         github_url: data.github || null,
           huggingface_url: `https://huggingface.co/${modelIdValue}`,
           download_count: data.downloads || data.download_count || 0,
-          categories: Array.isArray(data.tags) ? data.tags : [],
-          tags: Array.isArray(data.tags) ? data.tags : [],
+          categories: enrichedTags,
+          tags: enrichedTags,
+          capabilities: enrichedTags.slice(0, 24),
         metadata: {
             modelId: data.modelId || modelIdValue,
             downloads: data.downloads || 0,
             likes: data.likes || 0,
+            tags: enrichedTags,
+            filter_facets: filterFacets,
             task: data.pipeline_tag || data.task,
           library_name: data.library_name,
           paper: data.model_index,
@@ -832,35 +877,96 @@ export class HuggingFaceService {
     }
   }
 
-  private extractDescription(data: any): string {
+  private extractDescription(data: any, readmeMd?: string | null): string {
+    if (data.cardData?.description) {
+      return String(data.cardData.description).trim();
+    }
     if (data.modelCardData?.model_description) {
-      return data.modelCardData.model_description || '';
+      return String(data.modelCardData.model_description).trim();
+    }
+    if (data.description) {
+      return String(data.description).trim();
+    }
+    if (data.summary) {
+      return String(data.summary).trim();
+    }
+    if (readmeMd) {
+      const fromReadme = this.extractShortDescriptionFromReadme(readmeMd);
+      if (fromReadme) return fromReadme;
     }
     if (data.siblings && Array.isArray(data.siblings)) {
       const readmeSibling = data.siblings.find((s: any) => s.rfilename === 'README.md');
       if (readmeSibling?.content) {
-        return readmeSibling.content;
+        const fromSibling = this.extractShortDescriptionFromReadme(String(readmeSibling.content));
+        if (fromSibling) return fromSibling;
       }
-    }
-    // Try to get description from other fields
-    if (data.description) {
-      return data.description;
-    }
-    if (data.summary) {
-      return data.summary;
     }
     return 'No description available';
   }
 
+  private extractShortDescriptionFromReadme(readme: string): string {
+    let text = readme.replace(/^---[\s\S]*?---\s*/, '');
+    text = text
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/^#+\s+/gm, '')
+      .replace(/[>|*_`~]/g, ' ')
+      .replace(/\r/g, '');
+
+    const paragraphs = text
+      .split(/\n\s*\n/)
+      .map((p) => p.replace(/\s+/g, ' ').trim())
+      .filter((p) => p.length > 40 && !/^https?:\/\//i.test(p));
+
+    const first = paragraphs[0] || text.replace(/\s+/g, ' ').trim().slice(0, 400);
+    if (!first) return '';
+    return first.length > 500 ? `${first.slice(0, 497)}...` : first;
+  }
+
   async searchTrendingModels(limit: number = 20): Promise<any[]> {
+    return this.searchModels({ sort: 'downloads', limit });
+  }
+
+  async searchModels(options: {
+    sort?: 'downloads' | 'likes' | 'createdAt' | 'lastModified' | 'trending';
+    direction?: '-1' | '1';
+    limit?: number;
+    pipeline_tag?: string;
+    search?: string;
+  } = {}): Promise<any[]> {
+    const {
+      sort = 'downloads',
+      direction = '-1',
+      limit = 20,
+      pipeline_tag,
+      search,
+    } = options;
+
+    const cappedLimit = Math.min(Math.max(limit, 1), 100);
+    const params = new URLSearchParams({
+      sort,
+      direction,
+      limit: String(cappedLimit),
+    });
+
+    if (pipeline_tag) {
+      params.set('pipeline_tag', pipeline_tag);
+    }
+    if (search) {
+      params.set('search', search);
+    }
+
     try {
-      const response = await fetch(`https://huggingface.co/api/models?sort=downloads&direction=-1&limit=${limit}`);
+      const response = await fetch(`https://huggingface.co/api/models?${params.toString()}`, {
+        headers: this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {},
+      });
       if (!response.ok) {
-        throw new Error('Failed to fetch trending models');
+        throw new Error(`Failed to search models: ${response.statusText} (${response.status})`);
       }
       return response.json();
     } catch (error) {
-      console.error('Error fetching trending models:', error);
+      console.error('Error searching HuggingFace models:', error);
       throw error;
     }
   }
