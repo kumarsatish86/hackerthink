@@ -2,69 +2,14 @@
  * Apply pending models SQL migrations (CLI).
  * Usage (from project root):
  *   node scripts/apply-models-migrations.mjs
- *
- * Loads env files in order (later overrides earlier):
- *   .env → .env.production → .env.local
- * Shell-exported vars always win over file values.
  */
-import { readFileSync, readdirSync, existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
 import { Pool } from 'pg';
+import { loadCliEnv, logDbTarget } from './load-cli-env.mjs';
 
-/** Snapshot of env keys set before any file load (shell / systemd / pm2). */
-const presetKeys = new Set(
-  Object.keys(process.env).filter((k) => process.env[k] !== undefined && process.env[k] !== '')
-);
-
-/**
- * @param {string} file
- * @param {{ override?: boolean }} [opts] - if override, replace keys not preset in the shell
- */
-function loadEnv(file, opts = {}) {
-  const { override = true } = opts;
-  const path = resolve(file);
-  if (!existsSync(path)) return false;
-  try {
-    const text = readFileSync(path, 'utf8');
-    let loaded = 0;
-    for (const raw of text.split(/\r?\n/)) {
-      const line = raw.trim();
-      if (!line || line.startsWith('#')) continue;
-      const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
-      if (!m) continue;
-      const key = m[1];
-      let value = m[2].trim();
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
-      // Never clobber vars already exported in the shell
-      if (presetKeys.has(key)) continue;
-      if (override || process.env[key] === undefined || process.env[key] === '') {
-        process.env[key] = value;
-        loaded++;
-      }
-    }
-    console.log(`Loaded env from ${file} (${loaded} keys applied)`);
-    return true;
-  } catch (e) {
-    console.warn(`Could not read ${file}:`, e.message);
-    return false;
-  }
-}
-
-const loadedAny =
-  loadEnv('.env') |
-  loadEnv('.env.production') |
-  loadEnv('.env.local');
-
-if (!loadedAny) {
-  console.warn(
-    'No .env / .env.production / .env.local found. Relying on process environment only.'
-  );
-}
+loadCliEnv();
+logDbTarget();
 
 const host = process.env.DB_HOST;
 const port = Number(process.env.DB_PORT || 5432);
@@ -86,21 +31,12 @@ Currently:
 
 Fix on the server:
   1) Put credentials in /opt/hackerthink/.env.production  (or .env)
-     Example:
-       DB_HOST=your-db-host
-       DB_PORT=5432
-       DB_USER=...
-       DB_PASSWORD=...
-       DB_NAME=hackerthink
-       DB_SSL=true
   2) Or export them before running:
-       export DB_HOST=... DB_PORT=5432 DB_USER=... DB_PASSWORD=... DB_NAME=... DB_SSL=true
+       export DB_HOST=... DB_PORT=5555 DB_USER=... DB_PASSWORD=... DB_NAME=... DB_SSL=true
        node scripts/apply-models-migrations.mjs
 `);
   process.exit(1);
 }
-
-console.log(`Connecting to postgres://${user}@${host}:${port}/${database} (ssl=${ssl})`);
 
 const pool = new Pool({
   host,

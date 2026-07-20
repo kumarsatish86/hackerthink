@@ -1,29 +1,13 @@
-import { readFileSync } from 'fs';
-import { resolve, dirname, join } from 'path';
-import { fileURLToPath, pathToFileURL } from 'url';
+import { writeFileSync } from 'fs';
 import { createRequire } from 'module';
+import { loadCliEnv, logDbTarget } from './load-cli-env.mjs';
+
+loadCliEnv();
+logDbTarget();
 
 const require = createRequire(import.meta.url);
-
-function loadEnv(file) {
-  try {
-    const text = readFileSync(resolve(file), 'utf8');
-    for (const line of text.split(/\r?\n/)) {
-      const m = line.match(/^([^#=]+)=(.*)$/);
-      if (m && !process.env[m[1].trim()]) {
-        process.env[m[1].trim()] = m[2].trim().replace(/^["']|["']$/g, '');
-      }
-    }
-  } catch {}
-}
-
-loadEnv('.env.local');
-loadEnv('.env');
-
-// Use pg directly and call enrichment via dynamic import of compiled path won't work with TS.
-// Instead: inline call through next isn't available. Use a small SQL seed + node with tsx.
-
 const { Pool } = require('pg');
+
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT || 5432),
@@ -40,7 +24,5 @@ console.log('Published models:', rows.length);
 for (const r of rows) console.log(' -', r.slug);
 await pool.end();
 
-// Write slug list for tsx enrichment runner
-import { writeFileSync } from 'fs';
 writeFileSync('scripts/.published-model-slugs.json', JSON.stringify(rows.map((r) => r.slug), null, 2));
 console.log('Wrote scripts/.published-model-slugs.json');

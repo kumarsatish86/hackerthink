@@ -1,33 +1,9 @@
+import { writeFileSync } from 'fs';
 import { Pool } from 'pg';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import { loadCliEnv, logDbTarget } from './load-cli-env.mjs';
 
-const presetKeys = new Set(
-  Object.keys(process.env).filter((k) => process.env[k] !== undefined && process.env[k] !== '')
-);
-
-function loadEnv(file) {
-  const path = resolve(file);
-  if (!existsSync(path)) return;
-  try {
-    const text = readFileSync(path, 'utf8');
-    for (const raw of text.split(/\r?\n/)) {
-      const line = raw.trim();
-      if (!line || line.startsWith('#')) continue;
-      const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
-      if (!m) continue;
-      const key = m[1];
-      let value = m[2].trim().replace(/^["']|["']$/g, '');
-      if (presetKeys.has(key)) continue;
-      process.env[key] = value;
-    }
-  } catch {}
-}
-
-// Later files override earlier (.env.production wins over stale localhost in .env)
-loadEnv('.env');
-loadEnv('.env.production');
-loadEnv('.env.local');
+loadCliEnv();
+logDbTarget();
 
 const pool = new Pool({
   host: process.env.DB_HOST,

@@ -1,20 +1,7 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { loadCliEnv, logDbTarget } from './load-cli-env.mjs';
 
-function loadEnv(file: string) {
-  try {
-    const text = readFileSync(resolve(file), 'utf8');
-    for (const line of text.split(/\r?\n/)) {
-      const m = line.match(/^([^#=]+)=(.*)$/);
-      if (m && !process.env[m[1].trim()]) {
-        process.env[m[1].trim()] = m[2].trim().replace(/^["']|["']$/g, '');
-      }
-    }
-  } catch {}
-}
-
-loadEnv('.env.local');
-loadEnv('.env');
+loadCliEnv();
+logDbTarget();
 
 async function main() {
   const slug = process.argv[2];
