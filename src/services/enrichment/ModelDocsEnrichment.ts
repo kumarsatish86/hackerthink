@@ -1085,15 +1085,25 @@ export async function persistModelDocs(modelId: string, docs: ModelDocsBundle) {
            compatibility_matrix = $3::jsonb,
            overview_guidance = $4::jsonb,
            playground_config = $5::jsonb,
+           description = COALESCE(NULLIF(TRIM(description), ''), NULLIF(TRIM($7), ''), description),
            updated_at = NOW()
        WHERE id = $6`,
       [
         JSON.stringify(docs.aiSummary),
-        JSON.stringify(docs.quickFacts),
+        JSON.stringify({
+          ...docs.quickFacts,
+          install_time: docs.quickFacts.install_time || '5–15 min',
+          install_difficulty: docs.quickFacts.install_difficulty || 'easy',
+          python_version: docs.quickFacts.python_version || '3.9+',
+          verification_command:
+            docs.quickFacts.verification_command ||
+            `python -c "print('ok')"`,
+        }),
         JSON.stringify(docs.compatibilityMatrix),
         JSON.stringify(docs.overviewGuidance),
         JSON.stringify(docs.playgroundConfig),
         modelId,
+        docs.aiSummary?.what || '',
       ]
     );
   });

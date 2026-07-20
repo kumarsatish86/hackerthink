@@ -2,8 +2,11 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { queryOne } from '@/lib/db';
 import { getModelDetailBySlug } from '@/lib/models/getModelDetail';
+import { generateModelSummary } from '@/lib/models/generateModelSummary';
+import { generatePeopleAlsoAsk } from '@/lib/models/generatePeopleAlsoAsk';
 import { ModelsThemeProvider } from '@/components/models/ModelsThemeProvider';
 import { ModelDetailView } from '@/components/models/detail/ModelDetailView';
+import '@/styles/ht-tokens.css';
 import '@/styles/models.css';
 
 export const dynamic = 'force-dynamic';
@@ -17,6 +20,8 @@ interface ModelMetaRow {
   model_type: string | null;
   license: string | null;
   logo_url: string | null;
+  architecture: string | null;
+  parameters: string | null;
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;
@@ -26,7 +31,7 @@ interface ModelMetaRow {
 async function getModelMeta(slug: string): Promise<ModelMetaRow | undefined> {
   return queryOne(
     `SELECT name, slug, description, developer, task, model_type, license, logo_url,
-            seo_title, seo_description, seo_keywords, status
+            architecture, parameters, seo_title, seo_description, seo_keywords, status
      FROM ai_models WHERE slug = $1 LIMIT 1`,
     [slug]
   );
@@ -47,18 +52,37 @@ export async function generateMetadata({
     };
   }
 
-  const title = model.seo_title || `${model.name} - AI Model | HackerThink`;
-  const description =
+  const fallbackDesc = generateModelSummary({
+    id: '',
+    name: model.name,
+    slug: model.slug,
+    developer: model.developer,
+    description: model.description,
+    task: model.task,
+    model_type: model.model_type,
+    license: model.license,
+    architecture: model.architecture,
+    parameters: model.parameters,
+  });
+
+  const title = model.seo_title || `${model.name} — Specs, Install, Benchmarks | HackerThink`;
+  const rawDesc =
     model.seo_description ||
     model.description ||
-    `${model.name} — ${model.model_type || model.task || 'AI model'}${model.developer ? ` by ${model.developer}` : ''}. Specs, benchmarks, installation guides, and a live playground.`;
+    fallbackDesc;
+  const description = rawDesc.replace(/^no description available$/i, fallbackDesc).slice(0, 300);
   const canonical = `/models/${slug}`;
   const ogImage = `/api/models/og?slug=${encodeURIComponent(slug)}`;
+  const keywords =
+    model.seo_keywords ||
+    [model.name, model.task, model.model_type, model.license, 'AI model', 'HackerThink']
+      .filter(Boolean)
+      .join(', ');
 
   return {
     title,
     description,
-    keywords: model.seo_keywords || undefined,
+    keywords,
     alternates: { canonical },
     openGraph: {
       title,
@@ -102,7 +126,9 @@ export default async function ModelDetailPage({
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: model.name,
-    ...(model.description && { description: model.description }),
+    ...(model.description
+      ? { description: model.description }
+      : { description: generateModelSummary(model) }),
     applicationCategory: 'AI Model',
     applicationSubCategory: model.model_type || model.task || 'General AI',
     operatingSystem: 'Cross-platform',
@@ -124,18 +150,24 @@ export default async function ModelDetailPage({
       : {}),
   };
 
-  const faqSchema =
+  const faqEntities =
     faqs.length > 0
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: faqs.map((faq) => ({
-            '@type': 'Question',
-            name: faq.question,
-            acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-          })),
-        }
-      : null;
+      ? faqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        }))
+      : generatePeopleAlsoAsk(model).map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        }));
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqEntities,
+  };
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -147,16 +179,68 @@ export default async function ModelDetailPage({
     ],
   };
 
+  const datasetSchema =
+    payload.training_data.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'Dataset',
+          name: `${model.name} training data`,
+          description: `Training datasets associated with ${model.name}`,
+          url: canonicalUrl,
+          creator: model.developer ? { '@type': 'Organization', name: model.developer } : undefined,
+        }
+      : null;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: model.name,
+    description: model.description || generateModelSummary(model),
+    url: canonicalUrl,
+    author: model.developer ? { '@type': 'Organization', name: model.developer } : undefined,
+    dateModified: model.last_updated || undefined,
+    datePublished: model.release_date || undefined,
+    mainEntityOfPage: canonicalUrl,
+  };
+
+  const relatedLinks = payload.related
+    .filter((r) => r.url || r.slug)
+    .slice(0, 12)
+    .map((r) => ({
+      '@type': 'WebPage',
+      name: r.title,
+      url: r.url || `${siteUrl}/${r.type === 'model' ? 'models' : r.type}/${r.slug}`,
+    }));
+
   return (
     <ModelsThemeProvider>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
       />
-      {faqSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {datasetSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }} />
+      )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      {relatedLinks.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'ItemList',
+              name: `Resources related to ${model.name}`,
+              itemListElement: relatedLinks.map((item, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                item,
+              })),
+            }),
+          }}
+        />
+      )}
       <ModelDetailView initialData={payload} />
     </ModelsThemeProvider>
   );

@@ -84,10 +84,10 @@ export default function AdminLayout({
         {/* Admin Sidebar */}
         <AdminSidebar />
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto flex flex-col">
+        {/* Main Content — min-w-0 so wide tables/content can't blow past the viewport */}
+        <div className="flex-1 min-w-0 overflow-auto flex flex-col">
           <AdminHeader />
-          <main className="flex-1 p-6">
+          <main className="flex-1 min-w-0 p-6">
             {children}
           </main>
         </div>

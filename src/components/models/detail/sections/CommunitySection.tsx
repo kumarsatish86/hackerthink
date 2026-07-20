@@ -115,6 +115,72 @@ export function CommunitySection({ model, links }: { model: ModelCore; links: Mo
 
   return (
     <DetailSection id="community" title="Community" description="Ratings, discussion, and where to connect">
+      <Card className="mb-6 p-4">
+        <h3 className="mb-2 text-sm font-semibold text-[var(--m-text)]">Projects Using This Model</h3>
+        <p className="mb-3 text-xs text-[var(--m-text-muted)]">
+          Showcase community apps, demos, and production stories powered by {model.name}.
+        </p>
+        <ul className="space-y-2 text-sm text-[var(--m-text)]">
+          <li className="rounded-md border border-dashed border-[var(--m-border)] px-3 py-2">
+            Submit your project via community links or discussion below.
+          </li>
+          {links
+            .filter((l) => /project|showcase|demo|github/i.test(`${l.title} ${l.link_type || ''}`))
+            .slice(0, 5)
+            .map((l) => (
+              <li key={l.id}>
+                <a href={l.url} target="_blank" rel="noopener noreferrer" className="text-[var(--m-brand)] hover:underline">
+                  {l.title}
+                </a>
+              </li>
+            ))}
+        </ul>
+      </Card>
+
+      <Card className="mb-6 p-4">
+        <h3 className="mb-2 text-sm font-semibold text-[var(--m-text)]">Tips &amp; user benchmarks</h3>
+        <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--m-text-muted)]">
+          <li>Share latency/VRAM notes from your hardware in Discussion.</li>
+          <li>Link your Colab or Space for others to reproduce results.</li>
+          <li>Call out quantization settings that worked best for you.</li>
+        </ul>
+      </Card>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card className="p-4">
+          <h3 className="mb-2 text-sm font-semibold text-[var(--ht-text)]">Known Issues</h3>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--ht-text-muted)]">
+            <li>Watch tokenizer mismatches when swapping base checkpoints.</li>
+            <li>Large batch sizes may OOM on consumer GPUs — start small.</li>
+            <li>Report reproducible bugs with hardware + quantization notes.</li>
+          </ul>
+        </Card>
+        <Card className="p-4">
+          <h3 className="mb-2 text-sm font-semibold text-[var(--ht-text)]">Common Errors</h3>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--ht-text-muted)]">
+            <li>`CUDA out of memory` — reduce batch or use a quantized variant.</li>
+            <li>`safetensors` load failures — confirm transformers version.</li>
+            <li>Unexpected dims — verify pooling strategy matches training.</li>
+          </ul>
+        </Card>
+        <Card className="p-4">
+          <h3 className="mb-2 text-sm font-semibold text-[var(--ht-text)]">Deployment Notes</h3>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--ht-text-muted)]">
+            <li>Pin model revision digests in production images.</li>
+            <li>Warm the model on pod start to avoid first-request spikes.</li>
+            <li>Export OpenAPI from your serving layer for client SDKs.</li>
+          </ul>
+        </Card>
+        <Card className="p-4">
+          <h3 className="mb-2 text-sm font-semibold text-[var(--ht-text)]">Fine-tuning Experiences</h3>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-[var(--ht-text-muted)]">
+            <li>Start with a small domain set and early-stop on STS/retrieval.</li>
+            <li>Document learning rate and epochs that worked for peers.</li>
+            <li>Share adapters (LoRA) when full FT is unnecessary.</li>
+          </ul>
+        </Card>
+      </div>
+
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="p-4">
           <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--m-text)]">

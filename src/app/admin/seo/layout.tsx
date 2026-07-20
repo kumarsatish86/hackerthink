@@ -11,6 +11,9 @@ export default function SEOLayout({ children }: { children: React.ReactNode }) {
     { name: 'Overview', path: '/admin/seo' },
     { name: 'Sitemap', path: '/admin/seo/sitemap' },
     { name: 'Robots.txt', path: '/admin/seo/robots' },
+    { name: 'Ads.txt', path: '/admin/seo/ads' },
+    { name: 'llms.txt', path: '/admin/seo/llms' },
+    { name: 'security.txt', path: '/admin/seo/security' },
     { name: 'Redirects', path: '/admin/seo/redirects' },
   ];
 

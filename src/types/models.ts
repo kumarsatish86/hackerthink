@@ -32,7 +32,37 @@ export interface ModelQuickFacts {
   training_dataset?: string;
   commercial_use?: string;
   offline_support?: string;
+  embedding_dimension?: string;
+  latency?: string;
+  python_version?: string;
+  cuda_version?: string;
+  ram_required?: string;
+  install_time?: string;
+  install_difficulty?: string;
+  verification_command?: string;
   [key: string]: string | undefined;
+}
+
+export interface ModelInstallMeta {
+  estimated_time?: string;
+  difficulty?: 'easy' | 'medium' | 'hard' | string;
+  python_version?: string;
+  cuda_version?: string;
+  ram_required?: string;
+  gpu_required?: string;
+  expected_output?: string;
+  verification_command?: string;
+  troubleshooting?: string[];
+}
+
+export interface ModelProductionReadinessStored {
+  score?: number;
+  labels?: string[];
+  reason?: string;
+}
+
+export interface ModelDecisionAssistantStored {
+  best_for?: { label: string; rating: string; why?: string }[];
 }
 
 export interface ModelPlaygroundConfig {
@@ -206,7 +236,7 @@ export interface ModelDownloadAnalytics {
 }
 
 export interface ModelRelatedItem {
-  type: 'model' | 'dataset' | 'article' | 'tutorial' | 'course' | 'video';
+  type: 'model' | 'dataset' | 'article' | 'tutorial' | 'course' | 'video' | 'paper';
   title: string;
   slug?: string;
   url?: string;
@@ -263,6 +293,9 @@ export interface ModelCore {
   playground_config?: ModelPlaygroundConfig;
   ai_summary?: ModelAiSummary;
   quick_facts?: ModelQuickFacts;
+  install_meta?: ModelInstallMeta;
+  production_readiness?: ModelProductionReadinessStored;
+  decision_assistant?: ModelDecisionAssistantStored;
   compatibility_matrix?: Record<string, boolean | string>;
   overview_guidance?: {
     requirements?: string[];

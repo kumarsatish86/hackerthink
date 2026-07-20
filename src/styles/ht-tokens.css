@@ -1,0 +1,149 @@
+/**
+ * HackerThink design tokens (platform-wide).
+ * --ht-* is the canonical namespace; --m-* aliases keep models module compatible.
+ */
+
+.ht-scope,
+.models-scope {
+  /* Surfaces */
+  --ht-bg: #f8fafc;
+  --ht-surface: #ffffff;
+  --ht-surface-2: #f1f5f9;
+  --ht-border: #e2e8f0;
+  --ht-text: #0f172a;
+  --ht-text-muted: #64748b;
+  --ht-brand: #dc2626;
+  --ht-brand-hover: #b91c1c;
+  --ht-brand-soft: #fef2f2;
+  --ht-success: #059669;
+  --ht-success-soft: #ecfdf5;
+  --ht-warning: #d97706;
+  --ht-warning-soft: #fffbeb;
+  --ht-info: #0284c7;
+  --ht-info-soft: #f0f9ff;
+  --ht-danger: #dc2626;
+  --ht-danger-soft: #fef2f2;
+  --ht-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+
+  /* Spacing scale (4px base) */
+  --ht-space-1: 0.25rem;
+  --ht-space-2: 0.5rem;
+  --ht-space-3: 0.75rem;
+  --ht-space-4: 1rem;
+  --ht-space-5: 1.25rem;
+  --ht-space-6: 1.5rem;
+  --ht-space-8: 2rem;
+  --ht-space-10: 2.5rem;
+  --ht-space-12: 3rem;
+
+  /* Typography */
+  --ht-font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ht-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ht-text-xs: 0.75rem;
+  --ht-text-sm: 0.875rem;
+  --ht-text-base: 1rem;
+  --ht-text-lg: 1.125rem;
+  --ht-text-xl: 1.25rem;
+  --ht-text-2xl: 1.5rem;
+  --ht-text-3xl: 1.875rem;
+  --ht-leading-tight: 1.25;
+  --ht-leading-normal: 1.5;
+  --ht-leading-relaxed: 1.625;
+
+  /* Radii / motion */
+  --ht-radius-sm: 0.375rem;
+  --ht-radius: 0.75rem;
+  --ht-radius-lg: 1rem;
+  --ht-motion-fast: 120ms;
+  --ht-motion-normal: 200ms;
+  --ht-focus-ring: 2px solid var(--ht-brand);
+
+  /* Models module aliases */
+  --m-bg: var(--ht-bg);
+  --m-surface: var(--ht-surface);
+  --m-surface-2: var(--ht-surface-2);
+  --m-border: var(--ht-border);
+  --m-text: var(--ht-text);
+  --m-text-muted: var(--ht-text-muted);
+  --m-brand: var(--ht-brand);
+  --m-brand-hover: var(--ht-brand-hover);
+  --m-brand-soft: var(--ht-brand-soft);
+  --m-success: var(--ht-success);
+  --m-warning: var(--ht-warning);
+  --m-radius: var(--ht-radius);
+  --m-shadow: var(--ht-shadow);
+
+  color: var(--ht-text);
+  background: var(--ht-bg);
+  font-family: var(--ht-font-sans);
+}
+
+.dark .ht-scope,
+.ht-scope.dark,
+.dark .models-scope,
+.models-scope.dark {
+  --ht-bg: #0b1220;
+  --ht-surface: #111827;
+  --ht-surface-2: #1f2937;
+  --ht-border: #374151;
+  --ht-text: #f8fafc;
+  --ht-text-muted: #cbd5e1;
+  --ht-brand: #f87171;
+  --ht-brand-hover: #ef4444;
+  --ht-brand-soft: #450a0a;
+  --ht-success: #34d399;
+  --ht-success-soft: #064e3b;
+  --ht-warning: #fbbf24;
+  --ht-warning-soft: #78350f;
+  --ht-info: #38bdf8;
+  --ht-info-soft: #0c4a6e;
+  --ht-danger: #f87171;
+  --ht-danger-soft: #450a0a;
+  --ht-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.ht-scope a:focus-visible,
+.ht-scope button:focus-visible,
+.ht-scope input:focus-visible,
+.ht-scope select:focus-visible,
+.ht-scope textarea:focus-visible,
+.ht-scope [role='tab']:focus-visible,
+.models-scope a:focus-visible,
+.models-scope button:focus-visible,
+.models-scope input:focus-visible,
+.models-scope select:focus-visible,
+.models-scope textarea:focus-visible,
+.models-scope [role='tab']:focus-visible {
+  outline: var(--ht-focus-ring);
+  outline-offset: 2px;
+}
+
+.ht-scope .hero-contrast-badge,
+.models-scope .hero-contrast-badge {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+@media (prefers-contrast: more) {
+  .ht-scope,
+  .models-scope {
+    --ht-border: #0f172a;
+    --ht-text-muted: #334155;
+  }
+  .dark .ht-scope,
+  .ht-scope.dark,
+  .dark .models-scope,
+  .models-scope.dark {
+    --ht-border: #e2e8f0;
+    --ht-text-muted: #e2e8f0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ht-scope *,
+  .models-scope * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

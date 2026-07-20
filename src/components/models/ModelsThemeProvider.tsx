@@ -1,11 +1,12 @@
 'use client';
 
-import { ThemeProvider } from 'next-themes';
+import { HtThemeProvider } from '@/components/ht-ui/HtThemeProvider';
 
+/** Models-scoped theme (isolated storage key). Re-exports HtThemeProvider. */
 export function ModelsThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem storageKey="ht-models-theme">
+    <HtThemeProvider storageKey="ht-models-theme" defaultTheme="light">
       {children}
-    </ThemeProvider>
+    </HtThemeProvider>
   );
 }

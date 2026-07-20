@@ -5,27 +5,60 @@ import toast from 'react-hot-toast';
 import { FaRobot, FaTimes, FaCopy, FaArrowRight } from 'react-icons/fa';
 import type { ModelCore } from '@/types/models';
 
-function buildPromptTemplates(model: ModelCore): { label: string; prompt: string }[] {
+function buildPromptTemplates(model: ModelCore): { id: string; label: string; prompt: string }[] {
+  const id = model.external_model_id || model.slug;
+  const fw = model.framework || 'transformers';
+  const task = model.task || 'inference';
   return [
     {
-      label: 'Summarize this model',
-      prompt: `Explain what ${model.name} by ${model.developer || 'its developer'} is, what it's good at, and who should use it.`,
+      id: 'explain',
+      label: 'Explain',
+      prompt: `Explain ${model.name} (${id}) by ${model.developer || 'its developer'}: architecture (${model.architecture || 'n/a'}), task (${task}), strengths, and who should use it.`,
     },
     {
-      label: 'Compare with alternatives',
-      prompt: `Compare ${model.name} against similar ${model.task || 'AI'} models and highlight the key trade-offs.`,
+      id: 'compare',
+      label: 'Compare',
+      prompt: `Compare ${model.name} (${id}) to the closest open alternatives for ${task}. Cover quality, latency, license, and deployment cost.`,
     },
     {
-      label: 'Installation help',
-      prompt: `Give me step-by-step instructions to install and run ${model.name} locally using ${model.framework || 'Python'}.`,
+      id: 'deploy',
+      label: 'Deploy',
+      prompt: `Design a FastAPI + Docker deployment for ${model.name} (${id}) with health checks, env vars, and resource requests.`,
     },
     {
-      label: 'Suggest use cases',
-      prompt: `List practical, real-world use cases for ${model.name} in a production application.`,
+      id: 'code',
+      label: 'Code',
+      prompt: `Generate production-ready ${fw} code to load and run ${model.name} (${id}) for ${task}, including error handling.`,
     },
     {
-      label: 'Debug an integration issue',
-      prompt: `I'm integrating ${model.name} via its API and getting unexpected results. Help me debug the request/response format.`,
+      id: 'benchmark',
+      label: 'Benchmark',
+      prompt: `Propose a benchmark suite for ${model.name} covering accuracy, latency, RAM/VRAM, and comparison peers.`,
+    },
+    {
+      id: 'finetune',
+      label: 'Fine-tune',
+      prompt: `Outline a fine-tuning plan for ${model.name} on a custom dataset: data format, hyperparameters, evaluation, and risks.`,
+    },
+    {
+      id: 'convert',
+      label: 'Convert',
+      prompt: `Show how to export ${model.name} (${id}) to ONNX (and optionally TorchScript) and validate numerical parity.`,
+    },
+    {
+      id: 'quantize',
+      label: 'Quantize',
+      prompt: `Recommend quantization options (INT8/GPTQ/AWQ/GGUF) for ${model.name} and expected quality/speed trade-offs.`,
+    },
+    {
+      id: 'troubleshoot',
+      label: 'Troubleshoot',
+      prompt: `I'm integrating ${model.name} and seeing errors. Help debug common load/inference issues for ${fw}.`,
+    },
+    {
+      id: 'optimize',
+      label: 'Optimize',
+      prompt: `Optimize serving ${model.name} (${id}) for p95 latency and cost: batching, caching, hardware choice, and autoscaling.`,
     },
   ];
 }
@@ -48,18 +81,23 @@ export function ModelAssistantDrawer({ model }: { model: ModelCore }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--m-brand)] text-white shadow-lg transition hover:bg-[var(--m-brand-hover)] hover:scale-105"
+        className="fixed bottom-20 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--m-brand)] text-white shadow-lg transition hover:scale-105 hover:bg-[var(--m-brand-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:bottom-5"
         aria-label="Open AI prompt assistant"
       >
         <FaRobot className="h-5 w-5" />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-end bg-black/40 p-4 sm:items-center" role="dialog" aria-modal="true">
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-end bg-black/40 p-4 sm:items-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Model AI assistant"
+        >
           <div className="w-full max-w-sm rounded-xl border border-[var(--m-border)] bg-[var(--m-surface)] shadow-2xl">
             <div className="flex items-center justify-between border-b border-[var(--m-border)] p-4">
               <h3 className="flex items-center gap-2 text-sm font-semibold text-[var(--m-text)]">
-                <FaRobot className="text-[var(--m-brand)]" /> Prompt Assistant
+                <FaRobot className="text-[var(--m-brand)]" /> Model Assistant
               </h3>
               <button
                 type="button"
@@ -72,18 +110,18 @@ export function ModelAssistantDrawer({ model }: { model: ModelCore }) {
             </div>
             <div className="max-h-[60vh] space-y-2 overflow-y-auto p-4">
               <p className="mb-2 text-xs text-[var(--m-text-muted)]">
-                Copy a ready-made prompt about {model.name} to use with your favorite AI assistant.
+                Contextual prompts for {model.name} — copy and run in your AI tool.
               </p>
               {templates.map((t) => (
                 <button
-                  key={t.label}
+                  key={t.id}
                   type="button"
                   onClick={() => copyPrompt(t.prompt)}
                   className="group flex w-full items-start justify-between gap-2 rounded-lg border border-[var(--m-border)] p-3 text-left transition hover:border-[var(--m-brand)] hover:bg-[var(--m-surface-2)]"
                 >
                   <span>
                     <span className="block text-sm font-medium text-[var(--m-text)]">{t.label}</span>
-                    <span className="mt-0.5 block text-xs text-[var(--m-text-muted)] line-clamp-2">{t.prompt}</span>
+                    <span className="mt-0.5 line-clamp-2 block text-xs text-[var(--m-text-muted)]">{t.prompt}</span>
                   </span>
                   <FaCopy className="mt-1 h-3.5 w-3.5 flex-shrink-0 text-[var(--m-text-muted)] group-hover:text-[var(--m-brand)]" />
                 </button>
@@ -92,7 +130,7 @@ export function ModelAssistantDrawer({ model }: { model: ModelCore }) {
                 href="/dashboard"
                 className="flex items-center justify-center gap-1.5 rounded-lg border border-dashed border-[var(--m-border)] p-3 text-sm text-[var(--m-brand)] hover:bg-[var(--m-surface-2)]"
               >
-                Open full AI assistant <FaArrowRight className="h-3 w-3" />
+                Open dashboard <FaArrowRight className="h-3 w-3" />
               </a>
             </div>
           </div>

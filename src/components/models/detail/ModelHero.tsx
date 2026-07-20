@@ -2,38 +2,26 @@
 
 import {
   FaBrain, FaCheckCircle, FaShieldAlt, FaPlug, FaDownload, FaHeart, FaStar,
-  FaEye, FaFire, FaCodeBranch, FaMicrochip, FaBalanceScale, FaLayerGroup,
-  FaCalendarAlt, FaClock, FaLanguage,
+  FaEye, FaFire,
 } from 'react-icons/fa';
 import { Badge } from '@/components/models/ui/primitives';
 import type { ModelCore } from '@/types/models';
-import { formatCompactNumber, formatDate, formatRating, toStringArray } from './utils';
+import { formatCompactNumber, formatRating } from './utils';
+import { ModelVisualBadges } from './ModelVisualBadges';
+import { resolveModelDescription } from '@/lib/models/generateModelSummary';
 
 function MetricPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1.5 backdrop-blur-sm">
+    <div className="flex items-center gap-1.5 rounded-md bg-white/10 px-2 py-1 backdrop-blur-sm">
       <span className="text-white/80">{icon}</span>
-      <span className="font-semibold text-white">{value}</span>
-      <span className="hidden text-white/70 sm:inline">{label}</span>
-    </div>
-  );
-}
-
-function MetaItem({ icon, label, value }: { icon: React.ReactNode; label: string; value?: string | null }) {
-  if (!value) return null;
-  return (
-    <div className="flex items-start gap-2 text-sm text-white">
-      <span className="mt-0.5 flex-shrink-0 text-white/90">{icon}</span>
-      <span className="min-w-0">
-        <span className="text-white/70">{label}: </span>
-        <span className="font-medium text-white break-words">{value}</span>
-      </span>
+      <span className="text-sm font-semibold text-white">{value}</span>
+      <span className="hidden text-xs text-white/70 sm:inline">{label}</span>
     </div>
   );
 }
 
 export function ModelHero({ model }: { model: ModelCore }) {
-  const languages = toStringArray(model.languages);
+  const blurb = resolveModelDescription(model);
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-[var(--m-brand)] to-[var(--m-brand-hover)] text-white">
@@ -46,23 +34,24 @@ export function ModelHero({ model }: { model: ModelCore }) {
         }}
         aria-hidden
       />
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="flex flex-wrap items-start gap-5">
+      <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+        <div className="flex flex-wrap items-start gap-4">
           {model.logo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={model.logo_url}
               alt={`${model.name} logo`}
-              className="h-16 w-16 flex-shrink-0 rounded-xl bg-white/10 object-contain p-1.5 shadow-lg sm:h-20 sm:w-20"
+              className="h-12 w-12 flex-shrink-0 rounded-lg bg-white/10 object-contain p-1 shadow-md sm:h-14 sm:w-14"
             />
           ) : (
-            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-white/15 shadow-lg sm:h-20 sm:w-20">
-              <FaBrain className="h-8 w-8 text-white sm:h-10 sm:w-10" />
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-white/15 shadow-md sm:h-14 sm:w-14">
+              <FaBrain className="h-6 w-6 text-white sm:h-7 sm:w-7" />
             </div>
           )}
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">{model.name}</h1>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <h1 className="text-xl font-bold tracking-tight sm:text-2xl lg:text-3xl">{model.name}</h1>
               {model.verified && (
                 <Badge tone="success" className="!bg-white/20 !text-white">
                   <FaCheckCircle className="mr-1 inline h-3 w-3" /> Verified
@@ -70,53 +59,41 @@ export function ModelHero({ model }: { model: ModelCore }) {
               )}
               {model.security_badge && (
                 <Badge tone="neutral" className="!bg-white/20 !text-white">
-                  <FaShieldAlt className="mr-1 inline h-3 w-3" /> Security Reviewed
+                  <FaShieldAlt className="mr-1 inline h-3 w-3" /> Security
                 </Badge>
               )}
               {model.compatibility_badge && (
                 <Badge tone="neutral" className="!bg-white/20 !text-white">
-                  <FaPlug className="mr-1 inline h-3 w-3" /> Compatibility Tested
+                  <FaPlug className="mr-1 inline h-3 w-3" /> Compatible
                 </Badge>
               )}
               {model.trending_rank != null && model.trending_rank > 0 && (
                 <Badge tone="warning" className="!bg-white/20 !text-white">
-                  <FaFire className="mr-1 inline h-3 w-3" /> Trending #{model.trending_rank}
+                  <FaFire className="mr-1 inline h-3 w-3" /> #{model.trending_rank}
                 </Badge>
               )}
             </div>
 
-            {model.developer && <p className="mt-1 text-base text-white/90 sm:text-lg">by {model.developer}</p>}
+            {model.developer && <p className="mt-0.5 text-sm text-white/90">by {model.developer}</p>}
 
-            {model.description && (
-              <p className="mt-2 max-w-3xl text-sm text-white/85 sm:text-base">{model.description}</p>
-            )}
+            <p className="mt-1.5 max-w-3xl line-clamp-2 text-sm text-white/85">{blurb}</p>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              <MetricPill icon={<FaDownload className="h-3.5 w-3.5" />} label="downloads" value={formatCompactNumber(model.download_count)} />
-              <MetricPill icon={<FaHeart className="h-3.5 w-3.5" />} label="likes" value={formatCompactNumber(model.likes_count)} />
-              <MetricPill icon={<FaStar className="h-3.5 w-3.5" />} label="stars" value={formatCompactNumber(model.stars_count)} />
-              <MetricPill icon={<FaEye className="h-3.5 w-3.5" />} label="views" value={formatCompactNumber(model.view_count)} />
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              <MetricPill icon={<FaDownload className="h-3 w-3" />} label="downloads" value={formatCompactNumber(model.download_count)} />
+              <MetricPill icon={<FaHeart className="h-3 w-3" />} label="likes" value={formatCompactNumber(model.likes_count)} />
+              <MetricPill icon={<FaStar className="h-3 w-3" />} label="stars" value={formatCompactNumber(model.stars_count)} />
+              <MetricPill icon={<FaEye className="h-3 w-3" />} label="views" value={formatCompactNumber(model.view_count)} />
               <MetricPill
-                icon={<FaStar className="h-3.5 w-3.5 text-yellow-300" />}
+                icon={<FaStar className="h-3 w-3 text-yellow-300" />}
                 label={`(${model.rating_count || 0})`}
                 value={formatRating(model.rating)}
               />
             </div>
-          </div>
-        </div>
 
-        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-2.5 rounded-xl bg-white/10 p-4 backdrop-blur-sm sm:grid-cols-3 lg:grid-cols-4">
-          <MetaItem icon={<FaCodeBranch className="h-3.5 w-3.5" />} label="Version" value={model.version} />
-          <MetaItem icon={<FaLayerGroup className="h-3.5 w-3.5" />} label="Task" value={model.task} />
-          <MetaItem icon={<FaMicrochip className="h-3.5 w-3.5" />} label="Architecture" value={model.architecture} />
-          <MetaItem icon={<FaMicrochip className="h-3.5 w-3.5" />} label="Params" value={model.parameters} />
-          <MetaItem icon={<FaBalanceScale className="h-3.5 w-3.5" />} label="License" value={model.license} />
-          <MetaItem icon={<FaLayerGroup className="h-3.5 w-3.5" />} label="Framework" value={model.framework} />
-          {languages.length > 0 && (
-            <MetaItem icon={<FaLanguage className="h-3.5 w-3.5" />} label="Languages" value={languages.slice(0, 3).join(', ')} />
-          )}
-          <MetaItem icon={<FaCalendarAlt className="h-3.5 w-3.5" />} label="Released" value={formatDate(model.release_date)} />
-          <MetaItem icon={<FaClock className="h-3.5 w-3.5" />} label="Updated" value={formatDate(model.last_updated)} />
+            <div className="mt-2.5 [&_span]:!bg-white/15 [&_span]:!text-white">
+              <ModelVisualBadges model={model} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

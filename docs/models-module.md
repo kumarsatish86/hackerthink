@@ -162,3 +162,64 @@ from `@/lib/db` (not an ad-hoc `pg.Pool`) and emits:
 It's linked from the main sitemap index and respects the `seo_settings`
 table's `generate_sitemap` / `include_in_sitemap` / `sitemap_change_frequency`
 / `sitemap_priority` toggles.
+
+## 8. Detail page evolution contract
+
+The public detail shell is [`ModelDetailView`](../src/components/models/detail/ModelDetailView.tsx).
+
+### Schema-driven sections
+
+Sections are registered with `{ id, label, isEmpty, render }`. Empty sections
+are omitted from both the page body and sticky nav. Adding a new model never
+requires UI changes — populate satellite tables / JSON columns and the page
+renders what exists.
+
+### Derived UX layers (no DB required)
+
+| Helper | Purpose |
+| --- | --- |
+| `generateModelSummary` | 100–150 word fallback when description is empty |
+| `deriveModelScores` | Trending / popularity / production / friendliness |
+| `deriveProductionReadiness` | Stars + labels + docs/deploy scores |
+| `deriveDecisionAssistant` | Recommended / Not Recommended + alternatives |
+| `deriveDeveloperScore` | Nine-axis developer score (X.X/10) |
+| `estimateBenchmarks` | Estimated benchmarks when DB empty |
+| `generateTieredExamples` | Tiered multi-lang code packs |
+| `generatePeopleAlsoAsk` | PAA FAQ fallback + schema |
+| `groupModelCapabilities` | Frameworks / tasks / I/O / hardware groups |
+| `buildQuickStats` | Professional quick-stat cards (incl. Memory/VRAM) |
+
+### Enrichment
+
+`enrichModelDocsBySlug` persists `ai_summary`, `quick_facts` (including install
+meta), and backfills empty `description` from `ai_summary.what` when missing.
+
+### Collections
+
+- Client localStorage via `CollectionsMenu` (always available)
+- Server API `GET/POST/PUT /api/models/collections` for signed-in users
+  (`model_collections` table created lazily)
+
+### Keyboard shortcuts (sticky nav)
+
+- `g` then letter — jump to section by id/label prefix
+- `1`–`9` — jump by section index
+- `c` — Comparison · `p` — Playground
+
+## 7. Design system (`ht-ui`)
+
+Platform components live in `src/components/ht-ui/` with tokens in
+`src/styles/ht-tokens.css` (`--ht-*`; `--m-*` aliases for the models scope).
+
+Model detail composes these via mappers in `src/lib/models/*`:
+
+| Helper | Feeds |
+| --- | --- |
+| `deriveDeveloperScore` | Developer Score card (9 axes → X.X/10) |
+| `deriveDecisionAssistant` | Recommended / Not Recommended + alternatives with WHY |
+| `estimateBenchmarks` / `estimateHardware` | Never-empty benchmarks + VRAM/RAM estimates |
+| `generateTieredExamples` | Multi-language example packs when DB empty |
+| `generatePeopleAlsoAsk` | FAQ section + FAQPage JSON-LD when FAQs empty |
+
+Contracts and expansion rules: [`docs/design-system.md`](./design-system.md).
+

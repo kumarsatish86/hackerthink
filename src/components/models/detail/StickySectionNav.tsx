@@ -84,6 +84,36 @@ export function StickySectionNav({
       if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
+      // Digit 1-9 jump to section index
+      if (/^[1-9]$/.test(e.key)) {
+        const idx = Number(e.key) - 1;
+        if (sections[idx]) {
+          e.preventDefault();
+          scrollToSection(sections[idx].id);
+        }
+        return;
+      }
+
+      // Single-key jumps
+      if (!awaitingLetter) {
+        if (e.key.toLowerCase() === 'c') {
+          const compare = sections.find((s) => s.id === 'comparison');
+          if (compare) {
+            e.preventDefault();
+            scrollToSection('comparison');
+            return;
+          }
+        }
+        if (e.key.toLowerCase() === 'p') {
+          const playground = sections.find((s) => s.id === 'playground');
+          if (playground) {
+            e.preventDefault();
+            scrollToSection('playground');
+            return;
+          }
+        }
+      }
+
       if (!awaitingLetter && e.key.toLowerCase() === 'g') {
         awaitingLetter = true;
         clearTimeout(timeout);

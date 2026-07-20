@@ -5,11 +5,13 @@ import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import {
   FaDownload, FaExternalLinkAlt, FaPlay, FaFlag, FaShareAlt, FaBookmark, FaRegBookmark,
-  FaTimes,
+  FaTimes, FaExchangeAlt,
 } from 'react-icons/fa';
 import { Button, Card } from '@/components/models/ui/primitives';
 import { CopyButton } from '@/components/models/ui/CopyButton';
 import type { ModelCore, ModelInstallGuide } from '@/types/models';
+import Link from 'next/link';
+import { CollectionsMenu } from './CollectionsMenu';
 
 const REPORT_REASONS = [
   'Incorrect metadata',
@@ -139,57 +141,73 @@ export function ModelHeroActions({
 
   return (
     <div className="border-b border-[var(--m-border)] bg-[var(--m-surface)]">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-4 py-3 sm:px-6 lg:px-8">
-        {downloadHref ? (
-          <a href={downloadHref} target="_blank" rel="noopener noreferrer">
-            <Button size="sm">
-              <FaDownload className="h-3.5 w-3.5" /> Download
+      <div className="mx-auto max-w-7xl px-4 py-2.5 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {downloadHref ? (
+              <a href={downloadHref} target="_blank" rel="noopener noreferrer">
+                <Button size="sm">
+                  <FaDownload className="h-3.5 w-3.5" /> Download
+                </Button>
+              </a>
+            ) : (
+              <Button size="sm" disabled>
+                <FaDownload className="h-3.5 w-3.5" /> Download
+              </Button>
+            )}
+
+            {demoHref ? (
+              <a href={demoHref} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm">
+                  <FaExternalLinkAlt className="h-3.5 w-3.5" /> Run Online
+                </Button>
+              </a>
+            ) : (
+              <Button variant="outline" size="sm" disabled>
+                <FaExternalLinkAlt className="h-3.5 w-3.5" /> Run Online
+              </Button>
+            )}
+
+            <Button variant="outline" size="sm" onClick={scrollToPlayground}>
+              <FaPlay className="h-3.5 w-3.5" /> Playground
             </Button>
-          </a>
-        ) : (
-          <Button size="sm" disabled>
-            <FaDownload className="h-3.5 w-3.5" /> Download
-          </Button>
-        )}
 
-        {demoHref ? (
-          <a href={demoHref} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <FaExternalLinkAlt className="h-3.5 w-3.5" /> Run Online
+            <Link href={`/models/compare?models=${encodeURIComponent(model.slug)}`}>
+              <Button variant="outline" size="sm" aria-label="Compare this model">
+                <FaExchangeAlt className="h-3.5 w-3.5" /> Compare
+              </Button>
+            </Link>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <CopyButton value={modelIdValue} label="Copy ID" />
+            <CopyButton value={installCommand} label="Install" />
+            <Button variant="ghost" size="sm" onClick={share}>
+              <FaShareAlt className="h-3.5 w-3.5" /> Share
             </Button>
-          </a>
-        ) : (
-          <Button variant="outline" size="sm" disabled>
-            <FaExternalLinkAlt className="h-3.5 w-3.5" /> Run Online
+            <Button
+              variant={bookmarked ? 'primary' : 'ghost'}
+              size="sm"
+              onClick={toggleBookmark}
+              disabled={bookmarkBusy}
+              aria-pressed={bookmarked}
+            >
+              {bookmarked ? <FaBookmark className="h-3.5 w-3.5" /> : <FaRegBookmark className="h-3.5 w-3.5" />}
+              {bookmarked ? 'Saved' : 'Save'}
+              {bookmarkCount != null && <span className="text-xs opacity-75">({bookmarkCount})</span>}
+            </Button>
+            <CollectionsMenu model={model} />
+          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="ml-auto text-[var(--m-text-muted)]"
+            onClick={() => setReportOpen(true)}
+          >
+            <FaFlag className="h-3.5 w-3.5" /> Report
           </Button>
-        )}
-
-        <Button variant="outline" size="sm" onClick={scrollToPlayground}>
-          <FaPlay className="h-3.5 w-3.5" /> Open Playground
-        </Button>
-
-        <CopyButton value={modelIdValue} label="Copy Model ID" />
-        <CopyButton value={installCommand} label="Copy Install" />
-
-        <Button variant="ghost" size="sm" onClick={share}>
-          <FaShareAlt className="h-3.5 w-3.5" /> Share
-        </Button>
-
-        <Button
-          variant={bookmarked ? 'primary' : 'ghost'}
-          size="sm"
-          onClick={toggleBookmark}
-          disabled={bookmarkBusy}
-          aria-pressed={bookmarked}
-        >
-          {bookmarked ? <FaBookmark className="h-3.5 w-3.5" /> : <FaRegBookmark className="h-3.5 w-3.5" />}
-          {bookmarked ? 'Bookmarked' : 'Bookmark'}
-          {bookmarkCount != null && <span className="text-xs opacity-75">({bookmarkCount})</span>}
-        </Button>
-
-        <Button variant="ghost" size="sm" className="ml-auto text-[var(--m-text-muted)]" onClick={() => setReportOpen(true)}>
-          <FaFlag className="h-3.5 w-3.5" /> Report
-        </Button>
+        </div>
       </div>
 
       {reportOpen && (

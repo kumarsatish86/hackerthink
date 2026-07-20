@@ -1,37 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
 import { auth } from '@/auth';
-
-
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'hackerthink',
-});
+import { createDefaultRobotsConfig, generateRobotsTxt, type RobotsConfig } from '@/lib/seo/robotsConfig';
+import { getSeoSetting, upsertSeoSetting } from '@/lib/seo/seoSettingsDb';
 
 export async function GET() {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
-    // Fetch robots.txt content from settings
-    const { rows } = await pool.query(
-      "SELECT setting_value FROM seo_settings WHERE setting_key = 'default_robots_txt'"
-    );
+    const [robotsTxt, configJson] = await Promise.all([
+      getSeoSetting('default_robots_txt'),
+      getSeoSetting('robots_txt_config'),
+    ]);
 
-    if (rows.length === 0) {
-      // Return a default if not set
-      return NextResponse.json({ 
-        robots_txt: 'User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: https://example.com/sitemap.xml' 
-      });
+    let config: RobotsConfig | null = null;
+    if (configJson) {
+      try {
+        config = { ...createDefaultRobotsConfig(), ...JSON.parse(configJson) };
+      } catch {
+        config = null;
+      }
     }
 
-    return NextResponse.json({ robots_txt: rows[0].setting_value });
+    return NextResponse.json({
+      robots_txt: robotsTxt || generateRobotsTxt(createDefaultRobotsConfig()),
+      config,
+    });
   } catch (error) {
     console.error('Error fetching robots.txt settings:', error);
     return NextResponse.json(
@@ -43,27 +39,33 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
-    // Parse request body
     const body = await request.json();
-    const { robots_txt } = body;
+    const { robots_txt, config } = body;
 
-    if (robots_txt === undefined) {
+    if (robots_txt === undefined && !config) {
       return NextResponse.json(
-        { message: 'robots_txt content is required' },
+        { message: 'robots_txt or config is required' },
         { status: 400 }
       );
     }
 
-    // Update robots.txt content in settings
-    await pool.query(
-      "UPDATE seo_settings SET setting_value = $1, updated_at = CURRENT_TIMESTAMP WHERE setting_key = 'default_robots_txt'",
-      [robots_txt]
+    const nextConfig: RobotsConfig = config
+      ? { ...createDefaultRobotsConfig(), ...config }
+      : { ...createDefaultRobotsConfig(), mode: 'raw', rawContent: String(robots_txt || '') };
+
+    const content =
+      robots_txt !== undefined ? String(robots_txt) : generateRobotsTxt(nextConfig);
+
+    await upsertSeoSetting('default_robots_txt', content, 'Default robots.txt content');
+    await upsertSeoSetting(
+      'robots_txt_config',
+      JSON.stringify({ ...nextConfig, rawContent: content }),
+      'Structured robots.txt builder config'
     );
 
     return NextResponse.json({ message: 'robots.txt updated successfully' });
@@ -74,4 +76,4 @@ export async function PUT(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

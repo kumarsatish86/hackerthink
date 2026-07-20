@@ -1,43 +1,56 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
 import { auth } from '@/auth';
+import {
+  createDefaultSitemapConfig,
+  legacySettingsToSitemapConfig,
+  sitemapConfigToLegacySettings,
+  type SitemapAdvancedConfig,
+} from '@/lib/seo/sitemapConfig';
+import { upsertSeoSetting } from '@/lib/seo/seoSettingsDb';
+import { query } from '@/lib/db';
 
-
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'hackerthink',
-});
+function defaultIncludeCsv() {
+  return Object.entries(createDefaultSitemapConfig().types)
+    .filter(([, v]) => v.enabled)
+    .map(([k]) => k)
+    .join(',');
+}
 
 export async function GET() {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
-    // Fetch sitemap settings
-    const { rows } = await pool.query(`
-      SELECT setting_key, setting_value 
-      FROM seo_settings 
+    const { rows } = await query(`
+      SELECT setting_key, setting_value
+      FROM seo_settings
       WHERE setting_key IN (
-        'generate_sitemap', 
-        'sitemap_change_frequency', 
-        'sitemap_priority', 
-        'include_in_sitemap'
+        'generate_sitemap',
+        'sitemap_change_frequency',
+        'sitemap_priority',
+        'include_in_sitemap',
+        'sitemap_advanced_config'
       )
     `);
 
-    // Convert to object format
-    const sitemapSettings = rows.reduce((acc, row) => {
-      acc[row.setting_key] = row.setting_value;
-      return acc;
-    }, {});
+    const settings: Record<string, string> = {};
+    for (const row of rows) settings[row.setting_key] = row.setting_value;
 
-    return NextResponse.json({ sitemap_settings: sitemapSettings });
+    const config = legacySettingsToSitemapConfig(settings, settings.sitemap_advanced_config);
+    const legacy = sitemapConfigToLegacySettings(config);
+
+    return NextResponse.json({
+      sitemap_settings: {
+        generate_sitemap: settings.generate_sitemap ?? legacy.generate_sitemap,
+        sitemap_change_frequency:
+          settings.sitemap_change_frequency ?? legacy.sitemap_change_frequency,
+        sitemap_priority: settings.sitemap_priority ?? legacy.sitemap_priority,
+        include_in_sitemap: settings.include_in_sitemap ?? legacy.include_in_sitemap ?? defaultIncludeCsv(),
+      },
+      config,
+    });
   } catch (error) {
     console.error('Error fetching sitemap settings:', error);
     return NextResponse.json(
@@ -49,55 +62,56 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
-    // Parse request body
     const body = await request.json();
-    const { sitemap_settings } = body;
+    let config: SitemapAdvancedConfig;
 
-    if (!sitemap_settings || typeof sitemap_settings !== 'object') {
+    if (body.config) {
+      config = { ...createDefaultSitemapConfig(), ...body.config, types: body.config.types };
+    } else if (body.sitemap_settings) {
+      config = legacySettingsToSitemapConfig(body.sitemap_settings, null);
+    } else {
       return NextResponse.json(
-        { message: 'Invalid request. sitemap_settings object is required.' },
+        { message: 'Invalid request. config or sitemap_settings is required.' },
         { status: 400 }
       );
     }
 
-    // Update each setting
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
+    const legacy = sitemapConfigToLegacySettings(config);
 
-      // Allowed settings that can be updated
-      const allowedSettings = [
-        'generate_sitemap',
-        'sitemap_change_frequency',
-        'sitemap_priority',
-        'include_in_sitemap'
-      ];
-
-      for (const [key, value] of Object.entries(sitemap_settings)) {
-        if (allowedSettings.includes(key)) {
-          await client.query(
-            `UPDATE seo_settings
-             SET setting_value = $1, 
-                 updated_at = CURRENT_TIMESTAMP
-             WHERE setting_key = $2`,
-            [value, key]
-          );
-        }
-      }
-
-      await client.query('COMMIT');
-    } catch (dbError) {
-      await client.query('ROLLBACK');
-      throw dbError;
-    } finally {
-      client.release();
-    }
+    await upsertSeoSetting('generate_sitemap', legacy.generate_sitemap, 'Whether to automatically generate sitemap');
+    await upsertSeoSetting(
+      'sitemap_change_frequency',
+      legacy.sitemap_change_frequency,
+      'Default change frequency for sitemap'
+    );
+    await upsertSeoSetting('sitemap_priority', legacy.sitemap_priority, 'Default priority for sitemap');
+    await upsertSeoSetting(
+      'include_in_sitemap',
+      legacy.include_in_sitemap,
+      'Content types to include in sitemap'
+    );
+    await upsertSeoSetting(
+      'sitemap_advanced_config',
+      JSON.stringify(config),
+      'Advanced sitemap builder configuration'
+    );
+    await upsertSeoSetting(
+      'sitemap_static_pages',
+      JSON.stringify({
+        include: config.include_static_pages,
+        pages: config.static_pages,
+        homepage: config.include_homepage,
+        lastmod: config.include_lastmod,
+        images: config.include_images,
+        ping: config.ping_search_engines,
+      }),
+      'Static pages and extra sitemap options'
+    );
 
     return NextResponse.json({ message: 'Sitemap settings updated successfully' });
   } catch (error) {
@@ -107,4 +121,4 @@ export async function PUT(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
