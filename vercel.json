@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/huggingface-models",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/huggingface-datasets",
+      "schedule": "30 */6 * * *"
     }
   ]
 }

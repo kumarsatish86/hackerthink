@@ -28,6 +28,7 @@ interface Course {
   slug: string;
   short_description: string;
   description: string;
+  content?: string;
   requirements: string;
   what_will_learn: string;
   who_is_for: string;
@@ -505,8 +506,19 @@ export default function CourseDetail() {
                   {activeTab === 'overview' && (
                     <TabContent key="overview">
                       <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Course</h2>
-                      <div className="prose prose-indigo max-w-none">
-                        <p className="text-gray-600 mb-6">{course.description}</p>
+                      <div className="prose prose-indigo max-w-none mb-6">
+                        {(course.content || course.description || '').includes('<') ? (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: course.content || course.description || '',
+                            }}
+                          />
+                        ) : (
+                          <p className="text-gray-600">
+                            {course.content || course.description || course.short_description}
+                          </p>
+                        )}
+                      </div>
                         
                         {course.what_will_learn && (
                           <div className="mb-8">

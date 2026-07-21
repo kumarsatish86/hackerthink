@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit;
 
-    let whereConditions = [];
+    let whereConditions: string[] = [];
     let queryParams: any[] = [];
     let paramIndex = 1;
 
@@ -98,16 +98,33 @@ export async function GET(request: NextRequest) {
     queryParams.push(limit, offset);
     const datasetsResult = await pool.query(datasetsQuery, queryParams);
 
+    const statsResult = await pool.query(`
+      SELECT
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE status = 'published')::int AS published,
+        COUNT(*) FILTER (WHERE status = 'draft')::int AS drafts,
+        COALESCE(SUM(download_count), 0)::bigint AS downloads
+      FROM datasets
+    `);
+
+    const pages = Math.ceil(total / limit) || 1;
+
     return NextResponse.json({
       datasets: datasetsResult.rows,
       pagination: {
         total,
-        pages: Math.ceil(total / limit),
+        pages,
         page,
         limit,
-        hasNext: page < Math.ceil(total / limit),
+        hasNext: page < pages,
         hasPrev: page > 1
-      }
+      },
+      stats: statsResult.rows[0] || {
+        total: 0,
+        published: 0,
+        drafts: 0,
+        downloads: 0,
+      },
     });
 
   } catch (error) {

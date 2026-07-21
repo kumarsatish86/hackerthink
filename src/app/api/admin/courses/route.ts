@@ -122,21 +122,30 @@ export async function POST(request: NextRequest) {
     try {
       await client.query('BEGIN');
 
-      // Insert into content table first
+      // Insert into content table first (description = short; body = rich overview)
       const contentResult = await client.query(
         `INSERT INTO content (
           title, 
           slug, 
-          description, 
+          description,
+          body,
           content_type,
           status,
           author_id,
           created_at, 
           updated_at
         )
-        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        RETURNING id, title, slug, description, content_type, status, author_id, created_at, updated_at`,
-        [title, finalSlug, short_description || null, 'course', 'published', authorId]
+        VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        RETURNING id, title, slug, description, body, content_type, status, author_id, created_at, updated_at`,
+        [
+          title,
+          finalSlug,
+          short_description || null,
+          content || null,
+          'course',
+          'published',
+          authorId,
+        ]
       );
 
       const contentId = contentResult.rows[0].id;

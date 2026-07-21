@@ -29,7 +29,7 @@ export default function DatasetsEthicsPage() {
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Link href="/datasets" className="inline-flex items-center text-red-100 hover:text-white mb-4 transition-colors">
             <FaArrowLeft className="mr-2" /> Back to All Datasets
           </Link>
@@ -48,7 +48,7 @@ export default function DatasetsEthicsPage() {
       </div>
 
       {/* Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-8">
           {/* Introduction */}
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -155,6 +155,27 @@ export default function DatasetsEthicsPage() {
 
           {/* Resources */}
           <div className="bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-2xl font-bold mb-4">Explore ethics signals in the catalog</h2>
+            <div className="mb-6 flex flex-wrap gap-3">
+              <Link
+                href="/datasets?ethics=pii"
+                className="rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+              >
+                Datasets flagged with PII
+              </Link>
+              <Link
+                href="/datasets?ethics=high_risk"
+                className="rounded-lg bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100"
+              >
+                Higher risk score (≥6)
+              </Link>
+              <Link
+                href="/datasets?ethics=commercial"
+                className="rounded-lg bg-green-50 px-4 py-2 text-sm font-medium text-green-800 hover:bg-green-100"
+              >
+                Commercial-friendly licenses
+              </Link>
+            </div>
             <h2 className="text-2xl font-bold mb-4">Additional Resources</h2>
             <ul className="list-disc list-inside space-y-2 text-gray-700">
               <li><strong>Datasheets for Datasets:</strong> Framework for documenting dataset characteristics</li>

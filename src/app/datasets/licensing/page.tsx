@@ -79,7 +79,7 @@ export default function DatasetsLicensingPage() {
     <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Link href="/datasets" className="inline-flex items-center text-red-100 hover:text-white mb-4 transition-colors">
             <FaArrowLeft className="mr-2" /> Back to All Datasets
           </Link>
@@ -98,7 +98,7 @@ export default function DatasetsLicensingPage() {
       </div>
 
       {/* Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="space-y-8">
           {/* Overview */}
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -142,6 +142,38 @@ export default function DatasetsLicensingPage() {
                         )}
                       </div>
                       <p className="text-gray-700 mt-2">{license.description}</p>
+                      {license.commercial !== 'varies' && (
+                        <Link
+                          href={`/datasets?license=${encodeURIComponent(
+                            license.name.includes('MIT')
+                              ? 'MIT'
+                              : license.name.includes('Apache')
+                                ? 'Apache'
+                                : license.name.includes('CC0')
+                                  ? 'CC0'
+                                  : license.name.includes('CC-BY-NC')
+                                    ? 'CC-BY-NC'
+                                    : license.name.includes('CC-BY-SA')
+                                      ? 'CC-BY-SA'
+                                      : license.name.includes('CC-BY')
+                                        ? 'CC-BY'
+                                        : license.name.includes('ODbL')
+                                          ? 'ODbL'
+                                          : license.name
+                          )}`}
+                          className="mt-2 inline-block text-sm font-medium text-red-600 hover:underline"
+                        >
+                          Browse datasets with this license →
+                        </Link>
+                      )}
+                      {license.commercial === true && (
+                        <Link
+                          href="/datasets?ethics=commercial"
+                          className="ml-3 mt-2 inline-block text-sm font-medium text-green-700 hover:underline"
+                        >
+                          Commercial-friendly catalog
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>

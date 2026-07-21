@@ -433,6 +433,22 @@ export async function POST(request: NextRequest) {
       ['huggingface', 'model', result.rows[0].id, 'success', JSON.stringify(fetchedData)]
     );
 
+    // Auto-link training datasets → catalog datasets (model_training_data.related_dataset_slug)
+    let datasetLinkResult: { linkedCount: number; total: number } | null = null;
+    try {
+      const { syncModelTrainingDatasetLinks } = await import('@/lib/models/linkTrainingDatasets');
+      const tags = Array.isArray(tagsArray) ? tagsArray.map(String) : [];
+      const linkRes = await syncModelTrainingDatasetLinks(
+        pool,
+        result.rows[0].id,
+        trainingDataSources || [],
+        tags
+      );
+      datasetLinkResult = { linkedCount: linkRes.linkedCount, total: linkRes.linked.length };
+    } catch (linkError) {
+      console.error('Model↔dataset auto-link failed (import still succeeded):', linkError);
+    }
+
     // Fill AI Summary, Overview Guidance, FAQs, Install guides, etc.
     let docsEnrichment: any = null;
     if (apply_enrichment && result.rows[0]?.slug) {
@@ -453,6 +469,7 @@ export async function POST(request: NextRequest) {
       message: existingCheck.rows.length > 0 ? 'Model updated successfully' : 'Model imported successfully',
       enrichment_applied: apply_enrichment,
       docs_enrichment: docsEnrichment?.counts || null,
+      dataset_links: datasetLinkResult,
       is_update: existingCheck.rows.length > 0
     });
   } catch (error) {

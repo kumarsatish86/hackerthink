@@ -11,6 +11,29 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
 });
 
+function inferContentType(
+  videoUrl: string | null | undefined,
+  content: string | null | undefined,
+  explicit?: string | null
+): string {
+  if (explicit && ['text', 'video', 'pdf', 'external_resource'].includes(explicit)) {
+    return explicit;
+  }
+  if (videoUrl && String(videoUrl).trim()) return 'video';
+  const body = String(content || '');
+  if (
+    /\.pdf(\?|#|$)/i.test(body) ||
+    /\/uploads\/documents\//i.test(body) ||
+    /\/api\/uploads\/documents\//i.test(body)
+  ) {
+    return 'pdf';
+  }
+  if (/^https?:\/\//i.test(body.trim()) && !body.includes('<')) {
+    return 'external_resource';
+  }
+  return 'text';
+}
+
 // Helper function to extract IDs from URL
 function extractIds(pathname: string): { courseId: string; sectionId: string } {
   // Expected pattern: /api/admin/courses/{courseId}/sections/{sectionId}/chapters
@@ -70,8 +93,8 @@ export async function GET(request: NextRequest) {
     
     const chapters = rows.map(chapter => ({
       ...chapter,
-      content_type: chapter.video_url ? 'video' : 'text', // Add content_type based on video_url
-      is_free_preview: false, // Default value since the column doesn't exist
+      content_type: inferContentType(chapter.video_url, chapter.content),
+      is_free_preview: false,
       created_at: new Date(chapter.created_at).toISOString(),
       updated_at: new Date(chapter.updated_at).toISOString()
     }));
@@ -101,13 +124,28 @@ export async function POST(request: NextRequest) {
     console.log("CourseId:", courseId, "SectionId:", sectionId);
     
     // Parse request body
-    const { title, content, video_url, duration, order_index } = await request.json();
-    console.log("Chapter data:", { title, content, video_url, duration, order_index });
+    const { title, content, video_url, duration, order_index, content_type } = await request.json();
+    console.log("Chapter data:", { title, content, video_url, duration, order_index, content_type });
     
     // Validate required fields
     if (!title) {
       return NextResponse.json(
         { message: 'Chapter title is required' },
+        { status: 400 }
+      );
+    }
+
+    const resolvedType = inferContentType(video_url, content, content_type);
+
+    if (resolvedType === 'pdf' && !String(content || '').trim()) {
+      return NextResponse.json(
+        { message: 'PDF URL or uploaded file is required' },
+        { status: 400 }
+      );
+    }
+    if (resolvedType === 'video' && !String(video_url || '').trim()) {
+      return NextResponse.json(
+        { message: 'Video URL is required' },
         { status: 400 }
       );
     }
@@ -137,6 +175,9 @@ export async function POST(request: NextRequest) {
       console.log("Calculated order index:", finalOrderIndex);
     }
 
+    const storedVideoUrl = resolvedType === 'video' ? video_url || null : null;
+    const storedContent = content || null;
+
     // Insert chapter into database
     console.log("Inserting new chapter");
     const result = await pool.query(
@@ -164,8 +205,8 @@ export async function POST(request: NextRequest) {
       [
         sectionId, 
         title, 
-        content || null, 
-        video_url || null,
+        storedContent, 
+        storedVideoUrl,
         duration || null,
         finalOrderIndex
       ]
@@ -173,8 +214,8 @@ export async function POST(request: NextRequest) {
 
     const newChapter = {
       ...result.rows[0],
-      content_type: video_url ? 'video' : 'text', // Add content_type to response
-      is_free_preview: false, // Default value since the column doesn't exist
+      content_type: resolvedType,
+      is_free_preview: false,
       created_at: new Date(result.rows[0].created_at).toISOString(),
       updated_at: new Date(result.rows[0].updated_at).toISOString()
     };
@@ -190,4 +231,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

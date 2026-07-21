@@ -32,12 +32,40 @@ export default function AdminDatasetsPage() {
   const [sortBy, setSortBy] = useState<'created_at' | 'name' | 'rating' | 'download_count'>('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedDatasets, setSelectedDatasets] = useState<string[]>([]);
+  const [selectedSlugs, setSelectedSlugs] = useState<Record<string, string>>({});
+  const [enriching, setEnriching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    pages: 1,
+    page: 1,
+    limit: 10,
+    hasNext: false,
+    hasPrev: false,
+  });
+  const [stats, setStats] = useState({
+    total: 0,
+    published: 0,
+    drafts: 0,
+    downloads: 0,
+  });
 
   useEffect(() => {
     fetchDatasets();
-  }, [currentPage, statusFilter, typeFilter, sortBy, sortOrder]);
+  }, [currentPage, itemsPerPage, statusFilter, typeFilter, sortBy, sortOrder]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentPage !== 1) {
+        setCurrentPage(1);
+      } else {
+        fetchDatasets();
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const fetchDatasets = async () => {
     try {
@@ -56,7 +84,22 @@ export default function AdminDatasetsPage() {
       if (!response.ok) throw new Error('Failed to fetch datasets');
       
       const data = await response.json();
-      setDatasets(data.datasets || []);
+      const list = data.datasets || [];
+      setDatasets(list);
+      if (data.pagination) {
+        setPagination(data.pagination);
+      }
+      if (data.stats) {
+        setStats({
+          total: Number(data.stats.total) || 0,
+          published: Number(data.stats.published) || 0,
+          drafts: Number(data.stats.drafts) || 0,
+          downloads: Number(data.stats.downloads) || 0,
+        });
+      }
+      const slugMap: Record<string, string> = {};
+      for (const d of list) slugMap[d.id] = d.slug;
+      setSelectedSlugs((prev) => ({ ...prev, ...slugMap }));
     } catch (error) {
       console.error('Error fetching datasets:', error);
     } finally {
@@ -81,6 +124,29 @@ export default function AdminDatasetsPage() {
     } catch (error) {
       console.error('Bulk action error:', error);
       alert('Failed to perform bulk action');
+    }
+  };
+
+  const handleRegenerateDocs = async () => {
+    const slugs = selectedDatasets.map((id) => selectedSlugs[id]).filter(Boolean);
+    if (!slugs.length) {
+      alert('Select datasets first (slugs load with the table).');
+      return;
+    }
+    setEnriching(true);
+    try {
+      let ok = 0;
+      for (const slug of slugs) {
+        const res = await fetch(`/api/admin/datasets/${slug}/enrich`, { method: 'POST' });
+        if (res.ok) ok += 1;
+      }
+      alert(`Regenerated docs for ${ok}/${slugs.length} datasets`);
+      fetchDatasets();
+    } catch (e) {
+      console.error(e);
+      alert('Regenerate failed');
+    } finally {
+      setEnriching(false);
     }
   };
 
@@ -112,18 +178,6 @@ export default function AdminDatasetsPage() {
     }
   };
 
-  const filteredDatasets = datasets.filter(dataset => {
-    const matchesSearch = !searchTerm || 
-      dataset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dataset.provider?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dataset.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === 'all' || dataset.status === statusFilter;
-    const matchesType = typeFilter === 'all' || dataset.dataset_type === typeFilter;
-    
-    return matchesSearch && matchesStatus && matchesType;
-  });
-
   return (
     <div className="p-6">
       {/* Header */}
@@ -154,7 +208,7 @@ export default function AdminDatasetsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Datasets</p>
-              <p className="text-2xl font-bold text-gray-900">{datasets.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
             <FaDatabase className="text-4xl text-red-600 opacity-50" />
           </div>
@@ -164,7 +218,7 @@ export default function AdminDatasetsPage() {
             <div>
               <p className="text-sm text-gray-600">Published</p>
               <p className="text-2xl font-bold text-green-600">
-                {datasets.filter(d => d.status === 'published').length}
+                {stats.published}
               </p>
             </div>
             <FaCheckCircle className="text-4xl text-green-600 opacity-50" />
@@ -175,7 +229,7 @@ export default function AdminDatasetsPage() {
             <div>
               <p className="text-sm text-gray-600">Drafts</p>
               <p className="text-2xl font-bold text-yellow-600">
-                {datasets.filter(d => d.status === 'draft').length}
+                {stats.drafts}
               </p>
             </div>
             <FaTimesCircle className="text-4xl text-yellow-600 opacity-50" />
@@ -186,7 +240,7 @@ export default function AdminDatasetsPage() {
             <div>
               <p className="text-sm text-gray-600">Total Downloads</p>
               <p className="text-2xl font-bold text-blue-600">
-                {datasets.reduce((sum, d) => sum + (d.download_count || 0), 0)}
+                {stats.downloads}
               </p>
             </div>
             <FaDownload className="text-4xl text-blue-600 opacity-50" />
@@ -206,7 +260,10 @@ export default function AdminDatasetsPage() {
           />
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value as any);
+              setCurrentPage(1);
+            }}
             className="border rounded-lg px-4 py-2"
           >
             <option value="all">All Status</option>
@@ -216,7 +273,10 @@ export default function AdminDatasetsPage() {
           </select>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => {
+              setSortBy(e.target.value as any);
+              setCurrentPage(1);
+            }}
             className="border rounded-lg px-4 py-2"
           >
             <option value="created_at">Sort by Date</option>
@@ -259,6 +319,13 @@ export default function AdminDatasetsPage() {
             >
               Delete ({selectedDatasets.length})
             </button>
+            <button
+              onClick={handleRegenerateDocs}
+              disabled={enriching}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50"
+            >
+              {enriching ? 'Regenerating…' : `Regenerate docs (${selectedDatasets.length})`}
+            </button>
           </div>
         )}
       </div>
@@ -271,10 +338,10 @@ export default function AdminDatasetsPage() {
               <th className="px-4 py-3 text-left">
                 <input
                   type="checkbox"
-                  checked={selectedDatasets.length === filteredDatasets.length && filteredDatasets.length > 0}
+                  checked={selectedDatasets.length === datasets.length && datasets.length > 0}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setSelectedDatasets(filteredDatasets.map(d => d.id));
+                      setSelectedDatasets(datasets.map(d => d.id));
                     } else {
                       setSelectedDatasets([]);
                     }
@@ -296,14 +363,14 @@ export default function AdminDatasetsPage() {
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
                 </td>
               </tr>
-            ) : filteredDatasets.length === 0 ? (
+            ) : datasets.length === 0 ? (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                   No datasets found
                 </td>
               </tr>
             ) : (
-              filteredDatasets.map((dataset) => (
+              datasets.map((dataset) => (
                 <tr key={dataset.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <input
@@ -376,6 +443,58 @@ export default function AdminDatasetsPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white rounded-lg shadow px-4 py-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <p className="text-sm text-gray-600">
+            Showing{' '}
+            <span className="font-medium">
+              {pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1}
+            </span>
+            –
+            <span className="font-medium">
+              {Math.min(pagination.page * pagination.limit, pagination.total)}
+            </span>{' '}
+            of <span className="font-medium">{pagination.total}</span> datasets
+          </p>
+          <label className="flex items-center gap-2 text-sm text-gray-600">
+            <span>Per page</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border rounded-lg px-2 py-1.5 text-sm bg-white"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </label>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={!pagination.hasPrev || loading}
+            className="px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+          >
+            Previous
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {pagination.page} of {pagination.pages || 1}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => p + 1)}
+            disabled={!pagination.hasNext || loading}
+            className="px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50 hover:bg-gray-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

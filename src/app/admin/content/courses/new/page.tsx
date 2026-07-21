@@ -1,9 +1,25 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+const TipTapEditor = dynamic(() => import('@/components/TipTapEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-40 rounded-lg border border-gray-300 bg-gray-50 flex items-center justify-center text-sm text-gray-500">
+      Loading editor…
+    </div>
+  ),
+});
+
+const inputClass =
+  'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30';
+
+const labelClass = 'block text-sm font-semibold text-gray-900';
+const helpClass = 'mt-1.5 text-xs text-gray-600';
 
 export default function CreateCoursePage() {
   const { data: session, status } = useSession();
@@ -17,30 +33,29 @@ export default function CreateCoursePage() {
     content: '',
     level: 'Beginner',
     price: 0,
-    discount_price: 0
+    discount_price: 0,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    
-    setFormData(prev => {
+
+    setFormData((prev) => {
       const newData = {
         ...prev,
-        [name]: value
+        [name]: name === 'price' || name === 'discount_price' ? Number(value) || 0 : value,
       };
-      
-      // Auto-generate slug when title changes (only if slug is empty)
+
       if (name === 'title' && value && !prev.slug) {
-        const slug = value
+        newData.slug = value
           .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-          .replace(/\s+/g, '-') // Replace spaces with hyphens
-          .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-          .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
-        
-        newData.slug = slug;
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-|-$/g, '');
       }
-      
+
       return newData;
     });
   };
@@ -52,43 +67,38 @@ export default function CreateCoursePage() {
       .replace(/\s+/g, '-')
       .replace(/--+/g, '-')
       .trim();
-    
-    setFormData(prev => ({
-      ...prev,
-      slug
-    }));
+
+    setFormData((prev) => ({ ...prev, slug }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.slug) {
       setError('Title and slug are required');
       return;
     }
-    
+
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch('/api/admin/courses', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || 'Failed to create course');
       }
-      
+
       const data = await response.json();
       router.push(`/admin/content/courses/${data.course.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating course:', err);
-      setError(err.message || 'Failed to create course. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to create course. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -97,7 +107,7 @@ export default function CreateCoursePage() {
   if (status === 'loading') {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+        <div className="h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-red-500" />
       </div>
     );
   }
@@ -113,219 +123,203 @@ export default function CreateCoursePage() {
   }
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Create New Course</h1>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Create New Course</h1>
+          <p className="mt-1 text-sm text-gray-600">
+            Fill in the basics — you can expand modules and lessons after creating.
+          </p>
+        </div>
         <Link
           href="/admin/content/courses"
-          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
         >
           Cancel
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          </div>
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-800">{error}</p>
         </div>
       )}
 
-      <div className="bg-white shadow-sm rounded-lg">
-        <form onSubmit={handleSubmit} className="space-y-6 p-6">
-          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            {/* Course Title */}
-            <div className="sm:col-span-4">
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                Title *
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basics */}
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Course basics</h2>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-6">
+            <div className="sm:col-span-6">
+              <label htmlFor="title" className={labelClass}>
+                Title <span className="text-red-600">*</span>
               </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  onBlur={formData.slug ? undefined : generateSlug}
-                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  required
-                />
-              </div>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                value={formData.title}
+                onChange={handleChange}
+                onBlur={formData.slug ? undefined : generateSlug}
+                placeholder="e.g. Introduction to Machine Learning"
+                className={`mt-1.5 ${inputClass}`}
+                required
+              />
             </div>
 
-            {/* Course Slug */}
-            <div className="sm:col-span-4">
-              <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
-                Slug * (leave empty to auto-generate)
+            <div className="sm:col-span-6">
+              <label htmlFor="slug" className={labelClass}>
+                Slug <span className="text-red-600">*</span>
               </label>
-              <div className="mt-1 flex rounded-md shadow-sm">
+              <div className="mt-1.5 flex gap-2">
                 <input
                   type="text"
                   name="slug"
                   id="slug"
                   value={formData.slug}
                   onChange={handleChange}
-                  className="flex-1 focus:ring-red-500 focus:border-red-500 block w-full min-w-0 sm:text-sm border-gray-300 rounded-md"
+                  placeholder="introduction-to-machine-learning"
+                  className={inputClass}
                   required
                 />
                 <button
                   type="button"
                   onClick={generateSlug}
-                  className="ml-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  className="shrink-0 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-800 hover:bg-gray-50"
                 >
                   Generate
                 </button>
               </div>
-              {formData.title && !formData.slug && (
-                <p className="mt-1 text-xs text-gray-500">
-                  💡 Slug will be auto-generated from title
-                </p>
-              )}
-              {formData.slug && (
-                <p className="mt-1 text-xs text-green-600">
-                  ✅ Slug: {formData.slug}
-                </p>
-              )}
-              <p className="mt-1 text-xs text-gray-500">
-                URL-friendly name (e.g., "linux-basics")
+              <p className={helpClass}>
+                URL-friendly name (e.g. <code className="rounded bg-gray-100 px-1">linux-basics</code>
+                ). Leave empty while typing the title to auto-generate.
               </p>
+              {formData.slug ? (
+                <p className="mt-1 text-xs font-medium text-green-700">Slug: /courses/{formData.slug}</p>
+              ) : null}
             </div>
+          </div>
+        </section>
 
-            {/* Short Description */}
-            <div className="sm:col-span-6">
-              <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
-                Short Description
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="short_description"
-                  name="short_description"
-                  rows={3}
-                  value={formData.short_description}
-                  onChange={handleChange}
-                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                ></textarea>
-              </div>
-              <p className="mt-1 text-xs text-gray-500">
-                Brief description to display in course listings
-              </p>
-            </div>
+        {/* Descriptions with rich editors */}
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Descriptions</h2>
 
-            {/* Course Content */}
-            <div className="sm:col-span-6">
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                Course Content
-              </label>
-              <div className="mt-1">
-                <textarea
-                  id="content"
-                  name="content"
-                  rows={10}
-                  value={formData.content}
-                  onChange={handleChange}
-                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                ></textarea>
-              </div>
-              <p className="mt-1 text-xs text-gray-500">
-                You can add more detailed content later
-              </p>
-            </div>
+          <div className="mb-6">
+            <label htmlFor="short_description" className={labelClass}>
+              Short description
+            </label>
+            <p className={`${helpClass} mb-2`}>
+              Plain-text summary for course listings and cards (keep it concise).
+            </p>
+            <textarea
+              id="short_description"
+              name="short_description"
+              rows={4}
+              value={formData.short_description}
+              onChange={handleChange}
+              placeholder="A one-paragraph overview for the course catalog…"
+              className={inputClass}
+            />
+          </div>
 
-            {/* Course Level */}
-            <div className="sm:col-span-3">
-              <label htmlFor="level" className="block text-sm font-medium text-gray-700">
+          <div>
+            <label className={labelClass}>Course content / overview</label>
+            <p className={`${helpClass} mb-2`}>
+              Rich overview on the public course page. Add modules and lessons after creating.
+            </p>
+            <TipTapEditor
+              content={formData.content}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+              placeholder="Describe what students will learn, prerequisites, and outcomes…"
+              height="360px"
+              className="shadow-sm"
+            />
+          </div>
+        </section>
+
+        {/* Meta */}
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Level & pricing</h2>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div>
+              <label htmlFor="level" className={labelClass}>
                 Level
               </label>
-              <div className="mt-1">
-                <select
-                  id="level"
-                  name="level"
-                  value={formData.level}
-                  onChange={handleChange}
-                  className="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                >
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-              </div>
+              <select
+                id="level"
+                name="level"
+                value={formData.level}
+                onChange={handleChange}
+                className={`mt-1.5 ${inputClass}`}
+              >
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
             </div>
 
-            {/* Price */}
-            <div className="sm:col-span-2">
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+            <div>
+              <label htmlFor="price" className={labelClass}>
                 Price
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">$</span>
-                </div>
+              <div className="relative mt-1.5">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-sm font-medium text-gray-600">
+                  $
+                </span>
                 <input
                   type="number"
                   name="price"
                   id="price"
-                  min="0"
+                  min={0}
                   step="0.01"
                   value={formData.price}
                   onChange={handleChange}
-                  className="focus:ring-red-500 focus:border-red-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
+                  className={`${inputClass} pl-7`}
                 />
               </div>
             </div>
 
-            {/* Discount Price */}
-            <div className="sm:col-span-2">
-              <label htmlFor="discount_price" className="block text-sm font-medium text-gray-700">
-                Discount Price
+            <div>
+              <label htmlFor="discount_price" className={labelClass}>
+                Discount price
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">$</span>
-                </div>
+              <div className="relative mt-1.5">
+                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-sm font-medium text-gray-600">
+                  $
+                </span>
                 <input
                   type="number"
                   name="discount_price"
                   id="discount_price"
-                  min="0"
+                  min={0}
                   step="0.01"
                   value={formData.discount_price}
                   onChange={handleChange}
-                  className="focus:ring-red-500 focus:border-red-500 block w-full pl-7 sm:text-sm border-gray-300 rounded-md"
+                  className={`${inputClass} pl-7`}
                 />
               </div>
-              <p className="mt-1 text-xs text-gray-500">
-                Leave at 0 for no discount
-              </p>
+              <p className={helpClass}>Leave at 0 for no discount.</p>
             </div>
           </div>
+        </section>
 
-          <div className="pt-5 border-t border-gray-200">
-            <div className="flex justify-end">
-              <Link
-                href="/admin/content/courses"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                Cancel
-              </Link>
-              <button
-                type="submit"
-                disabled={loading}
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50"
-              >
-                {loading ? 'Creating...' : 'Create Course'}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+        <div className="flex justify-end gap-3 border-t border-gray-200 pt-5">
+          <Link
+            href="/admin/content/courses"
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
+          >
+            {loading ? 'Creating…' : 'Create Course'}
+          </button>
+        </div>
+      </form>
     </div>
   );
-} 
+}

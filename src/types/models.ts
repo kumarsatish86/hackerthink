@@ -128,6 +128,7 @@ export interface ModelTrainingDataset {
   download_url?: string | null;
   quality_score?: number | null;
   known_biases?: string | null;
+  related_dataset_slug?: string | null;
 }
 
 export interface ModelUsageExample {

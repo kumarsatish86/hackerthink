@@ -9,58 +9,56 @@ export default function SessionKeepAlive() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [recoveryAttempts, setRecoveryAttempts] = useState(0);
 
-  // Session recovery mechanism
   useEffect(() => {
     if (status === 'unauthenticated' && recoveryAttempts < 3) {
-      // Try to recover session
       const recoveryTimeout = setTimeout(() => {
-        console.log('Attempting session recovery...');
         update();
-        setRecoveryAttempts(prev => prev + 1);
-      }, 2000 * (recoveryAttempts + 1)); // Exponential backoff
-
+        setRecoveryAttempts((prev) => prev + 1);
+      }, 2000 * (recoveryAttempts + 1));
       return () => clearTimeout(recoveryTimeout);
     }
   }, [status, recoveryAttempts, update]);
 
-  // Reset recovery attempts when session is restored
   useEffect(() => {
     if (status === 'authenticated') {
       setRecoveryAttempts(0);
     }
   }, [status]);
 
+  // Keep session warm — do NOT put timeLeft in deps (that recreated intervals every second).
   useEffect(() => {
-    if (status === 'authenticated' && session) {
-      // Refresh session every 20 minutes to keep it alive
-      const interval = setInterval(() => {
-        update(); // This will refresh the session
-      }, 20 * 60 * 1000); // 20 minutes
+    if (status !== 'authenticated' || !session) return;
 
-      // Show warning 5 minutes before session expires
-      const warningInterval = setInterval(() => {
-        setShowWarning(true);
-        setTimeLeft(5 * 60); // 5 minutes in seconds
-      }, 15 * 60 * 1000); // 15 minutes
+    const keepAlive = setInterval(() => {
+      update();
+    }, 20 * 60 * 1000);
 
-      // Countdown timer for warning
-      const countdownInterval = setInterval(() => {
-        if (timeLeft > 0) {
-          setTimeLeft(prev => prev - 1);
+    const warnAt = setTimeout(() => {
+      setShowWarning(true);
+      setTimeLeft(5 * 60);
+    }, 15 * 60 * 1000);
+
+    return () => {
+      clearInterval(keepAlive);
+      clearTimeout(warnAt);
+    };
+  }, [status, session, update]);
+
+  useEffect(() => {
+    if (!showWarning) return;
+    const countdown = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          return 0;
         }
-      }, 1000);
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(countdown);
+  }, [showWarning]);
 
-      return () => {
-        clearInterval(interval);
-        clearInterval(warningInterval);
-        clearInterval(countdownInterval);
-      };
-    }
-  }, [status, session, update, timeLeft]);
-
-  // Auto-refresh session when warning is shown
   useEffect(() => {
-    if (showWarning && timeLeft <= 60) { // Auto-refresh when 1 minute left
+    if (showWarning && timeLeft > 0 && timeLeft <= 60) {
       update();
       setShowWarning(false);
       setTimeLeft(0);
@@ -73,7 +71,7 @@ export default function SessionKeepAlive() {
   const seconds = timeLeft % 60;
 
   return (
-    <div className="fixed top-4 right-4 z-50 bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded-md shadow-lg">
+    <div className="fixed top-4 right-4 z-50 rounded-md border border-yellow-400 bg-yellow-100 px-4 py-3 text-yellow-800 shadow-lg">
       <div className="flex items-center space-x-2">
         <span className="text-yellow-600">⚠️</span>
         <div>
@@ -83,12 +81,13 @@ export default function SessionKeepAlive() {
           </p>
         </div>
         <button
+          type="button"
           onClick={() => {
             update();
             setShowWarning(false);
             setTimeLeft(0);
           }}
-          className="ml-2 px-3 py-1 bg-yellow-500 text-white text-sm rounded hover:bg-yellow-600"
+          className="ml-2 rounded bg-yellow-500 px-3 py-1 text-sm text-white hover:bg-yellow-600"
         >
           Extend
         </button>

@@ -12,6 +12,9 @@ export async function generateMetadata(
   return {
     title: `${orgName} Datasets - HackerThink`,
     description: `Discover datasets developed by ${orgName}. Explore ${orgName.toLowerCase()} datasets with detailed information and download links.`,
+    alternates: {
+      canonical: `/datasets/organizations/${encodeURIComponent(org)}`,
+    },
     openGraph: {
       title: `${orgName} Datasets - HackerThink`,
       description: `Explore datasets developed by ${orgName}.`,

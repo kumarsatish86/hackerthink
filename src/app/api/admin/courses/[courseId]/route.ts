@@ -14,12 +14,19 @@ const pool = new Pool({
 // Helper function to extract the courseId safely
 function getCourseId(pathname: string): string {
   // Expected pattern: /api/admin/courses/{courseId}
-  const parts = pathname.split('/');
+  const parts = pathname.split('/').filter(Boolean);
   const courseIndex = parts.indexOf('courses') + 1;
   if (courseIndex > 0 && courseIndex < parts.length) {
     return parts[courseIndex];
   }
   return '';
+}
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isValidCourseId(id: string): boolean {
+  return Boolean(id) && id !== 'undefined' && id !== 'null' && UUID_RE.test(id);
 }
 
 export async function GET(request: NextRequest) {
@@ -32,6 +39,9 @@ export async function GET(request: NextRequest) {
 
     // Extract courseId from URL
     const courseId = getCourseId(request.nextUrl.pathname);
+    if (!isValidCourseId(courseId)) {
+      return NextResponse.json({ message: 'Invalid course id' }, { status: 400 });
+    }
 
     // Fetch course from database
     const { rows } = await pool.query(
@@ -40,6 +50,7 @@ export async function GET(request: NextRequest) {
         ct.title,
         ct.slug,
         ct.description as short_description,
+        ct.body as content,
         ct.status as status,
         ct.author_id,
         ct.featured_image_url,
@@ -92,6 +103,9 @@ export async function PUT(request: NextRequest) {
     
     // Extract courseId from URL
     const courseId = getCourseId(request.nextUrl.pathname);
+    if (!isValidCourseId(courseId)) {
+      return NextResponse.json({ message: 'Invalid course id' }, { status: 400 });
+    }
     
     // Parse the JSON body
     const updateData = await request.json();
@@ -115,28 +129,37 @@ export async function PUT(request: NextRequest) {
       await client.query('BEGIN');
 
       // Update content table
-      const contentFields = ['title', 'slug', 'description', 'status', 'featured_image_url'];
-      const contentUpdates = Object.keys(updateData)
-        .filter(key => contentFields.includes(key) && updateData[key] !== undefined);
-      
+      // Client may send short_description / content / published aliases
+      const contentFieldMap: Record<string, string> = {
+        title: 'title',
+        slug: 'slug',
+        description: 'description',
+        short_description: 'description',
+        body: 'body',
+        content: 'body',
+        status: 'status',
+        published: 'status',
+        featured_image_url: 'featured_image_url',
+      };
+
+      const contentUpdates = Object.keys(updateData).filter(
+        (key) => contentFieldMap[key] && updateData[key] !== undefined
+      );
+
       if (contentUpdates.length > 0) {
         const contentSetClauses = contentUpdates.map((field, index) => {
-          // Map client-side field names to database field names
-          const dbField = field === 'short_description' ? 'description' : 
-                          field === 'published' ? 'status' : field;
-          return `${dbField} = $${index + 1}`;
+          return `${contentFieldMap[field]} = $${index + 1}`;
         });
-        
-        const contentValues = contentUpdates.map(field => {
-          // Convert boolean published to status string
+
+        const contentValues = contentUpdates.map((field) => {
           if (field === 'published') {
             return updateData[field] ? 'published' : 'draft';
           }
           return updateData[field];
         });
-        
-        contentValues.push(courseId); // Add courseId as the last parameter
-        
+
+        contentValues.push(courseId);
+
         await client.query(
           `UPDATE content 
            SET ${contentSetClauses.join(', ')}, updated_at = CURRENT_TIMESTAMP
@@ -182,6 +205,7 @@ export async function PUT(request: NextRequest) {
           ct.title,
           ct.slug,
           ct.description as short_description,
+          ct.body as content,
           ct.status as status,
           ct.author_id,
           ct.featured_image_url,
@@ -245,6 +269,9 @@ export async function DELETE(request: NextRequest) {
 
     // Extract courseId from URL
     const courseId = getCourseId(request.nextUrl.pathname);
+    if (!isValidCourseId(courseId)) {
+      return NextResponse.json({ message: 'Invalid course id' }, { status: 400 });
+    }
 
     // Check if course exists
     const checkResult = await pool.query(

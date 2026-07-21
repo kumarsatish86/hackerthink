@@ -47,6 +47,7 @@ export default function ModelComparisonPage() {
   const [allModels, setAllModels] = useState<AIModel[]>([]);
   const [selectedModelSlugs, setSelectedModelSlugs] = useState<string[]>([]);
   const [comparison, setComparison] = useState<AIModel[]>([]);
+  const [benchmarkNames, setBenchmarkNames] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [modelsLoading, setModelsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,6 +89,7 @@ export default function ModelComparisonPage() {
         alert(data.error);
       } else {
         setComparison(data.models || []);
+        setBenchmarkNames(data.meta?.benchmark_names || []);
         const nextUrl = `/models/compare?models=${slugsParam}`;
         const current = `${window.location.pathname}${window.location.search}`;
         if (current !== nextUrl) {
@@ -206,6 +208,7 @@ export default function ModelComparisonPage() {
       compareModels(newSelection);
     } else {
       setComparison([]);
+      setBenchmarkNames([]);
       window.history.replaceState({}, '', '/models/compare');
     }
   };
@@ -234,6 +237,236 @@ export default function ModelComparisonPage() {
       alert('Comparison URL copied to clipboard!');
     }
   };
+
+  const parseParamToBillions = (value: unknown): number | null => {
+    if (value == null) return null;
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    const s = String(value).trim();
+    const m = s.match(/^([\d.]+)\s*([KMBT])?/i);
+    if (!m) return null;
+    const n = parseFloat(m[1]);
+    if (!Number.isFinite(n)) return null;
+    const u = (m[2] || 'B').toUpperCase();
+    if (u === 'T') return n * 1000;
+    if (u === 'B') return n;
+    if (u === 'M') return n / 1000;
+    if (u === 'K') return n / 1e6;
+    return n;
+  };
+
+  const comparisonFields = useMemo(() => {
+    const base = [
+      // Identity
+      { key: 'developer', label: 'Developer / Organization', category: 'Identity & Overview', compare: 'none' as const, hideIfEmpty: false },
+      { key: 'task_label', label: 'Task / Pipeline', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'model_type', label: 'Model Type', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'model_family', label: 'Model Family', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'architecture', label: 'Architecture', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'architecture_family', label: 'Architecture Family', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'version', label: 'Version', category: 'Identity & Overview', compare: 'none' as const },
+      { key: 'release_date_label', label: 'Release Date', category: 'Identity & Overview', compare: 'none' as const },
+      {
+        key: 'description',
+        label: 'Summary',
+        category: 'Identity & Overview',
+        compare: 'none' as const,
+        render: (value: unknown) =>
+          value ? (
+            <span className="text-sm text-gray-700 line-clamp-3">{String(value)}</span>
+          ) : (
+            '—'
+          ),
+      },
+
+      // Specs
+      {
+        key: 'param_display',
+        label: 'Parameters',
+        category: 'Technical Specs',
+        compare: 'higher' as const,
+        compareValue: (v: unknown, model: AIModel) =>
+          (model as any).param_count_numeric ?? parseParamToBillions(v) ?? parseParamToBillions((model as any).parameters),
+        hideIfEmpty: false,
+      },
+      {
+        key: 'context_length',
+        label: 'Context Length',
+        category: 'Technical Specs',
+        compare: 'higher' as const,
+        render: (value: unknown) => (value ? `${Number(value).toLocaleString()} tokens` : '—'),
+      },
+      { key: 'tokenizer', label: 'Tokenizer', category: 'Technical Specs', compare: 'none' as const },
+      {
+        key: 'vocabulary_size',
+        label: 'Vocabulary Size',
+        category: 'Technical Specs',
+        compare: 'higher' as const,
+        render: (value: unknown) => (value ? Number(value).toLocaleString() : '—'),
+      },
+      { key: 'framework_label', label: 'Framework', category: 'Technical Specs', compare: 'none' as const },
+      { key: 'training_framework', label: 'Training Framework', category: 'Technical Specs', compare: 'none' as const },
+      { key: 'input_types', label: 'Input Types', category: 'Technical Specs', type: 'list' as const, compare: 'none' as const },
+      { key: 'output_types', label: 'Output Types', category: 'Technical Specs', type: 'list' as const, compare: 'none' as const },
+      { key: 'quantized_versions', label: 'Quantized Versions', category: 'Technical Specs', type: 'list' as const, compare: 'none' as const },
+
+      // Capabilities
+      { key: 'capabilities', label: 'Capabilities', category: 'Capabilities', type: 'list' as const, compare: 'none' as const },
+      { key: 'categories', label: 'Categories', category: 'Capabilities', type: 'list' as const, compare: 'none' as const },
+      { key: 'tags', label: 'Tags', category: 'Capabilities', type: 'list' as const, compare: 'none' as const },
+
+      // Hardware
+      { key: 'inference_speed_label', label: 'Inference Speed', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'memory_footprint_label', label: 'Memory Footprint', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'gpu_requirement', label: 'GPU', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'vram_requirement', label: 'VRAM', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'ram_requirement', label: 'RAM', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'cpu_requirement', label: 'CPU', category: 'Hardware & Runtime', compare: 'none' as const },
+      { key: 'disk_requirement', label: 'Disk / Storage', category: 'Hardware & Runtime', compare: 'none' as const },
+
+      // Licensing
+      { key: 'license', label: 'License', category: 'Licensing & Access', compare: 'none' as const, hideIfEmpty: false },
+      { key: 'commercial_use_label', label: 'Commercial Use', category: 'Licensing & Access', compare: 'none' as const },
+      {
+        key: 'pricing_type',
+        label: 'Availability',
+        category: 'Licensing & Access',
+        compare: 'none' as const,
+        hideIfEmpty: false,
+        render: (value: unknown) => (
+          <span
+            className={`px-2 py-1 rounded text-xs ${
+              value === 'free' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+            }`}
+          >
+            {value === 'free' ? 'Open-source' : 'Paid / API'}
+          </span>
+        ),
+      },
+      { key: 'huggingface_url', label: 'Hugging Face', category: 'Licensing & Access', type: 'link' as const, compare: 'none' as const },
+      { key: 'github_url', label: 'GitHub', category: 'Licensing & Access', type: 'link' as const, compare: 'none' as const },
+      { key: 'homepage_url', label: 'Homepage', category: 'Licensing & Access', type: 'link' as const, compare: 'none' as const },
+      { key: 'verified', label: 'Verified', category: 'Licensing & Access', type: 'boolean' as const, compare: 'none' as const },
+      { key: 'security_badge', label: 'Security Badge', category: 'Licensing & Access', type: 'boolean' as const, compare: 'none' as const },
+
+      // Popularity
+      {
+        key: 'rating',
+        label: 'Rating',
+        category: 'Popularity & Trust',
+        type: 'rating' as const,
+        compare: 'higher' as const,
+        hideIfEmpty: false,
+        render: (value: unknown, model: AIModel) => (
+          <div className="flex items-center gap-2">
+            <FaStar className="text-yellow-400" />
+            <span className="font-semibold">{formatRating(Number(value))}</span>
+            <span className="text-sm text-gray-600">({model.rating_count || 0})</span>
+          </div>
+        ),
+      },
+      {
+        key: 'download_count',
+        label: 'Downloads',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        hideIfEmpty: false,
+        render: (value: unknown) => (
+          <div className="flex items-center gap-2">
+            <FaDownload className="text-blue-600" />
+            <span>{formatNumber(Number(value) || 0)}</span>
+          </div>
+        ),
+      },
+      {
+        key: 'likes_display',
+        label: 'Likes',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        render: (value: unknown) => formatNumber(Number(value) || 0),
+      },
+      {
+        key: 'stars_display',
+        label: 'Stars',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        render: (value: unknown) => formatNumber(Number(value) || 0),
+      },
+      {
+        key: 'github_stars',
+        label: 'GitHub Stars',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        render: (value: unknown) => formatNumber(Number(value) || 0),
+      },
+      {
+        key: 'github_forks',
+        label: 'GitHub Forks',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        render: (value: unknown) => formatNumber(Number(value) || 0),
+      },
+      {
+        key: 'view_count',
+        label: 'Views',
+        category: 'Popularity & Trust',
+        compare: 'higher' as const,
+        render: (value: unknown) => formatNumber(Number(value) || 0),
+      },
+      {
+        key: 'trending_rank',
+        label: 'Trending Rank',
+        category: 'Popularity & Trust',
+        compare: 'lower' as const,
+      },
+
+      // Training
+      {
+        key: 'training_dataset_count',
+        label: 'Training Datasets (count)',
+        category: 'Training Data',
+        compare: 'higher' as const,
+      },
+      {
+        key: 'training_datasets',
+        label: 'Training Datasets',
+        category: 'Training Data',
+        type: 'list' as const,
+        compare: 'none' as const,
+      },
+      {
+        key: 'training_datasets_linked',
+        label: 'Linked on HackerThink',
+        category: 'Training Data',
+        type: 'list' as const,
+        compare: 'none' as const,
+      },
+
+      // Safety
+      { key: 'known_biases', label: 'Known Biases', category: 'Safety & Ethics', type: 'list' as const, compare: 'none' as const },
+      { key: 'ethical_risks', label: 'Ethical Risks', category: 'Safety & Ethics', type: 'list' as const, compare: 'none' as const },
+      {
+        key: 'evaluation_summary',
+        label: 'Evaluation Summary',
+        category: 'Safety & Ethics',
+        compare: 'none' as const,
+        render: (value: unknown) =>
+          value ? <span className="text-sm text-gray-700 line-clamp-3">{String(value)}</span> : '—',
+      },
+    ];
+
+    const benchmarkFields = benchmarkNames.map((name) => ({
+      key: `benchmark__${name}`,
+      label: name,
+      category: 'Benchmarks & Performance',
+      compare: 'higher' as const,
+      render: (value: unknown) =>
+        value == null || value === '' ? '—' : (
+          <span className="font-semibold">{Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+        ),
+    }));
+
+    return [...base, ...benchmarkFields];
+  }, [benchmarkNames]);
 
   return (
     <ModelsThemeProvider>
@@ -395,91 +628,8 @@ export default function ModelComparisonPage() {
             {/* Detailed Comparison Table */}
             <ComparisonTable
               models={comparison}
-              fields={[
-                { key: 'developer', label: 'Developer / Organization', compare: 'none' },
-                { key: 'model_type', label: 'Model Type', compare: 'none' },
-                { key: 'architecture', label: 'Architecture', compare: 'none' },
-                { key: 'parameters', label: 'Parameter Count', compare: 'none' },
-                {
-                  key: 'context_length',
-                  label: 'Context Length',
-                  compare: 'higher',
-                  render: (value) => (value ? `${Number(value).toLocaleString()} tokens` : '—'),
-                },
-                { key: 'license', label: 'License', compare: 'none' },
-                {
-                  key: 'rating',
-                  label: 'Rating',
-                  type: 'rating',
-                  compare: 'higher',
-                  render: (value, model) => (
-                    <div className="flex items-center gap-2">
-                      <FaStar className="text-yellow-400" />
-                      <span className="font-semibold">{formatRating(value)}</span>
-                      <span className="text-sm text-gray-600">({model.rating_count || 0})</span>
-                    </div>
-                  ),
-                },
-                {
-                  key: 'download_count',
-                  label: 'Downloads',
-                  compare: 'higher',
-                  render: (value) => (
-                    <div className="flex items-center gap-2">
-                      <FaDownload className="text-blue-600" />
-                      <span>{formatNumber(Number(value) || 0)}</span>
-                    </div>
-                  ),
-                },
-                ...(comparison.some((m) => m.github_stats?.stars)
-                  ? [{
-                      key: 'github_stats',
-                      label: 'GitHub Stars',
-                      compare: 'none' as const,
-                      render: (value: any) => (value?.stars ? formatNumber(value.stars) : '—'),
-                    }]
-                  : []),
-                {
-                  key: 'pricing_type',
-                  label: 'Availability',
-                  compare: 'none',
-                  render: (value) => (
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      value === 'free' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {value === 'free' ? 'Open-source' : 'Paid / API'}
-                    </span>
-                  ),
-                },
-              ]}
+              fields={comparisonFields}
             />
-
-            {/* Performance Comparison */}
-            {comparison.some(m => m.benchmarks && Object.keys(m.benchmarks).length > 0) && (
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <FaChartLine className="text-red-600" />
-                  Performance Comparison
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  Detailed benchmark comparison is available on individual model pages.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {comparison.map((model) => (
-                    <Link
-                      key={model.id}
-                      href={`/models/${model.slug}`}
-                      className="p-4 border rounded-lg hover:border-red-500 hover:shadow-md transition-all"
-                    >
-                      <h3 className="font-semibold mb-2">{model.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        View detailed benchmarks →
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Share Comparison */}
             <div className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg shadow-lg p-6">

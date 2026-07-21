@@ -103,9 +103,9 @@ export default function CreateDatasetPage() {
         tags: formData.tags ? JSON.parse(formData.tags) : [],
         sample_data: formData.sample_data ? JSON.parse(formData.sample_data) : {},
         schema_json: formData.schema_json ? JSON.parse(formData.schema_json) : {},
-        quality_score: formData.quality_score ? parseFloat(formData.quality_score) : null,
-        rating: formData.rating ? parseFloat(formData.rating) : 0,
-        rating_count: formData.rating_count ? parseInt(formData.rating_count) : 0,
+        quality_score: formData.quality_score ? parseFloat(String(formData.quality_score)) : null,
+        rating: formData.rating ? parseFloat(String(formData.rating)) : 0,
+        rating_count: formData.rating_count ? parseInt(String(formData.rating_count), 10) : 0,
       };
 
       const response = await fetch('/api/admin/datasets', {

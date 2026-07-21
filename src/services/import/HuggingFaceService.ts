@@ -453,6 +453,27 @@ export class HuggingFaceService {
         });
       }
 
+      // Explicit HF card / tag dataset references (preferred for auto-linking)
+      const cardDatasets = data.cardData?.datasets || data.card_data?.datasets || data.datasets;
+      if (Array.isArray(cardDatasets)) {
+        for (const item of cardDatasets) {
+          const label = typeof item === 'string' ? item : item?.id || item?.name;
+          if (!label) continue;
+          if (!trainingDataSources.find((d) => d.name?.toLowerCase() === String(label).toLowerCase())) {
+            trainingDataSources.push({ name: String(label), id: String(label), source: 'cardData' });
+          }
+        }
+      }
+      const tagListForDatasets = Array.isArray(data.tags) ? data.tags.map((t: any) => String(t)) : [];
+      for (const tag of tagListForDatasets) {
+        const m = tag.match(/^(?:dataset|datasets)[:/](.+)$/i);
+        if (!m?.[1]) continue;
+        const label = m[1].trim();
+        if (!trainingDataSources.find((d) => d.name?.toLowerCase() === label.toLowerCase())) {
+          trainingDataSources.push({ name: label, id: label, source: 'tag' });
+        }
+      }
+
       // Extract safetensors information from HF API, files, and README
       safetensorsInfo = {};
       const safetensorFiles = files.filter(f => f.filename.includes('.safetensors'));
@@ -857,19 +878,50 @@ export class HuggingFaceService {
       }
 
       const data = await response.json();
+      const {
+        buildHfDatasetEnrichment,
+        fetchHfDatasetSize,
+      } = await import('@/lib/datasets/hfDatasetEnrichment');
+
+      const sizePayload = await fetchHfDatasetSize(datasetId, this.apiKey);
+      const enriched = buildHfDatasetEnrichment(data, sizePayload);
+
+      const description =
+        (typeof data.description === 'string' && data.description.trim()) ||
+        (data.cardData?.pretty_name ? String(data.cardData.pretty_name) : '') ||
+        '';
 
       return {
         name: data.id || datasetId,
         slug: datasetId.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
-        provider: 'HuggingFace',
-        description: data.description || '',
-        dataset_type: data.task_categories?.[0] || 'general',
+        provider: enriched.provider || 'HuggingFace',
+        description,
+        dataset_type: enriched.dataset_type || 'general',
+        modality: enriched.modality || enriched.dataset_type || 'general',
+        format: enriched.format,
+        size: enriched.size,
+        size_bytes: enriched.size_bytes,
+        rows: enriched.rows,
+        columns: enriched.columns,
+        classes: enriched.classes,
+        languages: enriched.languages,
+        language: enriched.language,
+        license: enriched.license,
+        domain: enriched.domain,
         download_url: `https://huggingface.co/datasets/${datasetId}`,
         huggingface_url: `https://huggingface.co/datasets/${datasetId}`,
         download_count: data.downloads || 0,
+        stars_count: enriched.stars_count || 0,
+        release_date: enriched.release_date,
+        last_updated: enriched.last_updated,
         categories: data.tags || [],
         tags: data.tags || [],
-        metadata: data
+        quick_facts: enriched.quick_facts,
+        metadata: {
+          ...data,
+          size_server: sizePayload,
+          enrichment: enriched,
+        },
       };
     } catch (error) {
       console.error('Error fetching dataset from HuggingFace:', error);
@@ -972,14 +1024,44 @@ export class HuggingFaceService {
   }
 
   async searchTrendingDatasets(limit: number = 20): Promise<any[]> {
+    return this.searchDatasets({ sort: 'downloads', limit });
+  }
+
+  async searchDatasets(options: {
+    sort?: 'downloads' | 'likes' | 'createdAt' | 'lastModified' | 'trending';
+    direction?: '-1' | '1';
+    limit?: number;
+    search?: string;
+    filter?: string;
+  } = {}): Promise<any[]> {
+    const {
+      sort = 'downloads',
+      direction = '-1',
+      limit = 20,
+      search,
+      filter,
+    } = options;
+
+    const cappedLimit = Math.min(Math.max(limit, 1), 100);
+    const params = new URLSearchParams({
+      sort,
+      direction,
+      limit: String(cappedLimit),
+    });
+
+    if (search) params.set('search', search);
+    if (filter) params.set('filter', filter);
+
     try {
-      const response = await fetch(`https://huggingface.co/api/datasets?sort=downloads&direction=-1&limit=${limit}`);
+      const response = await fetch(`https://huggingface.co/api/datasets?${params.toString()}`, {
+        headers: this.apiKey ? { Authorization: `Bearer ${this.apiKey}` } : {},
+      });
       if (!response.ok) {
-        throw new Error('Failed to fetch trending datasets');
+        throw new Error(`Failed to search datasets: ${response.statusText} (${response.status})`);
       }
       return response.json();
     } catch (error) {
-      console.error('Error fetching trending datasets:', error);
+      console.error('Error searching HuggingFace datasets:', error);
       throw error;
     }
   }

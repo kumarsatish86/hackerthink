@@ -1,71 +1,101 @@
-import { Metadata } from 'next';
-import DatasetDetailClient from '@/components/datasets/DatasetDetailClient';
-import { Pool } from 'pg';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { queryOne } from '@/lib/db';
+import { getDatasetDetailBySlug } from '@/lib/datasets/getDatasetDetail';
+import { generateDatasetSummary } from '@/lib/datasets/generateDatasetSummary';
+import { generatePeopleAlsoAsk } from '@/lib/datasets/generatePeopleAlsoAsk';
+import { DatasetsThemeProvider } from '@/components/datasets/DatasetsThemeProvider';
+import { DatasetDetailView } from '@/components/datasets/detail/DatasetDetailView';
+import '@/styles/ht-tokens.css';
 
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'Admin1234',
-  database: process.env.DB_NAME || 'hackerthink',
-});
+export const dynamic = 'force-dynamic';
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<Metadata> {
-  try {
-    const { slug } = await params;
-    const result = await pool.query(
-      `SELECT name, description, seo_title, seo_description, provider, dataset_type, license, version
-       FROM datasets WHERE slug = $1 AND status = 'published'`,
-      [slug]
-    );
-
-    if (result.rows.length === 0) {
-      return {
-        title: 'Dataset Not Found - HackerThink',
-        description: 'The dataset you are looking for does not exist.',
-      };
-    }
-
-    const dataset = result.rows[0];
-    const title = dataset.seo_title || `${dataset.name} Dataset - HackerThink`;
-    const description = dataset.seo_description || 
-      dataset.description || 
-      `${dataset.name} - ${dataset.dataset_type || 'AI'} dataset by ${dataset.provider || 'various contributors'}`;
-
-    return {
-      title,
-      description,
-      openGraph: {
-        title,
-        description,
-        type: 'website',
-        ...(dataset.provider && {
-          siteName: dataset.provider,
-        }),
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-      },
-    };
-  } catch (error) {
-    console.error('Error generating metadata:', error);
-    return {
-      title: 'Dataset - HackerThink',
-      description: 'View details of this dataset',
-    };
-  }
+async function getMeta(slug: string) {
+  return queryOne(
+    `SELECT name, slug, description, seo_title, seo_description, seo_keywords, provider, dataset_type, license, version, status
+     FROM datasets WHERE slug = $1 LIMIT 1`,
+    [slug]
+  );
 }
 
-export default async function DatasetDetailPage({
+export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
-  return <DatasetDetailClient slug={slug} />;
+  const row = await getMeta(slug);
+  if (!row || row.status !== 'published') {
+    return { title: 'Dataset Not Found - HackerThink', description: 'Dataset not found.' };
+  }
+  const fallback = generateDatasetSummary(row as any);
+  const title = row.seo_title || `${row.name} Dataset — Specs, Download, Explorer | HackerThink`;
+  const description = (row.seo_description || row.description || fallback).slice(0, 300);
+  const canonical = `/datasets/${slug}`;
+  return {
+    title,
+    description,
+    keywords: row.seo_keywords || undefined,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: canonical,
+      images: [{ url: `/api/datasets/og?slug=${encodeURIComponent(slug)}`, width: 1200, height: 630 }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+  };
 }
 
+export default async function DatasetDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const payload = await getDatasetDetailBySlug(slug);
+  if (!payload) notFound();
+
+  const { dataset, faqs } = payload;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hackerthink.com';
+  const canonicalUrl = `${siteUrl}/datasets/${slug}`;
+
+  const datasetSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: dataset.name,
+    description: dataset.description || generateDatasetSummary(dataset),
+    url: canonicalUrl,
+    license: dataset.license || undefined,
+    creator: dataset.provider ? { '@type': 'Organization', name: dataset.provider } : undefined,
+    dateModified: dataset.last_updated || undefined,
+    datePublished: dataset.release_date || undefined,
+    distribution: dataset.download_url
+      ? { '@type': 'DataDownload', contentUrl: dataset.download_url }
+      : undefined,
+  };
+
+  const faqEntities = (faqs.length ? faqs : generatePeopleAlsoAsk(dataset)).map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  }));
+
+  const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqEntities };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Datasets', item: `${siteUrl}/datasets` },
+      { '@type': 'ListItem', position: 3, name: dataset.name, item: canonicalUrl },
+    ],
+  };
+
+  return (
+    <DatasetsThemeProvider>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <DatasetDetailView initialData={payload} />
+    </DatasetsThemeProvider>
+  );
+}

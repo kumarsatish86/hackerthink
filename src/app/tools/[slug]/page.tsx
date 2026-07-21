@@ -152,8 +152,6 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const tool = await getTool(slug);
   
-  console.log("Tool fetched:", tool); // Debug log
-  
   if (!tool) {
     notFound();
   }
@@ -167,7 +165,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Prompt Generator tool
   if (tool.slug === 'ai-prompt-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -296,7 +294,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Image Prompt Styler tool
   if (tool.slug === 'ai-image-prompt-styler') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -425,7 +423,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Cost Calculator tool
   if (tool.slug === 'ai-cost-calculator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -554,7 +552,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Headline Generator tool
   if (tool.slug === 'ai-headline-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -683,7 +681,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Image Size Planner tool
   if (tool.slug === 'ai-image-size-planner') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -812,7 +810,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Voice Cloning Legality Checker tool
   if (tool.slug === 'ai-voice-cloning-legality-checker') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -941,7 +939,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Text Style Analyzer tool
   if (tool.slug === 'ai-text-style-analyzer') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1070,7 +1068,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Comparison Matrix tool
   if (tool.slug === 'ai-comparison-matrix') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1199,7 +1197,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Roadmap Builder tool
   if (tool.slug === 'ai-roadmap-builder') {
             return (
-              <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
                 <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1328,7 +1326,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Policy Generator tool
   if (tool.slug === 'ai-policy-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1457,7 +1455,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Ethics Risk Label tool
   if (tool.slug === 'ai-ethics-risk-label') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1586,7 +1584,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render RAG Chunking Tool
   if (tool.slug === 'rag-chunking-tool') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1715,7 +1713,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Prompt Cleaner Tool
   if (tool.slug === 'prompt-cleaner') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1844,7 +1842,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI ROI Calculator tool
   if (tool.slug === 'ai-roi-calculator') {
                 return (
-                  <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
                     <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -1973,7 +1971,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Model Hardware Estimator tool
   if (tool.slug === 'ai-model-hardware-estimator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2102,7 +2100,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset Finder Tool
   if (tool.slug === 'dataset-finder') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2231,7 +2229,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset License Checker
   if (tool.slug === 'dataset-license-checker') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2360,7 +2358,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset Token Estimator
   if (tool.slug === 'dataset-token-estimator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2489,7 +2487,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset Similarity Tool
   if (tool.slug === 'dataset-similarity') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2618,7 +2616,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset Quality Scoreboard
   if (tool.slug === 'dataset-quality-scoreboard') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2747,7 +2745,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset-Model Matrix
   if (tool.slug === 'dataset-model-matrix') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -2876,7 +2874,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Idea Generator
   if (tool.slug === 'ai-idea-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3005,7 +3003,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Persona Creator
   if (tool.slug === 'ai-persona-creator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3134,7 +3132,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Logo Prompt Generator
   if (tool.slug === 'ai-logo-prompt-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3263,7 +3261,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Prompt Formatter
   if (tool.slug === 'ai-prompt-formatter' || tool.slug === 'ai-prompt-beautifier') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3392,7 +3390,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Resume / Cover Letter Prompt Generator
   if (tool.slug === 'ai-resume-cover-letter-generator' || tool.slug === 'ai-resume-generator' || tool.slug === 'ai-cover-letter-generator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3521,7 +3519,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Model Finder
   if (tool.slug === 'ai-model-finder' || tool.slug === 'ai-model-recommender') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3650,7 +3648,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Chat Style Converter
   if (tool.slug === 'ai-chat-style-converter') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3779,7 +3777,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Text Emotion Analyzer
   if (tool.slug === 'ai-text-emotion-analyzer') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -3908,7 +3906,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Script-to-Scene Visualizer
   if (tool.slug === 'ai-script-to-scene-visualizer') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4037,7 +4035,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Content Planner
   if (tool.slug === 'ai-content-planner' || tool.slug === 'content-planner-30-day') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4166,7 +4164,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Pricing Comparison Calculator
   if (tool.slug === 'ai-pricing-comparison-calculator' || tool.slug === 'ai-pricing-calculator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4295,7 +4293,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Accent Simulator
   if (tool.slug === 'ai-accent-simulator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4424,7 +4422,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Prompt Privacy Checker
   if (tool.slug === 'prompt-privacy-checker' || tool.slug === 'privacy-checker') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4553,7 +4551,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render Dataset Size & Storage Estimator
   if (tool.slug === 'dataset-size-storage-estimator' || tool.slug === 'dataset-estimator') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4682,7 +4680,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   // Render AI Workflow Blueprint Builder
   if (tool.slug === 'ai-workflow-blueprint-builder' || tool.slug === 'workflow-builder') {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <ToolStructuredData tool={tool} />
         
         <div className="mb-8">
@@ -4813,7 +4811,7 @@ export default async function ToolPage({ params }: { params: Promise<{ slug: str
   const htmlContent = await getToolHtml(tool.file_path);
   
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <h1 className="text-3xl font-bold mb-2">{tool.title}</h1>
       
       {tool.description && (

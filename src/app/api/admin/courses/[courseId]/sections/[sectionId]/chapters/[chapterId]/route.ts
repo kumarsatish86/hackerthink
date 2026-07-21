@@ -59,7 +59,21 @@ export async function GET(
     // Map the database fields to the expected API response fields
     const chapter = {
       ...rows[0],
-      content_type: rows[0].video_url ? 'video' : 'text',
+      content_type: (() => {
+        if (rows[0].video_url && String(rows[0].video_url).trim()) return 'video';
+        const body = String(rows[0].content || '');
+        if (
+          /\.pdf(\?|#|$)/i.test(body) ||
+          /\/uploads\/documents\//i.test(body) ||
+          /\/api\/uploads\/documents\//i.test(body)
+        ) {
+          return 'pdf';
+        }
+        if (/^https?:\/\//i.test(body.trim()) && !body.includes('<')) {
+          return 'external_resource';
+        }
+        return 'text';
+      })(),
       is_free_preview: false, // Default value since the field doesn't exist in course_lessons
       created_at: new Date(rows[0].created_at).toISOString(),
       updated_at: new Date(rows[0].updated_at).toISOString()
@@ -194,11 +208,25 @@ export async function PUT(
     const { rows } = await pool.query(query, values);
 
     // Map the database response to the expected API format
+    const body = String(rows[0].content || '');
+    const resolvedType =
+      content_type && ['text', 'video', 'pdf', 'external_resource'].includes(content_type)
+        ? content_type
+        : rows[0].video_url
+          ? 'video'
+          : /\.pdf(\?|#|$)/i.test(body) ||
+              /\/uploads\/documents\//i.test(body) ||
+              /\/api\/uploads\/documents\//i.test(body)
+            ? 'pdf'
+            : /^https?:\/\//i.test(body.trim()) && !body.includes('<')
+              ? 'external_resource'
+              : 'text';
+
     return NextResponse.json({
       message: 'Chapter updated successfully',
       chapter: {
         ...rows[0],
-        content_type: rows[0].video_url ? 'video' : 'text',
+        content_type: resolvedType,
         is_free_preview: false, // Default value
         created_at: new Date(rows[0].created_at).toISOString(),
         updated_at: new Date(rows[0].updated_at).toISOString()

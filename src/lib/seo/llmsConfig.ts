@@ -42,6 +42,11 @@ export const LLMS_LINK_CATALOG: LlmsLink[] = [
   { id: 'compare', path: '/models/compare', title: 'Compare Models', description: 'Side-by-side model comparison', section: 'docs' },
   { id: 'timeline', path: '/models/timeline', title: 'Model Timeline', description: 'Model release timeline', section: 'docs' },
   { id: 'datasets-leaderboard', path: '/datasets/leaderboard', title: 'Dataset Leaderboard', description: 'Dataset rankings', section: 'docs' },
+  { id: 'datasets-compare', path: '/datasets/compare', title: 'Compare Datasets', description: 'Side-by-side dataset comparison', section: 'docs' },
+  { id: 'datasets-timeline', path: '/datasets/timeline', title: 'Dataset Timeline', description: 'Dataset release timeline', section: 'docs' },
+  { id: 'datasets-benchmarks', path: '/datasets/benchmarks', title: 'Benchmark Datasets', description: 'Evaluation and benchmark datasets', section: 'docs' },
+  { id: 'datasets-licensing', path: '/datasets/licensing', title: 'Dataset Licensing', description: 'License and commercial-use guide', section: 'docs' },
+  { id: 'datasets-ethics', path: '/datasets/ethics', title: 'Dataset Ethics', description: 'Bias, PII, and responsible use', section: 'docs' },
   { id: 'privacy', path: '/privacy-policy', title: 'Privacy Policy', description: 'Privacy policy', section: 'docs' },
   { id: 'terms', path: '/terms-of-service', title: 'Terms of Service', description: 'Terms of service', section: 'docs' },
 ];

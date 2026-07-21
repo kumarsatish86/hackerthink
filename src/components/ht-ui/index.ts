@@ -71,3 +71,15 @@ export { AIAssistant } from './AIAssistant';
 export type { AIAssistantProps, AssistantAction } from './AIAssistant';
 export { CommunitySectionUI } from './CommunitySection';
 export type { CommunitySectionProps, CommunityBlock } from './CommunitySection';
+
+export {
+  SourceBadge,
+  QualityDashboard,
+  DownloadCenter,
+  DataExplorer,
+} from './DatasetCompounds';
+export type {
+  QualityDashboardMetric,
+  DownloadMirror,
+  DataExplorerRow,
+} from './DatasetCompounds';

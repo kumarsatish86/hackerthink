@@ -119,10 +119,21 @@ export default function DatasetsCategoryClient({ category }: DatasetsCategoryCli
         setAvailableLicenses(data.filterOptions.licenses || []);
         setAvailableDomains(data.filterOptions.domains || []);
       }
+      const licenseFacets = data.facetCounts?.licenses || [];
+      const domainFacets = data.facetCounts?.domains || [];
+      if (licenseFacets.length) {
+        setAvailableLicenses(licenseFacets.map((f: { value: string }) => f.value));
+      }
+      if (domainFacets.length) {
+        setAvailableDomains(domainFacets.map((f: { value: string }) => f.value));
+      }
       
       setCategoryInfo({
-        name: category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        count: data.total || data.datasets?.length || 0
+        name: category.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+        count: data.total || data.datasets?.length || 0,
+        description: licenseFacets.length
+          ? `Live facets: ${licenseFacets.slice(0, 5).map((f: { value: string; count: number }) => `${f.value} (${f.count})`).join(', ')}`
+          : undefined,
       });
     } catch (error) {
       console.error('Error fetching datasets:', error);

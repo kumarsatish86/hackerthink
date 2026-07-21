@@ -84,10 +84,16 @@ export default function EditDatasetPage() {
 
   const tabs = [
     { id: 'basic', label: 'Basic Info' },
+    { id: 'summary', label: 'Summary' },
     { id: 'technical', label: 'Technical Specs' },
     { id: 'content', label: 'Content' },
+    { id: 'samples', label: 'Samples' },
+    { id: 'downloads', label: 'Downloads' },
+    { id: 'preprocess', label: 'Preprocess' },
     { id: 'links', label: 'Links & Access' },
     { id: 'quality', label: 'Quality & Ethics' },
+    { id: 'faqs', label: 'FAQs / Security' },
+    { id: 'relations', label: 'Relations' },
     { id: 'media', label: 'Media & SEO' },
     { id: 'additional', label: 'Additional' },
   ];
@@ -202,9 +208,9 @@ export default function EditDatasetPage() {
         tags: formData.tags ? JSON.parse(formData.tags) : [],
         sample_data: formData.sample_data ? JSON.parse(formData.sample_data) : {},
         schema_json: formData.schema_json ? JSON.parse(formData.schema_json) : {},
-        quality_score: formData.quality_score ? parseFloat(formData.quality_score) : null,
-        rating: formData.rating ? parseFloat(formData.rating) : 0,
-        rating_count: formData.rating_count ? parseInt(formData.rating_count) : 0,
+        quality_score: formData.quality_score ? parseFloat(String(formData.quality_score)) : null,
+        rating: formData.rating ? parseFloat(String(formData.rating)) : 0,
+        rating_count: formData.rating_count ? parseInt(String(formData.rating_count), 10) : 0,
       };
 
       const response = await fetch(`/api/admin/datasets/${datasetId}`, {
@@ -389,6 +395,73 @@ export default function EditDatasetPage() {
               <div>
                 {renderField('Full Description (Markdown)', 'full_description', 'textarea', undefined, 'Full markdown description...')}
               </div>
+            </div>
+          )}
+
+          {activeTab === 'summary' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">Summary & narrative</h2>
+              <p className="text-sm text-gray-500">
+                Public AI summary is generated via Enrich. Edit description fields here; run{' '}
+                <code className="rounded bg-gray-100 px-1">POST /api/admin/datasets/{'{slug}'}/enrich</code> to
+                refresh derived docs.
+              </p>
+              {renderField('Short Description', 'description', 'textarea')}
+              {renderField('Full Description (Markdown)', 'full_description', 'textarea')}
+            </div>
+          )}
+
+          {activeTab === 'samples' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">Samples</h2>
+              {renderField('Sample Data (JSON)', 'sample_data', 'textarea', undefined, '{"rows": []}')}
+              <p className="text-sm text-gray-500">
+                Hybrid explorer also loads Hugging Face preview rows when this is empty.
+              </p>
+            </div>
+          )}
+
+          {activeTab === 'downloads' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">Downloads & mirrors</h2>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {renderField('Download URL', 'download_url', 'text')}
+                {renderField('HuggingFace URL', 'huggingface_url', 'text')}
+                {renderField('Kaggle URL', 'kaggle_url', 'text')}
+                {renderField('GitHub URL', 'github_url', 'text')}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'preprocess' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">Preprocessing</h2>
+              {renderField('Preprocessing Info', 'preprocessing_info', 'textarea')}
+              <p className="text-sm text-gray-500">
+                Code snippets are seeded by Enrich into <code>dataset_preprocessing</code>.
+              </p>
+            </div>
+          )}
+
+          {activeTab === 'faqs' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">FAQs / Security notes</h2>
+              {renderField('Ethical Considerations', 'ethical_considerations', 'textarea')}
+              {renderField('Bias Notes', 'bias_notes', 'textarea')}
+              {renderField('PII Description', 'pii_description', 'textarea')}
+              <p className="text-sm text-gray-500">FAQ rows and security notes live in satellite tables; use Enrich to seed PAA.</p>
+            </div>
+          )}
+
+          {activeTab === 'relations' && (
+            <div className="space-y-6">
+              <h2 className="mb-4 text-xl font-bold">Relations</h2>
+              {renderField('Paper URL', 'paper_url', 'text')}
+              {renderField('Documentation URL', 'documentation_url', 'text')}
+              {renderField('Citation', 'citation', 'textarea')}
+              <p className="text-sm text-gray-500">
+                Models Using resolves via <code>model_training_data.related_dataset_slug</code> and name match.
+              </p>
             </div>
           )}
 

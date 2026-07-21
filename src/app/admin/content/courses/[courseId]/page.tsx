@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface CourseModule {
@@ -28,9 +28,11 @@ interface Course {
   author_name: string;
 }
 
-export default function CourseDetailPage({ params }: { params: { courseId: string } }) {
+export default function CourseDetailPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const params = useParams();
+  const courseId = typeof params.courseId === 'string' ? params.courseId : '';
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<CourseModule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,17 +54,19 @@ export default function CourseDetailPage({ params }: { params: { courseId: strin
     } else if (status === 'authenticated') {
       if (session?.user?.role !== 'admin') {
         router.push('/dashboard');
-      } else {
+      } else if (courseId) {
         fetchCourse();
         fetchModules();
       }
     }
-  }, [status, session, router, params.courseId]);
+  }, [status, session, router, courseId]);
 
   const fetchCourse = async () => {
+    if (!courseId) return;
+
     try {
       setLoading(true);
-      const response = await fetch(`/api/admin/courses/${params.courseId}`);
+      const response = await fetch(`/api/admin/courses/${courseId}`);
       
       if (!response.ok) {
         if (response.status === 404) {
@@ -82,8 +86,10 @@ export default function CourseDetailPage({ params }: { params: { courseId: strin
   };
 
   const fetchModules = async () => {
+    if (!courseId) return;
+
     try {
-      const response = await fetch(`/api/admin/courses/${params.courseId}/sections`);
+      const response = await fetch(`/api/admin/courses/${courseId}/sections`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch modules');
@@ -100,15 +106,15 @@ export default function CourseDetailPage({ params }: { params: { courseId: strin
   const handleModuleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newModule.title) {
+    if (!newModule.title || !courseId) {
       return;
     }
     
     try {
       console.log("Submitting module with data:", newModule);
-      console.log("Course ID:", params.courseId);
+      console.log("Course ID:", courseId);
       
-      const response = await fetch(`/api/admin/courses/${params.courseId}/sections`, {
+      const response = await fetch(`/api/admin/courses/${courseId}/sections`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

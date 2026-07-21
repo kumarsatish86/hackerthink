@@ -1,15 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useSession } from 'next-auth/react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+
+const TipTapEditor = dynamic(() => import('@/components/TipTapEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-40 rounded-lg border border-gray-300 bg-gray-50 flex items-center justify-center text-sm text-gray-500">
+      Loading editor…
+    </div>
+  ),
+});
+
+const inputClass =
+  'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/30';
+
+const labelClass = 'block text-sm font-semibold text-gray-900';
+const helpClass = 'mt-1.5 text-xs text-gray-600';
 
 interface Course {
   id: string;
   title: string;
   slug: string;
   short_description: string;
+  content?: string;
   prerequisites: string;
   learning_objectives: string[];
   level: string;
@@ -35,11 +52,12 @@ export default function EditCourse() {
     title: '',
     slug: '',
     short_description: '',
+    content: '',
     prerequisites: '',
     learning_objectives: [] as string[],
-    level: 'beginner',
+    level: 'Beginner',
     duration: 0,
-    published: false
+    published: false,
   });
 
   useEffect(() => {
@@ -48,7 +66,7 @@ export default function EditCourse() {
     } else if (status === 'authenticated') {
       if (session?.user?.role !== 'admin') {
         router.push('/dashboard');
-      } else {
+      } else if (courseId) {
         fetchCourse();
       }
     }
@@ -58,48 +76,56 @@ export default function EditCourse() {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/courses/${courseId}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('Course not found');
         }
         throw new Error('Failed to fetch course');
       }
-      
+
       const data = await response.json();
       setCourse(data.course);
-      
-      // Set form data
+
       setFormData({
         title: data.course.title || '',
         slug: data.course.slug || '',
         short_description: data.course.short_description || '',
+        content: data.course.content || '',
         prerequisites: data.course.prerequisites || '',
         learning_objectives: data.course.learning_objectives || [],
-        level: data.course.level || 'beginner',
+        level: (() => {
+          const raw = String(data.course.level || 'Beginner');
+          const normalized = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+          return ['Beginner', 'Intermediate', 'Advanced'].includes(normalized)
+            ? normalized
+            : 'Beginner';
+        })(),
         duration: data.course.duration || 0,
-        published: data.course.published || false
+        published: data.course.published || false,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching course:', err);
-      setError(err.message || 'Failed to load course. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to load course. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target as HTMLInputElement;
-    
+
     if (type === 'checkbox') {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: (e.target as HTMLInputElement).checked
+        [name]: (e.target as HTMLInputElement).checked,
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: name === 'duration' ? Number(value) || 0 : value,
       }));
     }
   };
@@ -113,7 +139,7 @@ export default function EditCourse() {
   const addObjective = () => {
     setFormData({
       ...formData,
-      learning_objectives: [...formData.learning_objectives, '']
+      learning_objectives: [...formData.learning_objectives, ''],
     });
   };
 
@@ -125,11 +151,11 @@ export default function EditCourse() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       setSaving(true);
       setError(null);
-      
+
       const response = await fetch(`/api/admin/courses/${courseId}`, {
         method: 'PUT',
         headers: {
@@ -137,17 +163,16 @@ export default function EditCourse() {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update course');
       }
-      
-      // Success! Redirect to course details
+
       router.push(`/admin/content/courses/${courseId}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error updating course:', err);
-      setError(err.message || 'Failed to update course. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to update course. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -156,254 +181,245 @@ export default function EditCourse() {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        <div className="h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-red-500" />
       </div>
     );
   }
 
   if (error && !course) {
     return (
-      <div className="min-h-screen bg-white px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
-        <div className="max-w-max mx-auto">
-          <main className="sm:flex">
-            <p className="text-4xl font-extrabold text-indigo-600 sm:text-5xl">404</p>
-            <div className="sm:ml-6">
-              <div className="sm:border-l sm:border-gray-200 sm:pl-6">
-                <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
-                  {error || 'Course not found'}
-                </h1>
-                <p className="mt-1 text-base text-gray-500">
-                  Please check the URL or go back to courses.
-                </p>
-              </div>
-              <div className="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
-                <Link
-                  href="/admin/content/courses"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Go back to courses
-                </Link>
-              </div>
-            </div>
-          </main>
-        </div>
+      <div className="mx-auto max-w-lg px-4 py-16 text-center">
+        <h1 className="text-2xl font-bold text-gray-900">{error || 'Course not found'}</h1>
+        <p className="mt-2 text-sm text-gray-600">Check the URL or return to the courses list.</p>
+        <Link
+          href="/admin/content/courses"
+          className="mt-6 inline-flex rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700"
+        >
+          Back to courses
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <nav className="mb-6" aria-label="Breadcrumb">
-        <ol className="flex space-x-2 text-sm text-gray-500">
+        <ol className="flex flex-wrap gap-2 text-sm text-gray-600">
           <li>
-            <Link href="/admin/content/courses" className="hover:text-gray-700">
+            <Link href="/admin/content/courses" className="hover:text-gray-900">
               Courses
             </Link>
           </li>
-          <li className="flex items-center">
-            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <Link href={`/admin/content/courses/${courseId}`} className="ml-2 hover:text-gray-700">
-              Course Details
+          <li className="text-gray-400">/</li>
+          <li>
+            <Link href={`/admin/content/courses/${courseId}`} className="hover:text-gray-900">
+              Details
             </Link>
           </li>
-          <li className="flex items-center">
-            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <span className="ml-2 text-gray-900 font-medium">Edit Course</span>
-          </li>
+          <li className="text-gray-400">/</li>
+          <li className="font-medium text-gray-900">Edit</li>
         </ol>
       </nav>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Course</h1>
-        <p className="text-gray-600">Update course details</p>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Edit Course</h1>
+          <p className="mt-1 text-sm text-gray-600">Update course details and overview content.</p>
+        </div>
+        <Link
+          href={`/admin/content/courses/${courseId}`}
+          className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
+        >
+          Cancel
+        </Link>
       </div>
 
       {error && (
-        <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          </div>
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-800">{error}</p>
         </div>
       )}
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="p-6">
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                  Title <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Course basics</h2>
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="title" className={labelClass}>
+                Title <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+                className={`mt-1.5 ${inputClass}`}
+              />
+            </div>
 
-              <div>
-                <label htmlFor="slug" className="block text-sm font-medium text-gray-700">
-                  Slug <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="slug"
-                  id="slug"
-                  value={formData.slug}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  URL-friendly name (e.g., "introduction-to-linux")
-                </p>
-              </div>
+            <div>
+              <label htmlFor="slug" className={labelClass}>
+                Slug <span className="text-red-600">*</span>
+              </label>
+              <input
+                type="text"
+                name="slug"
+                id="slug"
+                value={formData.slug}
+                onChange={handleInputChange}
+                required
+                className={`mt-1.5 ${inputClass}`}
+              />
+              <p className={helpClass}>URL-friendly name (e.g. introduction-to-linux).</p>
+            </div>
+          </div>
+        </section>
 
-              <div>
-                <label htmlFor="short_description" className="block text-sm font-medium text-gray-700">
-                  Short Description
-                </label>
-                <textarea
-                  id="short_description"
-                  name="short_description"
-                  rows={3}
-                  value={formData.short_description}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                ></textarea>
-              </div>
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Descriptions</h2>
 
-              <div>
-                <label htmlFor="prerequisites" className="block text-sm font-medium text-gray-700">
-                  Prerequisites
-                </label>
-                <textarea
-                  id="prerequisites"
-                  name="prerequisites"
-                  rows={3}
-                  value={formData.prerequisites}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                ></textarea>
-              </div>
+          <div className="mb-6">
+            <label htmlFor="short_description" className={labelClass}>
+              Short description
+            </label>
+            <p className={`${helpClass} mb-2`}>Plain-text summary for course listings.</p>
+            <textarea
+              id="short_description"
+              name="short_description"
+              rows={4}
+              value={formData.short_description}
+              onChange={handleInputChange}
+              className={inputClass}
+            />
+          </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Learning Objectives
-                </label>
-                <div className="space-y-2 mt-1">
-                  {formData.learning_objectives.map((objective, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="text"
-                        value={objective}
-                        onChange={(e) => handleObjectiveChange(index, e.target.value)}
-                        className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeObjective(index)}
-                        className="ml-2 inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                      >
-                        <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
+          <div className="mb-6">
+            <label className={labelClass}>Course content / overview</label>
+            <p className={`${helpClass} mb-2`}>Rich overview shown on the public course page.</p>
+            <TipTapEditor
+              content={formData.content}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+              placeholder="Describe what students will learn…"
+              height="320px"
+              className="shadow-sm"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="prerequisites" className={labelClass}>
+              Prerequisites
+            </label>
+            <textarea
+              id="prerequisites"
+              name="prerequisites"
+              rows={3}
+              value={formData.prerequisites}
+              onChange={handleInputChange}
+              className={`mt-1.5 ${inputClass}`}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-gray-900">Objectives & meta</h2>
+
+          <div className="mb-6">
+            <label className={labelClass}>Learning objectives</label>
+            <div className="mt-2 space-y-2">
+              {formData.learning_objectives.map((objective, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={objective}
+                    onChange={(e) => handleObjectiveChange(index, e.target.value)}
+                    className={inputClass}
+                  />
                   <button
                     type="button"
-                    onClick={addObjective}
-                    className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={() => removeObjective(index)}
+                    className="shrink-0 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
                   >
-                    <svg className="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Add Objective
+                    Remove
                   </button>
                 </div>
-              </div>
+              ))}
+              <button
+                type="button"
+                onClick={addObjective}
+                className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50"
+              >
+                Add objective
+              </button>
+            </div>
+          </div>
 
-              <div>
-                <label htmlFor="level" className="block text-sm font-medium text-gray-700">
-                  Difficulty Level
-                </label>
-                <select
-                  id="level"
-                  name="level"
-                  value={formData.level}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                >
-                  <option value="beginner">Beginner</option>
-                  <option value="intermediate">Intermediate</option>
-                  <option value="advanced">Advanced</option>
-                </select>
-              </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div>
+              <label htmlFor="level" className={labelClass}>
+                Level
+              </label>
+              <select
+                id="level"
+                name="level"
+                value={formData.level}
+                onChange={handleInputChange}
+                className={`mt-1.5 ${inputClass}`}
+              >
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+            </div>
 
-              <div>
-                <label htmlFor="duration" className="block text-sm font-medium text-gray-700">
-                  Duration (minutes)
-                </label>
-                <input
-                  type="number"
-                  name="duration"
-                  id="duration"
-                  min="0"
-                  value={formData.duration}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
+            <div>
+              <label htmlFor="duration" className={labelClass}>
+                Duration (minutes)
+              </label>
+              <input
+                type="number"
+                name="duration"
+                id="duration"
+                min={0}
+                value={formData.duration}
+                onChange={handleInputChange}
+                className={`mt-1.5 ${inputClass}`}
+              />
+            </div>
 
-              <div className="flex items-center">
+            <div className="flex items-end pb-1">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold text-gray-900">
                 <input
                   id="published"
                   name="published"
                   type="checkbox"
                   checked={formData.published}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
                 />
-                <label htmlFor="published" className="ml-2 block text-sm text-gray-900">
-                  Published
-                </label>
-              </div>
-
-              <div className="flex justify-end">
-                <Link
-                  href={`/admin/content/courses/${courseId}`}
-                  className="mr-4 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </Link>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
+                Published
+              </label>
             </div>
-          </form>
+          </div>
+        </section>
+
+        <div className="flex justify-end gap-3 border-t border-gray-200 pt-5">
+          <Link
+            href={`/admin/content/courses/${courseId}`}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50"
+          >
+            Cancel
+          </Link>
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 disabled:opacity-50"
+          >
+            {saving ? 'Saving…' : 'Save Changes'}
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
-} 
+}

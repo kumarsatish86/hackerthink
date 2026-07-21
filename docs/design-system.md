@@ -62,3 +62,9 @@ Use token variables only (`var(--ht-surface)`, etc.). Avoid hardcoded hex in com
 - Do keep interactive heavy charts dynamically imported at page level
 - Don't put business heuristics inside ht-ui (keep presentational)
 - Don't say “No data available” — use `EmptyState` with helpful CTAs
+
+## Datasets module
+
+Dataset detail composes the same ht-ui primitives via `src/components/datasets/detail/*` and mappers in `src/lib/datasets/*` (QuickStats, DecisionCard, DeveloperScore, FAQAccordion, BenchmarkCards/Charts, ComparisonTable, CodeViewer, CommunitySectionUI, RelatedResources, Timeline, EmptyState, ShareCard, BookmarkCard). Dataset-specific compounds: `QualityDashboard`, `DownloadCenter`, `DataExplorer`, `SourceBadge` from `@/components/ht-ui`.
+
+See [datasets-module.md](./datasets-module.md).

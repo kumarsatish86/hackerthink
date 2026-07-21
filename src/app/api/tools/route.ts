@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -9,98 +9,161 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
 });
 
-// Category and platform mapping based on tool names or descriptions
-// This is a temporary solution until these fields are added to the database
-function inferToolMetadata(tool: any) {
-  const title = tool.title.toLowerCase();
-  const description = tool.description?.toLowerCase() || '';
-  
-  // Set default values
+export const dynamic = 'force-dynamic';
+
+function splitCsv(raw: string | null): string[] {
+  if (!raw) return [];
+  return raw.split(',').map((v) => v.trim()).filter(Boolean);
+}
+
+function inferToolMetadata(tool: {
+  id: number | string;
+  title: string;
+  slug: string;
+  description?: string | null;
+  icon?: string | null;
+  file_path?: string | null;
+}) {
+  const title = (tool.title || '').toLowerCase();
+  const slug = (tool.slug || '').toLowerCase();
+  const description = (tool.description || '').toLowerCase();
+  const hay = `${title} ${slug} ${description}`;
+
   let category = 'other';
-  let platform = 'cross-platform';
+  let platform = 'web';
   let license = 'Open Source';
-  let officialUrl = '#';
-  let popularity = 75 + Math.floor(Math.random() * 20); // Random between 75-95
-  let usersCount = 5000 + Math.floor(Math.random() * 50000); // Random between 5000-55000
-  
-  // Infer category
-  if (title.includes('monitor') || description.includes('monitor') || 
-      title.includes('htop') || title.includes('grafana') || title.includes('prometheus')) {
-    category = 'system-monitoring';
-  } else if (title.includes('security') || description.includes('security') || 
-            title.includes('nmap') || title.includes('wireshark') || title.includes('metasploit')) {
+  let popularity = 78;
+  let usersCount = 8000;
+
+  if (/prompt|persona|headline|chat.?style|emotion|resume|cover.?letter|logo.?prompt|image.?prompt|script.?to.?scene|accent/.test(hay)) {
+    category = 'prompting';
+    popularity = 88;
+  } else if (/dataset|token.?estim|similarity|quality.?score|license.?check|storage.?estim|model.?matrix|finder/.test(hay)) {
+    category = 'datasets';
+    popularity = 84;
+  } else if (/cost|roi|pricing|hardware.?estim|image.?size|planner|roadmap|workflow|content.?planner/.test(hay)) {
+    category = 'cost-planning';
+    popularity = 86;
+  } else if (/ethic|privacy|policy|voice.?cloning|legality|risk/.test(hay)) {
     category = 'security';
-  } else if (title.includes('docker') || description.includes('container') || 
-            title.includes('kubernetes') || title.includes('podman')) {
-    category = 'containerization';
-  } else if (title.includes('ansible') || description.includes('automat') || 
-            title.includes('terraform') || description.includes('workflow')) {
+    popularity = 80;
+  } else if (/nlp|transformer|language|text/.test(hay)) {
+    category = 'nlp';
+  } else if (/vision|image|opencv|detect/.test(hay)) {
+    category = 'computer-vision';
+  } else if (/model.?finder|comparison|matrix|machine.?learning|ml /.test(hay)) {
+    category = 'machine-learning';
+  } else if (/automat|ansible|workflow|blueprint/.test(hay)) {
     category = 'automation';
-  } else if (title.includes('git') || description.includes('develop') || 
-            description.includes('programming')) {
+  } else if (/git|develop|code|formatter|rag|chunk/.test(hay)) {
     category = 'development';
-  } else if (title.includes('network') || description.includes('network')) {
-    category = 'networking';
   }
-  
-  // Infer platform
-  if (description.includes('linux only') || description.includes('for linux')) {
-    platform = 'linux';
-  } else if (description.includes('windows only')) {
-    platform = 'windows';
-  } else if (description.includes('macos only') || description.includes('for mac')) {
-    platform = 'macos';
-  } else {
-    platform = 'cross-platform';
-  }
-  
-  // Generate a plausible URL if none exists
-  if (title) {
-    officialUrl = `https://${title.replace(/[^a-z0-9]/gi, '').toLowerCase()}.org`;
-  }
-  
+
+  if (/python|pytorch|tensorflow|jupyter|pandas/.test(hay)) platform = 'python';
+  else if (/javascript|node|react|next/.test(hay)) platform = 'javascript';
+  else if (/cloud|api|saas|openai/.test(hay)) platform = 'cloud';
+  else if (/linux|cli|terminal/.test(hay)) platform = 'linux';
+  else platform = 'web';
+
+  if (/mit/.test(hay)) license = 'MIT';
+  else if (/apache/.test(hay)) license = 'Apache 2.0';
+  else if (/api|proprietary|closed/.test(hay)) license = 'API';
+  else license = 'Open Source';
+
+  // Stable-ish pseudo metrics from slug length (avoid random flicker)
+  const seed = Array.from(slug).reduce((a, c) => a + c.charCodeAt(0), 0);
+  popularity = Math.min(98, Math.max(70, popularity + (seed % 12)));
+  usersCount = 3000 + (seed % 40) * 1200;
+
   return {
     ...tool,
     category,
     platform,
     license,
-    official_url: officialUrl,
+    official_url: tool.slug ? `/tools/${tool.slug}` : '#',
     popularity,
-    users_count: usersCount
+    users_count: usersCount,
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search') || '';
+    const categories = splitCsv(searchParams.get('category'));
+    const platforms = splitCsv(searchParams.get('platform'));
+    const licenses = splitCsv(searchParams.get('license'));
+    const popularOnly = searchParams.get('popular') === 'true';
+    const sortBy = searchParams.get('sort') || 'title';
+    const sortOrder = searchParams.get('order') === 'desc' ? 'desc' : 'asc';
+
     const client = await pool.connect();
-    
     try {
-      // Fetch all published tools with the fields that exist in the database
       const result = await client.query(`
-        SELECT 
-          id, 
-          title, 
-          slug, 
-          description, 
-          icon, 
-          file_path
-        FROM tools 
-        WHERE published = true 
+        SELECT id, title, slug, description, icon, file_path
+        FROM tools
+        WHERE published = true
         ORDER BY title ASC
       `);
-      
-      // Add missing fields with inferred values
-      const enrichedTools = result.rows.map(inferToolMetadata);
-      
-      return NextResponse.json({ tools: enrichedTools });
+
+      let tools = result.rows.map(inferToolMetadata);
+
+      const filterOptions = {
+        categories: Array.from(new Set(tools.map((t) => t.category))).sort(),
+        platforms: Array.from(new Set(tools.map((t) => t.platform))).sort(),
+        licenses: Array.from(new Set(tools.map((t) => t.license))).sort(),
+      };
+
+      if (search) {
+        const q = search.toLowerCase();
+        tools = tools.filter(
+          (t) =>
+            t.title.toLowerCase().includes(q) ||
+            (t.description || '').toLowerCase().includes(q) ||
+            t.slug.toLowerCase().includes(q)
+        );
+      }
+      if (categories.length) {
+        tools = tools.filter((t) => categories.includes(t.category));
+      }
+      if (platforms.length) {
+        tools = tools.filter((t) => platforms.includes(t.platform));
+      }
+      if (licenses.length) {
+        tools = tools.filter((t) =>
+          licenses.some((l) => t.license.toLowerCase().includes(l.toLowerCase()))
+        );
+      }
+      if (popularOnly) {
+        tools = tools.filter((t) => t.popularity >= 85);
+      }
+
+      tools.sort((a, b) => {
+        let av: string | number = a.title;
+        let bv: string | number = b.title;
+        if (sortBy === 'popularity') {
+          av = a.popularity;
+          bv = b.popularity;
+        } else if (sortBy === 'users') {
+          av = a.users_count;
+          bv = b.users_count;
+        }
+        if (typeof av === 'number' && typeof bv === 'number') {
+          return sortOrder === 'asc' ? av - bv : bv - av;
+        }
+        const cmp = String(av).localeCompare(String(bv));
+        return sortOrder === 'asc' ? cmp : -cmp;
+      });
+
+      return NextResponse.json({ tools, total: tools.length, filterOptions });
     } finally {
       client.release();
     }
   } catch (error) {
     console.error('Error fetching tools:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch tools' },
+      { error: 'Failed to fetch tools', details: (error as Error).message },
       { status: 500 }
     );
   }
-} 
+}

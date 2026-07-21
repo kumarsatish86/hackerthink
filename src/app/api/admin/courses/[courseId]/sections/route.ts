@@ -14,12 +14,19 @@ const pool = new Pool({
 // Helper function to extract the courseId safely
 function getCourseId(pathname: string): string {
   // Expected pattern: /api/admin/courses/{courseId}/sections
-  const parts = pathname.split('/');
+  const parts = pathname.split('/').filter(Boolean);
   const courseIndex = parts.indexOf('courses') + 1;
   if (courseIndex > 0 && courseIndex < parts.length) {
     return parts[courseIndex];
   }
   return '';
+}
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isValidCourseId(id: string): boolean {
+  return Boolean(id) && id !== 'undefined' && id !== 'null' && UUID_RE.test(id);
 }
 
 export async function GET(request: NextRequest) {
@@ -35,6 +42,9 @@ export async function GET(request: NextRequest) {
     // Extract courseId from URL
     const courseId = getCourseId(request.nextUrl.pathname);
     console.log("CourseId:", courseId);
+    if (!isValidCourseId(courseId)) {
+      return NextResponse.json({ message: 'Invalid course id' }, { status: 400 });
+    }
 
     // Check if course exists
     const courseCheck = await pool.query(
@@ -97,6 +107,9 @@ export async function POST(request: NextRequest) {
     // Extract courseId from URL
     const courseId = getCourseId(request.nextUrl.pathname);
     console.log("CourseId:", courseId);
+    if (!isValidCourseId(courseId)) {
+      return NextResponse.json({ message: 'Invalid course id' }, { status: 400 });
+    }
     
     // Parse the JSON body
     const body = await request.json();

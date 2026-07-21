@@ -29,12 +29,10 @@ export async function GET(request: NextRequest) {
       keys = keysParam.split(',')
         .map(k => k.trim())
         .filter(k => k.length > 0);
-      console.log('[Settings API] Extracted keys:', keys);
     }
     
     // If we still don't have keys, use default keys as fallback
     if (keys.length === 0) {
-      console.log('[Settings API] No keys provided, using default keys');
       keys = ['site_name', 'site_description', 'favicon_path'];
     }
     
@@ -59,7 +57,6 @@ export async function GET(request: NextRequest) {
     
     // If no settings found in database, return defaults
     if (Object.keys(settings).length === 0) {
-      console.log('[Settings API] No settings found in database, returning defaults');
       const defaults: Record<string, string> = {
         site_name: 'HackerThink',
         site_description: 'Learn Linux concepts, scripts, and tutorials',
@@ -68,8 +65,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(defaults);
     }
     
-    // Return the settings as JSON
-    console.log('[Settings API] Successfully returning settings:', Object.keys(settings));
     return NextResponse.json(settings);
   } catch (error) {
     console.error('[Settings API] Error fetching settings:', error);

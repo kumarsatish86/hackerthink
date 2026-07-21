@@ -332,7 +332,7 @@ export default function RoadmapPageClient({ roadmap }: RoadmapPageClientProps) {
           <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
         </div>
         
-        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           {/* Breadcrumb */}
           <motion.nav 
             className="flex mb-8" 
@@ -536,7 +536,7 @@ export default function RoadmapPageClient({ roadmap }: RoadmapPageClientProps) {
 
       {/* Prerequisites Section */}
       <section className="py-16 bg-gray-50">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Prerequisites</h2>
             <p className="text-lg text-gray-600">Required knowledge and skills before starting this program</p>
@@ -567,7 +567,7 @@ export default function RoadmapPageClient({ roadmap }: RoadmapPageClientProps) {
 
       {/* Learning Curriculum */}
       <section id="roadmap-visualization" className="py-16 bg-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-block px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium mb-4">
@@ -836,7 +836,7 @@ export default function RoadmapPageClient({ roadmap }: RoadmapPageClientProps) {
 
       {/* Career Outcomes Section */}
       <section className="py-16 bg-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Career Outcomes</h2>
             <p className="text-lg text-gray-600">Professional opportunities and career paths after completing this program</p>
@@ -872,7 +872,7 @@ export default function RoadmapPageClient({ roadmap }: RoadmapPageClientProps) {
 
       {/* Related Roadmaps Section */}
       <section className="py-16 bg-gray-50">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Related Learning Paths</h2>
             <p className="text-lg text-gray-600">Continue your learning journey with these complementary programs</p>

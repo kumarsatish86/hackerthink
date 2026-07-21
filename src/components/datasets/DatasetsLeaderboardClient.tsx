@@ -100,7 +100,10 @@ export default function DatasetsLeaderboardClient() {
             onChange={(e) => setSortBy(e.target.value)}
             className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
           >
-            <option value="download_count">Most Downloaded</option>
+            <option value="download_count">Most Downloaded (popularity proxy)</option>
+            <option value="popularity_score">Popularity Score</option>
+            <option value="quality_score">Highest Quality</option>
+            <option value="freshness_score">Freshest</option>
             <option value="rating">Highest Rated</option>
             <option value="view_count">Most Viewed</option>
             <option value="rating_count">Most Rated</option>
