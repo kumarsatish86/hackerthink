@@ -557,7 +557,6 @@ export default function CourseDetail() {
                             </ul>
                           </div>
                         )}
-                      </div>
                     </TabContent>
                   )}
                   
