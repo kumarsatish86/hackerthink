@@ -440,13 +440,22 @@ export default function ArticlesManagement() {
             )
           );
           break;
-        case 'delete':
-          await Promise.all(
-            Array.from(selectedArticles).map(id => 
-              fetch(`/api/admin/articles/${id}`, { method: 'DELETE' })
-            )
+        case 'delete': {
+          const results = await Promise.all(
+            Array.from(selectedArticles).map(async (id) => {
+              const res = await fetch(`/api/admin/articles/${id}`, { method: 'DELETE' });
+              if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.message || `Failed to delete article ${id}`);
+              }
+              return res;
+            })
           );
+          if (results.length === 0) {
+            throw new Error('No articles selected');
+          }
           break;
+        }
       }
       
       // Refresh articles and clear selection
@@ -454,10 +463,11 @@ export default function ArticlesManagement() {
       setSelectedArticles(new Set());
       setSelectAll(false);
       setBulkAction('');
+      setError(null);
       
     } catch (error) {
       console.error('Bulk action error:', error);
-      setError('Failed to perform bulk action. Please try again.');
+      setError(error instanceof Error ? error.message : 'Failed to perform bulk action. Please try again.');
     } finally {
       setBulkActionLoading(false);
     }
@@ -513,12 +523,14 @@ export default function ArticlesManagement() {
   const handleDelete = async (id: string) => {
     try {
       setActionLoading(true);
+      setError(null);
       const response = await fetch(`/api/admin/articles/${id}`, {
         method: 'DELETE',
       });
       
       if (!response.ok) {
-        throw new Error('Failed to delete article');
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Failed to delete article');
       }
       
       // Remove from local state
@@ -526,7 +538,7 @@ export default function ArticlesManagement() {
       setDeleteConfirm(null);
     } catch (err) {
       console.error('Error deleting article:', err);
-      setError('Failed to delete article. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to delete article. Please try again.');
     } finally {
       setActionLoading(false);
     }

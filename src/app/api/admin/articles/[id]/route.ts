@@ -364,12 +364,6 @@ export async function DELETE(
     }
 
     console.log('[DELETE /api/admin/articles/[id]] Parsed article ID:', articleId);
-    console.log('[DELETE /api/admin/articles/[id]] Database config:', {
-      host: serverRuntimeConfig.DB_HOST || process.env.DB_HOST,
-      port: serverRuntimeConfig.DB_PORT || process.env.DB_PORT,
-      user: serverRuntimeConfig.DB_USER || process.env.DB_USER,
-      database: serverRuntimeConfig.DB_NAME || process.env.DB_NAME,
-    });
 
     // Check if article exists
     console.log('[DELETE /api/admin/articles/[id]] Checking if article exists...');
