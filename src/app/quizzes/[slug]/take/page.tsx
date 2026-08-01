@@ -52,7 +52,7 @@ export default function TakeQuizPage() {
 
   if (loading) {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Starting quiz...</p>
@@ -63,7 +63,7 @@ export default function TakeQuizPage() {
 
   if (error || !quizData) {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error || 'Failed to start quiz'}</p>
           <button

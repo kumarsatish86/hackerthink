@@ -1,178 +1,45 @@
-'use client';
+import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { FaClipboardList } from 'react-icons/fa';
+import QuizzesListClient from '@/components/quizzes/QuizzesListClient';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Quiz } from '@/types/quiz';
-import QuizCard from '@/components/quizzes/QuizCard';
-import QuizFilters from '@/components/quizzes/QuizFilters';
+export const metadata: Metadata = {
+  title: 'AI Quizzes - HackerThink',
+  description: 'Browse, filter, and practice with interactive AI quizzes',
+};
 
-export default function QuizzesPage() {
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    page: 1,
-    limit: 12,
-    pages: 1
-  });
-
-  // Filtering state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [difficultyFilter, setDifficultyFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('created_at');
-  const [sortOrder, setSortOrder] = useState('desc');
-
-  useEffect(() => {
-    fetchQuizzes();
-    fetchCategories();
-  }, [pagination.page, difficultyFilter, categoryFilter, searchQuery, sortBy, sortOrder]);
-
-  const fetchQuizzes = async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams({
-        page: pagination.page.toString(),
-        limit: pagination.limit.toString(),
-        ...(searchQuery && { search: searchQuery }),
-        ...(difficultyFilter !== 'all' && { difficulty: difficultyFilter }),
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        sort_by: sortBy,
-        sort_order: sortOrder
-      });
-
-      const response = await fetch(`/api/quizzes?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch quizzes');
-
-      const data = await response.json();
-      setQuizzes(data.quizzes || []);
-      setPagination(prev => ({
-        ...prev,
-        total: data.pagination?.total || 0,
-        pages: data.pagination?.pages || 1
-      }));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load quizzes');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/quizzes/categories');
-      if (!response.ok) throw new Error('Failed to fetch categories');
-      const data = await response.json();
-      setCategories(data.categories || []);
-    } catch (err) {
-      console.error('Failed to load categories:', err);
-    }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPagination(prev => ({ ...prev, page: 1 }));
-    fetchQuizzes();
-  };
-
-  if (loading && quizzes.length === 0) {
-    return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading quizzes...</p>
-        </div>
-      </div>
-    );
-  }
-
+function QuizzesListFallback() {
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">AI Quizzes</h1>
-        <p className="text-lg text-gray-600 max-w-3xl">
-          Test your AI knowledge with our interactive quizzes. Challenge yourself and learn something new!
-        </p>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="mb-8 space-y-4">
-        <form onSubmit={handleSearch} className="flex gap-4">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search quizzes..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            Search
-          </button>
-        </form>
-
-        <QuizFilters
-          categories={categories}
-          selectedCategory={categoryFilter}
-          selectedDifficulty={difficultyFilter}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onCategoryChange={setCategoryFilter}
-          onDifficultyChange={setDifficultyFilter}
-          onSortChange={setSortBy}
-          onSortOrderChange={setSortOrder}
-        />
-      </div>
-
-      {/* Quizzes Grid */}
-      {error ? (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md mb-6">
-          <p className="text-red-700">{error}</p>
-        </div>
-      ) : quizzes.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg mb-4">No quizzes found</p>
-          <p className="text-gray-400">Try adjusting your filters or search terms</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {quizzes.map((quiz) => (
-              <QuizCard key={quiz.id} quiz={quiz} />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {pagination.pages > 1 && (
-            <div className="flex justify-center items-center gap-2 mt-8">
-              <button
-                onClick={() => setPagination(prev => ({ ...prev, page: Math.max(1, prev.page - 1) }))}
-                disabled={pagination.page === 1}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              <span className="px-4 py-2 text-gray-700">
-                Page {pagination.page} of {pagination.pages}
-              </span>
-              <button
-                onClick={() => setPagination(prev => ({ ...prev, page: Math.min(prev.pages, prev.page + 1) }))}
-                disabled={pagination.page === pagination.pages}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </>
-      )}
+    <div className="flex justify-center items-center py-20 bg-white rounded-xl border border-gray-200">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500" />
     </div>
   );
 }
 
+export default function QuizzesPage() {
+  return (
+    <div className="bg-gradient-to-br from-gray-50 via-white to-red-50 min-h-screen">
+      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+              <FaClipboardList className="w-7 h-7" />
+            </div>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold">AI Quizzes</h1>
+              <p className="text-red-100 mt-1">
+                Browse, filter, and practice — same explorer pattern as Models, Datasets & Courses
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Suspense fallback={<QuizzesListFallback />}>
+          <QuizzesListClient />
+        </Suspense>
+      </div>
+    </div>
+  );
+}

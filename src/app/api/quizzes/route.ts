@@ -9,8 +9,30 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
 });
 
+async function hasStandaloneQuizSchema(): Promise<boolean> {
+  const result = await pool.query(
+    `SELECT 1
+     FROM information_schema.columns
+     WHERE table_schema = 'public'
+       AND table_name = 'quizzes'
+       AND column_name = 'slug'
+     LIMIT 1`
+  );
+  return result.rows.length > 0;
+}
+
 export async function GET(request: NextRequest) {
   try {
+    const schemaReady = await hasStandaloneQuizSchema();
+    if (!schemaReady) {
+      return NextResponse.json({
+        quizzes: [],
+        pagination: { total: 0, page: 1, limit: 12, pages: 0 },
+        message:
+          'Standalone quiz catalog schema is not installed yet (quizzes.slug missing).',
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
@@ -21,8 +43,8 @@ export async function GET(request: NextRequest) {
     const sortOrder = searchParams.get('sort_order') || 'desc';
 
     const offset = (page - 1) * limit;
-    let whereConditions: string[] = ["q.status = 'published'"];
-    let queryParams: any[] = [];
+    const whereConditions: string[] = ["q.status = 'published'"];
+    const queryParams: unknown[] = [];
     let paramIndex = 1;
 
     if (search) {
@@ -43,11 +65,9 @@ export async function GET(request: NextRequest) {
       paramIndex++;
     }
 
-    const whereClause = whereConditions.length > 0 
-      ? `WHERE ${whereConditions.join(' AND ')}`
-      : '';
+    const whereClause =
+      whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
 
-    // Get total count
     const countQuery = `
       SELECT COUNT(DISTINCT q.id) as total 
       FROM quizzes q
@@ -56,9 +76,8 @@ export async function GET(request: NextRequest) {
       ${whereClause}
     `;
     const countResult = await pool.query(countQuery, queryParams);
-    const total = parseInt(countResult.rows[0].total);
+    const total = parseInt(countResult.rows[0]?.total || '0', 10);
 
-    // Get quizzes with pagination
     const validSortColumns = ['created_at', 'title', 'difficulty'];
     const safeSortBy = validSortColumns.includes(sortBy) ? sortBy : 'created_at';
     const safeSortOrder = sortOrder.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
@@ -78,18 +97,17 @@ export async function GET(request: NextRequest) {
       ORDER BY q.${safeSortBy} ${safeSortOrder}
       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `;
-    
+
     queryParams.push(limit, offset);
     const { rows: quizzes } = await pool.query(query, queryParams);
 
-    // Format the quizzes data
-    const formattedQuizzes = quizzes.map(quiz => ({
+    const formattedQuizzes = quizzes.map((quiz) => ({
       ...quiz,
       created_at: quiz.created_at ? new Date(quiz.created_at).toISOString() : null,
       updated_at: quiz.updated_at ? new Date(quiz.updated_at).toISOString() : null,
       question_count: parseInt(quiz.question_count) || 0,
       category_names: quiz.category_names || [],
-      category_slugs: quiz.category_slugs || []
+      category_slugs: quiz.category_slugs || [],
     }));
 
     return NextResponse.json({
@@ -98,15 +116,19 @@ export async function GET(request: NextRequest) {
         total,
         page,
         limit,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit) || 0,
+      },
     });
   } catch (error) {
     console.error('Error fetching quizzes:', error);
     return NextResponse.json(
-      { message: 'Failed to fetch quizzes', error: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
+      {
+        quizzes: [],
+        pagination: { total: 0, page: 1, limit: 12, pages: 0 },
+        message: 'Failed to fetch quizzes',
+        error: error instanceof Error ? error.message : String(error),
+      },
+      { status: 200 }
     );
   }
 }
-

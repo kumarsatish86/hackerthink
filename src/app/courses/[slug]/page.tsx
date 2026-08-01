@@ -224,7 +224,7 @@ export default function CourseDetail() {
 
   if (loading) {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-20 flex flex-col items-center justify-center min-h-[60vh]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-center justify-center min-h-[60vh]">
         <div className="w-24 h-24 border-t-4 border-b-4 border-indigo-600 rounded-full animate-spin"></div>
         <p className="mt-6 text-xl text-gray-600">Loading course details...</p>
       </div>
@@ -233,7 +233,7 @@ export default function CourseDetail() {
 
   if (error || !course) {
     return (
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -275,7 +275,7 @@ export default function CourseDetail() {
         <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
 
-        <div className="relative w-full px-4 pt-16 pb-20 sm:px-6 lg:px-8 xl:px-10">
+        <div className="relative max-w-7xl mx-auto px-4 pt-16 pb-20 sm:px-6 lg:px-8">
           <motion.div 
             className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12"
             initial="hidden"
@@ -397,7 +397,7 @@ export default function CourseDetail() {
       </div>
 
       {/* Content Tabs */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8 -mt-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-6 relative z-10">
         <motion.div 
           className="flex flex-col md:flex-row gap-8"
           initial={{ opacity: 0, y: 20 }}

@@ -57,7 +57,7 @@ export default async function GuestProfilePage({ params }: PageProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Interviews with {guest.name}
@@ -72,7 +72,7 @@ export default async function GuestProfilePage({ params }: PageProps) {
       </div>
 
       {/* Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - Guest Profile */}
           <div className="lg:col-span-1">

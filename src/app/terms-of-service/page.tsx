@@ -11,7 +11,7 @@ export default function TermsOfService() {
     <div className="bg-gradient-to-b from-red-50 via-white to-gray-50 min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
             Terms of Service
           </h1>
@@ -22,7 +22,7 @@ export default function TermsOfService() {
       </div>
 
       {/* Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="space-y-8">
           {/* Introduction */}
           <section className="bg-white rounded-xl shadow-md p-8 border border-gray-200">

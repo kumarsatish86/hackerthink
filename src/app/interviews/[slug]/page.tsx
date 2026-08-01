@@ -130,7 +130,7 @@ export default async function InterviewDetailPage({ params }: PageProps) {
       <article className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow-sm">
-          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {interview.category_name && (
               <Link
                 href={`/interviews/category/${interview.category_slug || interview.category_name.toLowerCase().replace(/\s+/g, '-')}`}
@@ -200,7 +200,7 @@ export default async function InterviewDetailPage({ params }: PageProps) {
 
         {/* Featured Image */}
         {interview.featured_image && (
-          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-lg">
               <Image
                 src={interview.featured_image}
@@ -214,7 +214,7 @@ export default async function InterviewDetailPage({ params }: PageProps) {
         )}
 
         {/* Content */}
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">

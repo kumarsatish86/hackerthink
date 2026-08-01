@@ -212,7 +212,7 @@ export default function ScriptsPage() {
           </div>
       </div>
 
-        <div className="relative w-full px-4 py-24 sm:px-6 lg:px-8 xl:px-10 lg:py-32">
+        <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
             <div className="lg:col-span-6 text-center lg:text-left">
               <div className="space-y-8">
@@ -312,7 +312,7 @@ export default function ScriptsPage() {
         <div className="absolute bottom-0 left-0 right-0 overflow-hidden">
           {/* Floating Elements */}
           <div className="absolute w-full bottom-16 z-10 pointer-events-none">
-            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 relative h-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative h-24">
               {/* Floating code symbols */}
               {['{', '}', '()', '=>', '&&', '||', '*', '#'].map((symbol, index) => (
                 <div 
@@ -373,7 +373,7 @@ export default function ScriptsPage() {
             
             {/* Decorative dots on the wave */}
             <div className="absolute bottom-0 left-0 right-0 w-full h-16 z-10">
-              <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 relative">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 {[...Array(8)].map((_, index) => (
                   <div 
                     key={index}
@@ -394,7 +394,7 @@ export default function ScriptsPage() {
 
       {/* Featured Scripts Section */}
       <div className="bg-gray-50 py-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
               <span className="block">Featured Scripts</span>
@@ -542,7 +542,7 @@ export default function ScriptsPage() {
 
       {/* Why Use Scripts Section */}
       <div className="bg-gradient-to-br from-gray-900 to-indigo-900 text-white py-20">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
               <span className="block">Why Use Scripts?</span>
@@ -640,7 +640,7 @@ export default function ScriptsPage() {
 
       {/* Testimonials Section */}
       <div className="bg-white py-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
               What Our Users Say
@@ -731,7 +731,7 @@ export default function ScriptsPage() {
 
       {/* Scripts List */}
       <div id="scripts" className="bg-gray-50 py-20">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="text-center md:text-left mb-8 md:mb-0">
               <h2 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 sm:text-4xl">

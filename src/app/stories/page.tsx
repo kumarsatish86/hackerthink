@@ -161,7 +161,7 @@ export default function WebStoriesPage() {
 
       {/* Featured section */}
       <section className="py-16 bg-gradient-to-b from-indigo-900 to-indigo-800 text-white">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
@@ -224,7 +224,7 @@ export default function WebStoriesPage() {
       </section>
 
       {/* Main content */}
-      <section id="stories" className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-16">
+      <section id="stories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {error && (
           <div className="mb-8 bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
             <div className="flex">
@@ -357,7 +357,7 @@ export default function WebStoriesPage() {
 
       {/* Newsletter section */}
       <section className="bg-indigo-50 py-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="max-w-3xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
