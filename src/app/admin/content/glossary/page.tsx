@@ -83,12 +83,14 @@ export default function GlossaryManagement() {
   const handleDelete = async (id: string) => {
     try {
       setActionLoading(true);
+      setError(null);
       const response = await fetch(`/api/admin/terms/${id}`, {
         method: 'DELETE',
       });
       
       if (!response.ok) {
-        throw new Error('Failed to delete term');
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Failed to delete term');
       }
       
       // Remove from local state
@@ -96,7 +98,7 @@ export default function GlossaryManagement() {
       setDeleteConfirm(null);
     } catch (err) {
       console.error('Error deleting term:', err);
-      setError('Failed to delete term. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to delete term. Please try again.');
     } finally {
       setActionLoading(false);
     }
@@ -181,6 +183,7 @@ export default function GlossaryManagement() {
 
     try {
       setActionLoading(true);
+      setError(null);
       const response = await fetch('/api/admin/terms/bulk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -191,7 +194,8 @@ export default function GlossaryManagement() {
       });
 
       if (!response.ok) {
-        throw new Error('Bulk action failed');
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Bulk action failed');
       }
 
       // Refresh terms
@@ -199,7 +203,7 @@ export default function GlossaryManagement() {
       setSelectedTerms([]);
     } catch (err) {
       console.error('Error in bulk action:', err);
-      setError('Bulk action failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Bulk action failed. Please try again.');
     } finally {
       setActionLoading(false);
     }

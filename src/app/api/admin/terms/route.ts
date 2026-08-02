@@ -18,6 +18,12 @@ export async function GET() {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    // Ensure publish flag exists for admin list/status toggles
+    await pool.query(`
+      ALTER TABLE glossary_terms
+      ADD COLUMN IF NOT EXISTS published BOOLEAN DEFAULT true
+    `);
+
     // Check if the advanced columns exist
     const { rows: columns } = await pool.query(`
       SELECT column_name 
@@ -37,6 +43,7 @@ export async function GET() {
         slug,
         definition,
         category,
+        published,
         difficulty_level,
         learning_path,
         knowledge_test,
@@ -58,6 +65,7 @@ export async function GET() {
           slug,
           definition,
           category,
+          published,
           created_at,
           updated_at
         FROM glossary_terms
@@ -72,6 +80,7 @@ export async function GET() {
     const terms = rows.map(term => ({
       ...term,
       // Add empty values for missing fields to ensure consistent response shape
+      published: term.published !== false,
       difficulty_level: term.difficulty_level || 'Beginner',
       learning_path: term.learning_path || '',
       knowledge_test: term.knowledge_test || '',

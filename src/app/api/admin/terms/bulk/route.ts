@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -12,12 +10,21 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
 });
 
+async function ensurePublishedColumn(client: { query: typeof pool.query }) {
+  await client.query(`
+    ALTER TABLE glossary_terms
+    ADD COLUMN IF NOT EXISTS published BOOLEAN DEFAULT true
+  `);
+}
+
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     const body = await request.json();
@@ -27,31 +34,45 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
     }
 
+    const ids = termIds
+      .map((id: string | number) => parseInt(String(id), 10))
+      .filter((id: number) => !Number.isNaN(id));
+
+    if (ids.length === 0) {
+      return NextResponse.json({ error: 'No valid term IDs provided' }, { status: 400 });
+    }
+
     const client = await pool.connect();
 
     try {
+      const placeholders = ids.map((_, index) => `$${index + 1}`).join(',');
       let result;
-      const placeholders = termIds.map((_, index) => `$${index + 1}`).join(',');
 
       switch (action) {
         case 'publish':
+          await ensurePublishedColumn(client);
           result = await client.query(
-            `UPDATE terms SET published = true, updated_at = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`,
-            termIds
+            `UPDATE glossary_terms
+             SET published = true, updated_at = CURRENT_TIMESTAMP
+             WHERE id IN (${placeholders})`,
+            ids
           );
           break;
 
         case 'unpublish':
+          await ensurePublishedColumn(client);
           result = await client.query(
-            `UPDATE terms SET published = false, updated_at = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`,
-            termIds
+            `UPDATE glossary_terms
+             SET published = false, updated_at = CURRENT_TIMESTAMP
+             WHERE id IN (${placeholders})`,
+            ids
           );
           break;
 
         case 'delete':
           result = await client.query(
-            `DELETE FROM terms WHERE id IN (${placeholders})`,
-            termIds
+            `DELETE FROM glossary_terms WHERE id IN (${placeholders})`,
+            ids
           );
           break;
 
@@ -62,19 +83,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: `Successfully ${action}ed ${result.rowCount} term${result.rowCount !== 1 ? 's' : ''}`,
-        affectedRows: result.rowCount
+        affectedRows: result.rowCount,
       });
-
     } finally {
       client.release();
     }
-
   } catch (error) {
     console.error('Error in bulk terms action:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
 }
-
