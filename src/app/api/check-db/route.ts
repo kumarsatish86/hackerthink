@@ -10,7 +10,8 @@ const testPool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
   max: 1, // Use only one connection
   idleTimeoutMillis: 10000, // Close idle connections after 10 seconds
-  connectionTimeoutMillis: 5000, // Timeout after 5 seconds
+  connectionTimeoutMillis: 5000, // Timeout after 5 seconds,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
 
 export async function GET() {

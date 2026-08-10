@@ -12,7 +12,8 @@ try {
     password: process.env.DB_PASSWORD || 'Admin1234',
     database: process.env.DB_NAME || 'hackerthink',
     connectionTimeoutMillis: 5000, // 5 second timeout
-    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
+    idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
   });
 } catch (error) {
   console.error('[API] Error initializing database pool:', error);

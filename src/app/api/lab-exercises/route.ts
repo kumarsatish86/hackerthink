@@ -13,7 +13,8 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'hackerthink',
   max: 20, // Set max pool size
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection not established
+  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection not established,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
 
 // Test the database connection only when the API route is actually called

@@ -2,6 +2,7 @@
 import { Pool } from 'pg';
 
 // Create a database connection pool using environment variables
+// DB_SSL=true enables SSL for Neon/Vercel; leave unset/false for local Postgres.
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT || 5432),
@@ -54,4 +55,4 @@ export async function end() {
 }
 
 // Default export for convenience
-export default { query, queryOne, transaction, end }; 
+export default { query, queryOne, transaction, end };

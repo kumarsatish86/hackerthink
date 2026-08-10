@@ -15,6 +15,7 @@ const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'Admin1234',
   database: process.env.DB_NAME || 'hackerthink',
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
 
 // PUT /api/admin/web-stories/[id] - Update web story
