@@ -8,6 +8,7 @@ import { isDatabaseAssetStorageEnabled } from '@/lib/assetStorageSettings';
 import { siteAssetPublicUrl, upsertSiteAsset } from '@/lib/siteAssets';
 import { invalidateSiteSettingsCache } from '@/lib/siteSettings';
 import { padLogoBuffer } from '@/lib/padLogoImage';
+import { toServableSiteAssetPath } from '@/lib/siteAssetPath';
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -106,7 +107,12 @@ export async function GET() {
     `);
 
     const settings = rows.reduce((acc, setting) => {
-      acc[setting.setting_key] = setting.setting_value;
+      const key = setting.setting_key as string;
+      const value = setting.setting_value as string;
+      acc[key] =
+        key === 'logo_path' || key === 'favicon_path' || key === 'footer_logo_path'
+          ? toServableSiteAssetPath(value)
+          : value;
       return acc;
     }, {} as Record<string, string>);
 
@@ -169,11 +175,13 @@ export async function POST(request: NextRequest) {
         await upsertSiteAsset(key, mime, buffer, file.name);
         return siteAssetPublicUrl(key, version);
       }
+      // Write under public/images, but expose via API so VPS/standalone can serve
+      // files uploaded after deploy (static /images/* often 404s).
       const fileName = `${key}-${version}${ext}`;
       const dir = join(process.cwd(), 'public', 'images');
       await ensureDir(dir);
       await writeFile(join(dir, fileName), buffer);
-      return `/images/${fileName}`;
+      return `/api/site-images/${fileName}`;
     };
 
     const logoFile = formData.get('logo') as File | null;
@@ -280,16 +288,24 @@ export async function POST(request: NextRequest) {
       client.release();
     }
 
+    // Return full persisted settings (not only newly uploaded paths)
+    const { rows: freshRows } = await pool.query(`
+      SELECT setting_key, setting_value FROM site_settings
+      WHERE setting_key IN ('logo_path', 'favicon_path', 'footer_logo_path', 'primary_color', 'secondary_color', 'footer_text', 'site_name')
+    `);
+    const fresh = freshRows.reduce((acc, row) => {
+      const key = row.setting_key as string;
+      const value = row.setting_value as string;
+      acc[key] =
+        key === 'logo_path' || key === 'favicon_path' || key === 'footer_logo_path'
+          ? toServableSiteAssetPath(value)
+          : value;
+      return acc;
+    }, {} as Record<string, string>);
+
     return NextResponse.json({
       message: 'Appearance settings updated successfully',
-      settings: {
-        logo_path: logoPath,
-        favicon_path: faviconPath,
-        footer_logo_path: footerLogoPath,
-        primary_color: primaryColor,
-        secondary_color: secondaryColor,
-        footer_text: footerText,
-      },
+      settings: fresh,
       storage: {
         mode: useDatabase ? 'database' : 'filesystem',
         databaseEnabled: useDatabase,

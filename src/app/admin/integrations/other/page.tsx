@@ -394,7 +394,8 @@ export default function OtherIntegrationsPage() {
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 space-y-2">
                     <p>
                       <strong>Inactive (default):</strong> logo and favicon uploads are saved to the
-                      server disk under <code className="bg-white px-1 rounded">/public/images</code>.
+                      server disk under <code className="bg-white px-1 rounded">/public/images</code>{' '}
+                      and served via <code className="bg-white px-1 rounded">/api/site-images/…</code>.
                       Use this on a normal VPS or local server.
                     </p>
                     <p>

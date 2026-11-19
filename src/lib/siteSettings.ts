@@ -2,12 +2,23 @@
  * Site settings helpers — prefer direct DB on the server (no HTTP loopback).
  */
 import { query } from '@/lib/db';
+import { toServableSiteAssetPath } from '@/lib/siteAssetPath';
 
 const DEFAULTS: Record<string, string> = {
   site_name: 'HackerThink',
   site_description: 'Your comprehensive platform for AI news, tools, learning, and model training',
-  favicon_path: '/favicon.ico',
+  favicon_path: '/api/site-favicon',
 };
+
+const ASSET_KEYS = new Set(['logo_path', 'favicon_path', 'footer_logo_path']);
+
+function normalizeSettings(settings: Record<string, string>): Record<string, string> {
+  const out: Record<string, string> = { ...settings };
+  for (const key of ASSET_KEYS) {
+    if (out[key]) out[key] = toServableSiteAssetPath(out[key]);
+  }
+  return out;
+}
 
 type CacheEntry = { expires: number; value: Record<string, string> };
 const cache = new Map<string, CacheEntry>();
@@ -43,11 +54,13 @@ export async function getSiteSettingsFromDb(keys: string[] = []): Promise<Record
     if (keys.length > 0) {
       const filtered: Record<string, string> = {};
       for (const k of keys) filtered[k] = settings[k] ?? DEFAULTS[k] ?? '';
-      cache.set(key, { expires: Date.now() + TTL_MS, value: filtered });
-      return filtered;
+      const normalized = normalizeSettings(filtered);
+      cache.set(key, { expires: Date.now() + TTL_MS, value: normalized });
+      return normalized;
     }
-    cache.set(key, { expires: Date.now() + TTL_MS, value: settings });
-    return settings;
+    const normalized = normalizeSettings(settings);
+    cache.set(key, { expires: Date.now() + TTL_MS, value: normalized });
+    return normalized;
   } catch (error) {
     console.error('[getSiteSettingsFromDb]', error);
     if (keys.length > 0) {

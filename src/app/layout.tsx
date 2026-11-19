@@ -18,7 +18,11 @@ function iconTypeFromPath(path: string): string {
   if (clean.endsWith('.webp')) return 'image/webp';
   if (clean.endsWith('.svg')) return 'image/svg+xml';
   if (clean.endsWith('.ico')) return 'image/x-icon';
-  if (clean.includes('/api/site-assets/favicon') || clean.includes('/api/site-favicon')) {
+  if (
+    clean.includes('/api/site-assets/favicon') ||
+    clean.includes('/api/site-favicon') ||
+    clean.includes('/api/site-images/favicon')
+  ) {
     return 'image/x-icon';
   }
   return 'image/x-icon';

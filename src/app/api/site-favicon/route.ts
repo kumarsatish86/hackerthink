@@ -4,6 +4,7 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { getSiteSettingsFromDb } from '@/lib/siteSettings';
 import { getSiteAsset } from '@/lib/siteAssets';
+import { siteAssetDiskRelativePath } from '@/lib/siteAssetPath';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,8 +54,19 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Filesystem path from settings (e.g. /images/favicon-....png)
-    if (faviconPath.startsWith('/') && !faviconPath.startsWith('/api/')) {
+    // Filesystem path from settings (/images/... or /api/site-images/...)
+    const diskRel = siteAssetDiskRelativePath(faviconPath);
+    if (diskRel) {
+      const buf = await readPublicFile(`/${diskRel}`);
+      if (buf) {
+        return new NextResponse(buf, {
+          headers: {
+            'Content-Type': mimeFromPath(faviconPath),
+            'Cache-Control': 'public, max-age=3600, must-revalidate',
+          },
+        });
+      }
+    } else if (faviconPath.startsWith('/') && !faviconPath.startsWith('/api/')) {
       const buf = await readPublicFile(faviconPath);
       if (buf) {
         return new NextResponse(buf, {

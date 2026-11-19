@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { toServableSiteAssetPath } from '@/lib/siteAssetPath';
+
+const ASSET_KEYS = new Set(['logo_path', 'favicon_path', 'footer_logo_path']);
+
+function normalizeSettings(settings: Record<string, string>): Record<string, string> {
+  const out: Record<string, string> = { ...settings };
+  for (const key of ASSET_KEYS) {
+    if (out[key]) out[key] = toServableSiteAssetPath(out[key]);
+  }
+  return out;
+}
 
 // Mark the route as dynamic
 export const dynamic = 'force-dynamic';
@@ -61,12 +72,12 @@ export async function GET(request: NextRequest) {
       const defaults: Record<string, string> = {
         site_name: 'HackerThink',
         site_description: 'Learn Linux concepts, scripts, and tutorials',
-        favicon_path: '/favicon.ico'
+        favicon_path: '/api/site-favicon'
       };
       return NextResponse.json(defaults);
     }
     
-    return NextResponse.json(settings);
+    return NextResponse.json(normalizeSettings(settings));
   } catch (error) {
     console.error('[Settings API] Error fetching settings:', error);
     
