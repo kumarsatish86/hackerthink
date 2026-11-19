@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
+import { ensureAssetStorageIntegration } from '@/lib/assetStorageSettings';
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -13,11 +14,15 @@ const pool = new Pool({
 // GET integrations by provider
 export async function GET(
   request: NextRequest,
-  { params }: { params: { provider: string } }
+  { params }: { params: Promise<{ provider: string }> }
 ) {
-  const { provider } = params;
+  const { provider } = await params;
   
   try {
+    if (provider === 'other') {
+      await ensureAssetStorageIntegration();
+    }
+
     const client = await pool.connect();
     
     try {
@@ -37,4 +42,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

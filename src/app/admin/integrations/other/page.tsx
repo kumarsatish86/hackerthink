@@ -390,6 +390,28 @@ export default function OtherIntegrationsPage() {
                   </>
                 )}
                 
+                {integration.type === 'asset_storage' && (
+                  <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 space-y-2">
+                    <p>
+                      <strong>Inactive (default):</strong> logo and favicon uploads are saved to the
+                      server disk under <code className="bg-white px-1 rounded">/public/images</code>.
+                      Use this on a normal VPS or local server.
+                    </p>
+                    <p>
+                      <strong>Active:</strong> uploads are stored in the database and served from{' '}
+                      <code className="bg-white px-1 rounded">/api/site-assets/…</code>. Enable this
+                      only on hosts without a persistent filesystem (for example Vercel).
+                    </p>
+                    <p className="text-gray-500">
+                      After changing this setting, re-upload logo/favicon in{' '}
+                      <a href="/admin/settings/appearance" className="text-red-600 underline">
+                        Appearance Settings
+                      </a>
+                      .
+                    </p>
+                  </div>
+                )}
+
                 {integration.type === 'custom' && (
                   <>
                     <div>

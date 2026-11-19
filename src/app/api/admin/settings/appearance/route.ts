@@ -4,8 +4,10 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { Pool } from 'pg';
+import { isDatabaseAssetStorageEnabled } from '@/lib/assetStorageSettings';
+import { siteAssetPublicUrl, upsertSiteAsset } from '@/lib/siteAssets';
+import { invalidateSiteSettingsCache } from '@/lib/siteSettings';
 
-// Configure PostgreSQL connection
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
@@ -15,18 +17,15 @@ const pool = new Pool({
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
 
-// Ensure the directory exists
 async function ensureDir(dirPath: string) {
   if (!existsSync(dirPath)) {
     await mkdir(dirPath, { recursive: true });
   }
 }
 
-// Check if site_settings table exists, create if not
 async function ensureSiteSettingsTable() {
   const client = await pool.connect();
   try {
-    // Check if the table exists
     const tableCheck = await client.query(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
@@ -34,9 +33,8 @@ async function ensureSiteSettingsTable() {
         AND table_name = 'site_settings'
       );
     `);
-    
+
     if (!tableCheck.rows[0].exists) {
-      console.log('Creating site_settings table...');
       await client.query(`
         CREATE TABLE site_settings (
           id SERIAL PRIMARY KEY,
@@ -48,7 +46,6 @@ async function ensureSiteSettingsTable() {
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )
       `);
-      console.log('site_settings table created successfully');
     }
     return true;
   } catch (error) {
@@ -59,30 +56,54 @@ async function ensureSiteSettingsTable() {
   }
 }
 
+function getFileExtension(filename: string): string {
+  const ext = filename.split('.').pop();
+  return ext ? `.${ext}` : '';
+}
+
+function mimeFromFile(file: File, fallback: string): string {
+  if (file.type) return file.type;
+  const ext = getFileExtension(file.name).toLowerCase();
+  const map: Record<string, string> = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.webp': 'image/webp',
+  };
+  return map[ext] || fallback;
+}
+
 export async function GET() {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
-    // Fetch appearance settings from database
-    console.log('Fetching appearance settings from database');
+    await ensureSiteSettingsTable();
+
     const { rows } = await pool.query(`
       SELECT * FROM site_settings 
       WHERE setting_key IN ('logo_path', 'favicon_path', 'primary_color', 'secondary_color', 'footer_text', 'site_name')
     `);
 
-    console.log('Found settings:', rows);
-
-    // Convert to a more user-friendly format
     const settings = rows.reduce((acc, setting) => {
       acc[setting.setting_key] = setting.setting_value;
       return acc;
     }, {} as Record<string, string>);
 
-    return NextResponse.json({ settings });
+    const databaseStorage = await isDatabaseAssetStorageEnabled();
+
+    return NextResponse.json({
+      settings,
+      storage: {
+        mode: databaseStorage ? 'database' : 'filesystem',
+        databaseEnabled: databaseStorage,
+      },
+    });
   } catch (error) {
     console.error('Error fetching appearance settings:', error);
     return NextResponse.json(
@@ -94,107 +115,113 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
     const session = await auth();
     if (!session) {
       return NextResponse.json({ message: 'Unauthorized - Please sign in to continue' }, { status: 401 });
     }
 
+    await ensureSiteSettingsTable();
+
     const formData = await request.formData();
-    
-    // Get form data values
     const primaryColor = formData.get('primaryColor') as string;
     const secondaryColor = formData.get('secondaryColor') as string;
     const footerText = formData.get('footerText') as string;
-    
-    console.log('Received form data:', { primaryColor, secondaryColor, footerText });
-    
-    // Initialize paths as empty
+
     let logoPath: string | null = null;
     let faviconPath: string | null = null;
+    const version = Date.now();
+    const useDatabase = await isDatabaseAssetStorageEnabled();
 
-    // Handle logo upload if a file is provided
     const logoFile = formData.get('logo') as File | null;
     if (logoFile && logoFile.size > 0) {
       try {
-        console.log('Processing logo file:', logoFile.name, logoFile.size);
         const logoBuffer = Buffer.from(await logoFile.arrayBuffer());
-        const logoFileName = `logo-${Date.now()}${getFileExtension(logoFile.name)}`;
-        const logoDir = join(process.cwd(), 'public', 'images');
-        
-        await ensureDir(logoDir);
-        const logoFullPath = join(logoDir, logoFileName);
-        await writeFile(logoFullPath, logoBuffer);
-        
-        logoPath = `/images/${logoFileName}`;
-        console.log('Logo saved to:', logoPath);
+        if (useDatabase) {
+          const mime = mimeFromFile(logoFile, 'image/png');
+          await upsertSiteAsset('logo', mime, logoBuffer, logoFile.name);
+          logoPath = siteAssetPublicUrl('logo', version);
+        } else {
+          const logoFileName = `logo-${version}${getFileExtension(logoFile.name)}`;
+          const logoDir = join(process.cwd(), 'public', 'images');
+          await ensureDir(logoDir);
+          await writeFile(join(logoDir, logoFileName), logoBuffer);
+          logoPath = `/images/${logoFileName}`;
+        }
       } catch (fileError) {
         console.error('Error saving logo file:', fileError);
         return NextResponse.json(
-          { message: 'Error saving logo file', details: String(fileError) },
+          {
+            message: useDatabase
+              ? 'Error saving logo to database'
+              : 'Error saving logo file to disk. On serverless hosts, enable Database Asset Storage under Integrations → Other.',
+            details: String(fileError),
+          },
           { status: 500 }
         );
       }
     }
 
-    // Handle favicon upload if a file is provided
     const faviconFile = formData.get('favicon') as File | null;
     if (faviconFile && faviconFile.size > 0) {
       try {
-        console.log('Processing favicon file:', faviconFile.name, faviconFile.size);
         const faviconBuffer = Buffer.from(await faviconFile.arrayBuffer());
-        const faviconFileName = `favicon${getFileExtension(faviconFile.name)}`;
-        const faviconDir = join(process.cwd(), 'public');
-        
-        await ensureDir(faviconDir);
-        const faviconFullPath = join(faviconDir, faviconFileName);
-        await writeFile(faviconFullPath, faviconBuffer);
-        
-        faviconPath = `/${faviconFileName}`;
-        console.log('Favicon saved to:', faviconPath);
+        if (useDatabase) {
+          const mime = mimeFromFile(faviconFile, 'image/x-icon');
+          await upsertSiteAsset('favicon', mime, faviconBuffer, faviconFile.name);
+          faviconPath = siteAssetPublicUrl('favicon', version);
+        } else {
+          const faviconFileName = `favicon-${version}${getFileExtension(faviconFile.name)}`;
+          const faviconDir = join(process.cwd(), 'public', 'images');
+          await ensureDir(faviconDir);
+          await writeFile(join(faviconDir, faviconFileName), faviconBuffer);
+          faviconPath = `/images/${faviconFileName}`;
+        }
       } catch (fileError) {
         console.error('Error saving favicon file:', fileError);
         return NextResponse.json(
-          { message: 'Error saving favicon file', details: String(fileError) },
+          {
+            message: useDatabase
+              ? 'Error saving favicon to database'
+              : 'Error saving favicon file to disk. On serverless hosts, enable Database Asset Storage under Integrations → Other.',
+            details: String(fileError),
+          },
           { status: 500 }
         );
       }
     }
 
-    // Update settings in database
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
 
-      // Function to upsert a setting
       const upsertSetting = async (key: string, value: string) => {
-        if (value) {
-          console.log(`Upserting setting: ${key} = ${value}`);
-          
-          // Check if the setting exists first
-          const exists = await client.query(`
-            SELECT COUNT(*) FROM site_settings 
+        if (!value) return;
+
+        const exists = await client.query(
+          `SELECT COUNT(*) FROM site_settings WHERE setting_key = $1`,
+          [key]
+        );
+
+        if (parseInt(exists.rows[0].count) > 0) {
+          await client.query(
+            `
+            UPDATE site_settings 
+            SET setting_value = $2, updated_at = CURRENT_TIMESTAMP
             WHERE setting_key = $1
-          `, [key]);
-          
-          if (parseInt(exists.rows[0].count) > 0) {
-            // Update existing setting
-            await client.query(`
-              UPDATE site_settings 
-              SET setting_value = $2, updated_at = CURRENT_TIMESTAMP
-              WHERE setting_key = $1
-            `, [key, value]);
-          } else {
-            // Insert new setting
-            await client.query(`
-              INSERT INTO site_settings (setting_key, setting_value, category, setting_group)
-              VALUES ($1, $2, 'appearance', 'appearance')
-            `, [key, value]);
-          }
+            `,
+            [key, value]
+          );
+        } else {
+          await client.query(
+            `
+            INSERT INTO site_settings (setting_key, setting_value, setting_group)
+            VALUES ($1, $2, 'appearance')
+            `,
+            [key, value]
+          );
         }
       };
 
-      // Update all the settings
       if (logoPath) await upsertSetting('logo_path', logoPath);
       if (faviconPath) await upsertSetting('favicon_path', faviconPath);
       if (primaryColor) await upsertSetting('primary_color', primaryColor);
@@ -202,7 +229,7 @@ export async function POST(request: NextRequest) {
       if (footerText) await upsertSetting('footer_text', footerText);
 
       await client.query('COMMIT');
-      console.log('Database settings updated successfully');
+      invalidateSiteSettingsCache();
     } catch (dbError) {
       await client.query('ROLLBACK');
       console.error('Database error:', dbError);
@@ -211,15 +238,19 @@ export async function POST(request: NextRequest) {
       client.release();
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'Appearance settings updated successfully',
       settings: {
         logo_path: logoPath,
         favicon_path: faviconPath,
         primary_color: primaryColor,
         secondary_color: secondaryColor,
-        footer_text: footerText
-      }
+        footer_text: footerText,
+      },
+      storage: {
+        mode: useDatabase ? 'database' : 'filesystem',
+        databaseEnabled: useDatabase,
+      },
     });
   } catch (error) {
     console.error('Error updating appearance settings:', error);
@@ -229,9 +260,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-// Helper function to get file extension
-function getFileExtension(filename: string): string {
-  const ext = filename.split('.').pop();
-  return ext ? `.${ext}` : '';
-} 

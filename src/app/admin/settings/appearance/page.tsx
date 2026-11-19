@@ -18,6 +18,7 @@ export default function AppearanceSettings() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [storageMode, setStorageMode] = useState<'filesystem' | 'database'>('filesystem');
   
   const logoInputRef = useRef<HTMLInputElement>(null);
   const faviconInputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +54,10 @@ export default function AppearanceSettings() {
           if (data.settings.favicon_path) {
             setFaviconPreview(data.settings.favicon_path);
           }
+        }
+
+        if (data.storage?.mode === 'database' || data.storage?.mode === 'filesystem') {
+          setStorageMode(data.storage.mode);
         }
       } catch (error) {
         console.error('Error loading settings:', error);
@@ -103,7 +108,7 @@ export default function AppearanceSettings() {
     if (!file) return;
 
     // Validate file type
-    if (!file.type.match(/image\/(x-icon|png|svg\+xml)/)) {
+    if (file.type && !file.type.match(/image\/(x-icon|vnd\.microsoft\.icon|png|svg\+xml|ico)/i) && !/\.(ico|png|svg)$/i.test(file.name)) {
       setErrorMessage('Favicon must be an ICO, PNG, or SVG file');
       return;
     }
@@ -162,8 +167,20 @@ export default function AppearanceSettings() {
       
       console.log('Settings saved successfully:', data);
       setSuccessMessage('Appearance settings saved successfully!');
+
+      if (data.settings?.logo_path) {
+        setLogoPreview(data.settings.logo_path);
+        setSettings((prev) => ({ ...prev, siteLogo: data.settings.logo_path }));
+      }
+      if (data.settings?.favicon_path) {
+        setFaviconPreview(data.settings.favicon_path);
+        setSettings((prev) => ({ ...prev, favicon: data.settings.favicon_path }));
+      }
+
+      if (logoInputRef.current) logoInputRef.current.value = '';
+      if (faviconInputRef.current) faviconInputRef.current.value = '';
       
-      // Refresh the page after 1 second to show the updated logo/favicon
+      // Refresh so public layout picks up new favicon/logo paths
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -200,6 +217,21 @@ export default function AppearanceSettings() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white shadow rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Site Identity</h2>
+
+            <div className={`mb-6 rounded-md border px-4 py-3 text-sm ${
+              storageMode === 'database'
+                ? 'border-amber-200 bg-amber-50 text-amber-900'
+                : 'border-gray-200 bg-gray-50 text-gray-700'
+            }`}>
+              Upload storage:{' '}
+              <strong>{storageMode === 'database' ? 'Database' : 'Local filesystem'}</strong>
+              {' · '}
+              Change this under{' '}
+              <a href="/admin/integrations/other" className="text-red-600 underline">
+                Integrations → Other → Database Asset Storage
+              </a>
+              .
+            </div>
             
             {/* Logo Upload */}
             <div className="mb-6">
@@ -214,6 +246,7 @@ export default function AppearanceSettings() {
                       src={logoPreview} 
                       alt="Logo Preview" 
                       className="max-w-full max-h-full object-contain"
+                      onError={() => setLogoPreview(null)}
                     />
                   ) : (
                     <div className="text-gray-400 flex flex-col items-center justify-center">
@@ -257,6 +290,7 @@ export default function AppearanceSettings() {
                       src={faviconPreview} 
                       alt="Favicon Preview" 
                       className="max-w-full max-h-full object-contain"
+                      onError={() => setFaviconPreview(null)}
                     />
                   ) : (
                     <div className="text-gray-400 flex flex-col items-center justify-center">

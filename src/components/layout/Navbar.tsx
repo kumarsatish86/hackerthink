@@ -21,7 +21,7 @@ export function Navbar() {
     logo_path: '',
     site_name: 'HackerThink'
   });
-  const [logoLoaded, setLogoLoaded] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const [breakingNews, setBreakingNews] = useState<Array<{ title: string; slug: string; sourceType?: string }>>([]);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const moreDropdownRef = useRef<HTMLDivElement>(null);
@@ -38,6 +38,7 @@ export function Navbar() {
           logo_path: settings.logo_path || '',
           site_name: settings.site_name || 'HackerThink'
         });
+        setLogoFailed(false);
       } catch (error) {
         console.error('Error fetching site settings:', error);
       }
@@ -140,9 +141,19 @@ export function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <span className="text-xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
-                HackerThink
-              </span>
+              {siteSettings.logo_path && !logoFailed ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={siteSettings.logo_path}
+                  alt={siteSettings.site_name || 'HackerThink'}
+                  className="h-8 w-auto max-w-[180px] object-contain"
+                  onError={() => setLogoFailed(true)}
+                />
+              ) : (
+                <span className="text-xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
+                  {siteSettings.site_name || 'HackerThink'}
+                </span>
+              )}
             </Link>
           </div>
 
