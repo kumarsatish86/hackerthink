@@ -137,16 +137,16 @@ export function Navbar() {
       {/* Main Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 md:h-[4.25rem]">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center py-1">
+          <div className="flex justify-between items-center min-h-[4.75rem] md:min-h-[5.25rem] py-2">
+          {/* Logo — sized for ~500×75 assets */}
+          <div className="flex-shrink-0 max-w-[500px]">
+            <Link href="/" className="flex items-center">
               {siteSettings.logo_path && !logoFailed ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={siteSettings.logo_path}
                   alt={siteSettings.site_name || 'HackerThink'}
-                  className="h-10 md:h-11 w-auto max-w-[360px] md:max-w-[480px] object-contain object-left"
+                  className="h-[56px] md:h-[75px] w-auto max-w-[500px] object-contain object-left"
                   onError={() => setLogoFailed(true)}
                 />
               ) : (

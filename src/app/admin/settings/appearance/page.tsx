@@ -308,10 +308,10 @@ export default function AppearanceSettings() {
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 480×80 pixels (wide). Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
+                    Recommended size: 500×75 pixels (wide). Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
                   </p>
                   <p className="text-xs text-gray-500">
-                    This logo appears in the site header (up to ~480px wide).
+                    This logo appears in the site header at up to 500×75 pixels.
                   </p>
                 </div>
               </div>
@@ -352,7 +352,7 @@ export default function AppearanceSettings() {
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 420×80 pixels. Max 5MB. Use a light/white version for the dark footer.
+                    Recommended size: 500×75 pixels. Max 5MB. Use a light/white version for the dark footer.
                   </p>
                   <p className="text-xs text-gray-500">
                     Optional. If empty, the footer falls back to the site logo or site name text.

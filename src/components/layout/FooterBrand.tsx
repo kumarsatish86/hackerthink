@@ -42,7 +42,7 @@ export default function FooterBrand() {
           <img
             src={footerLogo}
             alt={siteName}
-            className="h-12 md:h-14 w-auto max-w-[320px] md:max-w-[420px] object-contain object-left"
+            className="h-[56px] md:h-[75px] w-auto max-w-[500px] object-contain object-left"
             onError={() => setLogoFailed(true)}
           />
         ) : (

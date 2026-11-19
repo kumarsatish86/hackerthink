@@ -40,11 +40,25 @@ async function ensureSiteSettingsTable() {
           id SERIAL PRIMARY KEY,
           setting_key VARCHAR(100) NOT NULL UNIQUE,
           setting_value TEXT,
+          category VARCHAR(50) NOT NULL DEFAULT 'appearance',
           setting_group VARCHAR(50),
           description TEXT,
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )
+      `);
+    } else {
+      // Production DBs may require NOT NULL category
+      await client.query(`
+        ALTER TABLE site_settings
+        ADD COLUMN IF NOT EXISTS category VARCHAR(50) DEFAULT 'appearance'
+      `);
+      await client.query(`
+        UPDATE site_settings SET category = 'appearance' WHERE category IS NULL
+      `);
+      await client.query(`
+        ALTER TABLE site_settings
+        ALTER COLUMN category SET DEFAULT 'appearance'
       `);
     }
     return true;
@@ -227,10 +241,11 @@ export async function POST(request: NextRequest) {
             [key, value]
           );
         } else {
+          // Production DB requires NOT NULL `category` (and may have setting_group)
           await client.query(
             `
-            INSERT INTO site_settings (setting_key, setting_value, setting_group)
-            VALUES ($1, $2, 'appearance')
+            INSERT INTO site_settings (setting_key, setting_value, category, setting_group)
+            VALUES ($1, $2, 'appearance', 'appearance')
             `,
             [key, value]
           );
