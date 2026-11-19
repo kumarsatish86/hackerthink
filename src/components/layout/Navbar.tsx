@@ -146,7 +146,7 @@ export function Navbar() {
                 <img
                   src={siteSettings.logo_path}
                   alt={siteSettings.site_name || 'HackerThink'}
-                  className="h-11 md:h-12 w-auto max-w-[220px] md:max-w-[280px] object-contain object-left"
+                  className="h-10 md:h-11 w-auto max-w-[360px] md:max-w-[480px] object-contain object-left"
                   onError={() => setLogoFailed(true)}
                 />
               ) : (

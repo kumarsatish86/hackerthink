@@ -87,7 +87,7 @@ export async function GET() {
 
     const { rows } = await pool.query(`
       SELECT * FROM site_settings 
-      WHERE setting_key IN ('logo_path', 'favicon_path', 'primary_color', 'secondary_color', 'footer_text', 'site_name')
+      WHERE setting_key IN ('logo_path', 'favicon_path', 'footer_logo_path', 'primary_color', 'secondary_color', 'footer_text', 'site_name')
     `);
 
     const settings = rows.reduce((acc, setting) => {
@@ -129,24 +129,32 @@ export async function POST(request: NextRequest) {
 
     let logoPath: string | null = null;
     let faviconPath: string | null = null;
+    let footerLogoPath: string | null = null;
     const version = Date.now();
     const useDatabase = await isDatabaseAssetStorageEnabled();
+
+    const saveImageAsset = async (
+      file: File,
+      key: 'logo' | 'favicon' | 'footer_logo',
+      fallbackMime: string
+    ): Promise<string> => {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      if (useDatabase) {
+        const mime = mimeFromFile(file, fallbackMime);
+        await upsertSiteAsset(key, mime, buffer, file.name);
+        return siteAssetPublicUrl(key, version);
+      }
+      const fileName = `${key}-${version}${getFileExtension(file.name)}`;
+      const dir = join(process.cwd(), 'public', 'images');
+      await ensureDir(dir);
+      await writeFile(join(dir, fileName), buffer);
+      return `/images/${fileName}`;
+    };
 
     const logoFile = formData.get('logo') as File | null;
     if (logoFile && logoFile.size > 0) {
       try {
-        const logoBuffer = Buffer.from(await logoFile.arrayBuffer());
-        if (useDatabase) {
-          const mime = mimeFromFile(logoFile, 'image/png');
-          await upsertSiteAsset('logo', mime, logoBuffer, logoFile.name);
-          logoPath = siteAssetPublicUrl('logo', version);
-        } else {
-          const logoFileName = `logo-${version}${getFileExtension(logoFile.name)}`;
-          const logoDir = join(process.cwd(), 'public', 'images');
-          await ensureDir(logoDir);
-          await writeFile(join(logoDir, logoFileName), logoBuffer);
-          logoPath = `/images/${logoFileName}`;
-        }
+        logoPath = await saveImageAsset(logoFile, 'logo', 'image/png');
       } catch (fileError) {
         console.error('Error saving logo file:', fileError);
         return NextResponse.json(
@@ -164,18 +172,7 @@ export async function POST(request: NextRequest) {
     const faviconFile = formData.get('favicon') as File | null;
     if (faviconFile && faviconFile.size > 0) {
       try {
-        const faviconBuffer = Buffer.from(await faviconFile.arrayBuffer());
-        if (useDatabase) {
-          const mime = mimeFromFile(faviconFile, 'image/x-icon');
-          await upsertSiteAsset('favicon', mime, faviconBuffer, faviconFile.name);
-          faviconPath = siteAssetPublicUrl('favicon', version);
-        } else {
-          const faviconFileName = `favicon-${version}${getFileExtension(faviconFile.name)}`;
-          const faviconDir = join(process.cwd(), 'public', 'images');
-          await ensureDir(faviconDir);
-          await writeFile(join(faviconDir, faviconFileName), faviconBuffer);
-          faviconPath = `/images/${faviconFileName}`;
-        }
+        faviconPath = await saveImageAsset(faviconFile, 'favicon', 'image/x-icon');
       } catch (fileError) {
         console.error('Error saving favicon file:', fileError);
         return NextResponse.json(
@@ -183,6 +180,24 @@ export async function POST(request: NextRequest) {
             message: useDatabase
               ? 'Error saving favicon to database'
               : 'Error saving favicon file to disk. On serverless hosts, enable Database Asset Storage under Integrations → Other.',
+            details: String(fileError),
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    const footerLogoFile = formData.get('footerLogo') as File | null;
+    if (footerLogoFile && footerLogoFile.size > 0) {
+      try {
+        footerLogoPath = await saveImageAsset(footerLogoFile, 'footer_logo', 'image/png');
+      } catch (fileError) {
+        console.error('Error saving footer logo file:', fileError);
+        return NextResponse.json(
+          {
+            message: useDatabase
+              ? 'Error saving footer logo to database'
+              : 'Error saving footer logo file to disk. On serverless hosts, enable Database Asset Storage under Integrations → Other.',
             details: String(fileError),
           },
           { status: 500 }
@@ -224,6 +239,7 @@ export async function POST(request: NextRequest) {
 
       if (logoPath) await upsertSetting('logo_path', logoPath);
       if (faviconPath) await upsertSetting('favicon_path', faviconPath);
+      if (footerLogoPath) await upsertSetting('footer_logo_path', footerLogoPath);
       if (primaryColor) await upsertSetting('primary_color', primaryColor);
       if (secondaryColor) await upsertSetting('secondary_color', secondaryColor);
       if (footerText) await upsertSetting('footer_text', footerText);
@@ -243,6 +259,7 @@ export async function POST(request: NextRequest) {
       settings: {
         logo_path: logoPath,
         favicon_path: faviconPath,
+        footer_logo_path: footerLogoPath,
         primary_color: primaryColor,
         secondary_color: secondaryColor,
         footer_text: footerText,

@@ -14,6 +14,7 @@ export default function AppearanceSettings() {
 
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+  const [footerLogoPreview, setFooterLogoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -22,6 +23,7 @@ export default function AppearanceSettings() {
   
   const logoInputRef = useRef<HTMLInputElement>(null);
   const faviconInputRef = useRef<HTMLInputElement>(null);
+  const footerLogoInputRef = useRef<HTMLInputElement>(null);
 
   // Load existing settings on mount
   useEffect(() => {
@@ -53,6 +55,10 @@ export default function AppearanceSettings() {
           
           if (data.settings.favicon_path) {
             setFaviconPreview(data.settings.favicon_path);
+          }
+
+          if (data.settings.footer_logo_path) {
+            setFooterLogoPreview(data.settings.footer_logo_path);
           }
         }
 
@@ -98,6 +104,28 @@ export default function AppearanceSettings() {
     const reader = new FileReader();
     reader.onload = (e) => {
       setLogoPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    setErrorMessage('');
+  };
+
+  const handleFooterLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.match(/image\/(jpeg|png|svg\+xml|gif|webp)/)) {
+      setErrorMessage('Footer logo must be an image file (JPEG, PNG, SVG, GIF, or WEBP)');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMessage('Footer logo file size must be under 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setFooterLogoPreview(ev.target?.result as string);
     };
     reader.readAsDataURL(file);
     setErrorMessage('');
@@ -155,6 +183,10 @@ export default function AppearanceSettings() {
         formData.append('favicon', faviconInputRef.current.files[0]);
       }
 
+      if (footerLogoInputRef.current?.files?.[0]) {
+        formData.append('footerLogo', footerLogoInputRef.current.files[0]);
+      }
+
       console.log('Submitting settings form data...');
 
       // Send to API endpoint
@@ -180,9 +212,13 @@ export default function AppearanceSettings() {
         setFaviconPreview(data.settings.favicon_path);
         setSettings((prev) => ({ ...prev, favicon: data.settings.favicon_path }));
       }
+      if (data.settings?.footer_logo_path) {
+        setFooterLogoPreview(data.settings.footer_logo_path);
+      }
 
       if (logoInputRef.current) logoInputRef.current.value = '';
       if (faviconInputRef.current) faviconInputRef.current.value = '';
+      if (footerLogoInputRef.current) footerLogoInputRef.current.value = '';
       
       // Refresh so public layout picks up new favicon/logo paths
       setTimeout(() => {
@@ -244,7 +280,7 @@ export default function AppearanceSettings() {
               </label>
               
               <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-32 h-32 bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden rounded-md">
+                <div className="flex-shrink-0 w-56 h-24 bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden rounded-md px-2">
                   {logoPreview ? (
                     <img 
                       src={logoPreview} 
@@ -272,10 +308,54 @@ export default function AppearanceSettings() {
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 200x50 pixels. Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
+                    Recommended size: 480×80 pixels (wide). Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
                   </p>
                   <p className="text-xs text-gray-500">
-                    This logo will appear in the site header and various other places.
+                    This logo appears in the site header (up to ~480px wide).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Logo Upload */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Footer Logo
+              </label>
+              
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0 w-56 h-24 bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden rounded-md px-2">
+                  {footerLogoPreview ? (
+                    <img 
+                      src={footerLogoPreview} 
+                      alt="Footer Logo Preview" 
+                      className="max-w-full max-h-full object-contain"
+                      onError={() => setFooterLogoPreview(null)}
+                    />
+                  ) : (
+                    <div className="text-gray-400 flex flex-col items-center justify-center">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-xs mt-1">No footer logo</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex-grow space-y-3">
+                  <input
+                    type="file"
+                    id="footerLogo"
+                    ref={footerLogoInputRef}
+                    onChange={handleFooterLogoChange}
+                    accept="image/png, image/jpeg, image/svg+xml, image/gif, image/webp"
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Recommended size: 420×80 pixels. Max 5MB. Use a light/white version for the dark footer.
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Optional. If empty, the footer falls back to the site logo or site name text.
                   </p>
                 </div>
               </div>

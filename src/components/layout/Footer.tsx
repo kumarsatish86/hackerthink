@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import FooterBrand from '@/components/layout/FooterBrand';
 
 export function Footer() {
   return (
@@ -16,16 +17,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-2 space-y-8">
-            <div>
-              <h3 className="text-4xl font-bold bg-gradient-to-r from-white to-red-200 bg-clip-text text-transparent mb-6">
-                HackerThink
-              </h3>
-              <p className="text-gray-300 text-lg leading-relaxed max-w-md">
-                Your trusted source for breaking AI news, cutting-edge research, and industry insights. 
-                Stay ahead of the AI revolution with real-time updates and expert analysis.
-              </p>
-            </div>
-            
+            <FooterBrand />
 
             {/* Enhanced Social Media */}
             <div>

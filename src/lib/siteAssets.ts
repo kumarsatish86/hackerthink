@@ -1,6 +1,6 @@
 import { query, queryOne } from '@/lib/db';
 
-export type SiteAssetKey = 'logo' | 'favicon';
+export type SiteAssetKey = 'logo' | 'favicon' | 'footer_logo';
 
 export type SiteAssetRow = {
   asset_key: string;

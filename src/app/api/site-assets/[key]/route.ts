@@ -3,7 +3,7 @@ import { getSiteAsset, type SiteAssetKey } from '@/lib/siteAssets';
 
 export const dynamic = 'force-dynamic';
 
-const ALLOWED: SiteAssetKey[] = ['logo', 'favicon'];
+const ALLOWED: SiteAssetKey[] = ['logo', 'favicon', 'footer_logo'];
 
 export async function GET(
   request: NextRequest,
