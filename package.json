@@ -7,8 +7,9 @@
     "dev:turbo": "next dev --turbopack -p 3007",
     "dev:clean": "rimraf .next && next dev -p 3007",
     "build": "next build",
-    "build:prod": "NODE_ENV=production next build",
+    "build:prod": "NODE_ENV=production BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA=true BROWSERSLIST_IGNORE_OLD_DATA=true next build",
     "build:clean": "rimraf .next && next build",
+    "refresh-browser-data": "npm i baseline-browser-mapping@latest -D && npx update-browserslist-db@latest --yes && npm i baseline-browser-mapping@latest -D",
     "start": "next start",
     "lint": "next lint",
     "migrate": "tsx src/app/api/migrations/run-migrations.ts",
@@ -110,5 +111,8 @@
     "tailwindcss": "^3.3.0",
     "tsx": "^4.19.4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "baseline-browser-mapping": "$baseline-browser-mapping"
   }
 }

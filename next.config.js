@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
 
+// Quiet [baseline-browser-mapping] spam during Next build workers.
+// Data freshness is handled by keeping the package updated (see package.json overrides).
+process.env.BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA ??= 'true';
+process.env.BROWSERSLIST_IGNORE_OLD_DATA ??= 'true';
+
 const nextConfig = {
   reactStrictMode: true,
   eslint: {
