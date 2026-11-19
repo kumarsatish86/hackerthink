@@ -107,9 +107,13 @@ export default function AppearanceSettings() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (file.type && !file.type.match(/image\/(x-icon|vnd\.microsoft\.icon|png|svg\+xml|ico)/i) && !/\.(ico|png|svg)$/i.test(file.name)) {
-      setErrorMessage('Favicon must be an ICO, PNG, or SVG file');
+    // Validate file type (browsers often report empty or octet-stream for .ico)
+    const okType =
+      !file.type ||
+      /image\/(x-icon|vnd\.microsoft\.icon|png|svg\+xml|webp|jpeg|jpg|gif)/i.test(file.type) ||
+      /\.(ico|png|svg|webp|jpe?g|gif)$/i.test(file.name);
+    if (!okType) {
+      setErrorMessage('Favicon must be an ICO, PNG, SVG, WEBP, or JPEG file');
       return;
     }
 
@@ -308,11 +312,11 @@ export default function AppearanceSettings() {
                     id="favicon"
                     ref={faviconInputRef}
                     onChange={handleFaviconChange}
-                    accept="image/x-icon, image/png, image/svg+xml"
+                    accept=".ico,.png,.svg,.webp,.jpg,.jpeg,image/x-icon,image/vnd.microsoft.icon,image/png,image/svg+xml,image/webp,image/jpeg"
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 32x32 pixels. Max file size: 1MB. Supported formats: ICO, PNG, SVG.
+                    Recommended size: 32x32 pixels. Max file size: 1MB. Supported formats: ICO, PNG, SVG, WEBP, JPEG.
                   </p>
                   <p className="text-xs text-gray-500">
                     This icon will appear in browser tabs and bookmarks.

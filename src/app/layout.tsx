@@ -10,20 +10,39 @@ export const dynamic = 'force-dynamic';
 
 const inter = Inter({ subsets: ['latin'] });
 
+function iconTypeFromPath(path: string): string {
+  const clean = path.split('?')[0].toLowerCase();
+  if (clean.endsWith('.png')) return 'image/png';
+  if (clean.endsWith('.jpg') || clean.endsWith('.jpeg')) return 'image/jpeg';
+  if (clean.endsWith('.gif')) return 'image/gif';
+  if (clean.endsWith('.webp')) return 'image/webp';
+  if (clean.endsWith('.svg')) return 'image/svg+xml';
+  if (clean.endsWith('.ico')) return 'image/x-icon';
+  if (clean.includes('/api/site-assets/favicon') || clean.includes('/api/site-favicon')) {
+    return 'image/x-icon';
+  }
+  return 'image/x-icon';
+}
+
 export async function generateMetadata() {
   try {
     // Fetch site settings using our dynamic helper
     const settings = await fetchSiteSettings(['site_name', 'site_description', 'favicon_path']);
-    
+    const faviconUrl = settings.favicon_path || '/api/site-favicon';
+    const faviconType = iconTypeFromPath(faviconUrl);
+
     return {
+      metadataBase: new URL(
+        process.env.NEXT_PUBLIC_SITE_URL ||
+          process.env.NEXTAUTH_URL ||
+          'http://localhost:3007'
+      ),
       title: settings.site_name || 'AIWeb - AI News, Tools & Learning Platform',
       description: settings.site_description || 'Your comprehensive platform for AI news, tools, learning, and model training',
       icons: {
-        icon: [
-          { url: settings.favicon_path || '/favicon.svg', type: 'image/svg+xml' },
-        ],
-        shortcut: settings.favicon_path || '/favicon.svg',
-        apple: settings.favicon_path || '/favicon.svg',
+        icon: [{ url: faviconUrl, type: faviconType }],
+        shortcut: [{ url: faviconUrl, type: faviconType }],
+        apple: [{ url: faviconUrl, type: faviconType }],
       },
     };
   } catch (error) {
@@ -31,14 +50,17 @@ export async function generateMetadata() {
     
     // Return default metadata if there's an error
     return {
+      metadataBase: new URL(
+        process.env.NEXT_PUBLIC_SITE_URL ||
+          process.env.NEXTAUTH_URL ||
+          'http://localhost:3007'
+      ),
       title: 'AIWeb - AI News, Tools & Learning Platform',
       description: 'Your comprehensive platform for AI news, tools, learning, and model training',
       icons: {
-        icon: [
-          { url: '/favicon.svg', type: 'image/svg+xml' },
-        ],
-        shortcut: '/favicon.svg',
-        apple: '/favicon.svg',
+        icon: [{ url: '/api/site-favicon', type: 'image/x-icon' }],
+        shortcut: [{ url: '/api/site-favicon', type: 'image/x-icon' }],
+        apple: [{ url: '/api/site-favicon', type: 'image/x-icon' }],
       },
     };
   }
@@ -56,13 +78,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={inter.className}>
-          {/* Fix for related commands - disabled until file is created */}
-          {/* <script src="/scripts/related-commands-fix.js" async></script> */}
-        
         <Providers>
-          <SiteLayoutWrapper>
-            {children}
-          </SiteLayoutWrapper>
+          <SiteLayoutWrapper>{children}</SiteLayoutWrapper>
         </Providers>
       </body>
     </html>

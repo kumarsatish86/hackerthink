@@ -60,11 +60,12 @@ export async function getModelsUsingDataset(dataset: DatasetCore): Promise<Datas
   const map = new Map<string, DatasetModelLink>();
 
   const fromSlug = await safeQuery(
-    `SELECT DISTINCT m.id, m.name, m.slug, m.developer, m.model_type, m.parameters, m.logo_url
+    `SELECT m.id, m.name, m.slug, m.developer, m.model_type, m.parameters, m.logo_url
      FROM ai_models m
      JOIN model_training_data td ON m.id = td.model_id
      WHERE m.status = 'published'
        AND (td.related_dataset_slug = $1 OR td.dataset_name ILIKE $2)
+     GROUP BY m.id, m.name, m.slug, m.developer, m.model_type, m.parameters, m.logo_url, m.download_count
      ORDER BY m.download_count DESC NULLS LAST
      LIMIT 24`,
     [slug, `%${name}%`]

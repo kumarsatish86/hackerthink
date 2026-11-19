@@ -71,6 +71,15 @@ const nextConfig = {
   turbopack: {},
   // Note: serverRuntimeConfig and publicRuntimeConfig have been removed in Next.js 16
   // Use environment variables directly via process.env instead
+
+  // Browsers hard-request /favicon.ico — serve the Appearance setting instead of a static file
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: '/favicon.ico', destination: '/api/site-favicon' },
+      ],
+    };
+  },
 };
 
 module.exports = nextConfig; 
