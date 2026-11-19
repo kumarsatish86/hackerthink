@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
-
 export function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -137,20 +136,22 @@ export function Navbar() {
       {/* Main Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center min-h-[4.75rem] md:min-h-[5.25rem] py-2">
-          {/* Logo — sized for ~500×75 assets */}
-          <div className="flex-shrink-0 max-w-[500px]">
-            <Link href="/" className="flex items-center">
+          {/* Compact bar — same logo size as footer (200×40) */}
+          <div className="flex justify-between items-center gap-4 h-11 py-0">
+          <div className="flex-shrink-0 w-[200px] h-[40px] overflow-hidden">
+            <Link href="/" className="flex items-center w-full h-full">
               {siteSettings.logo_path && !logoFailed ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={siteSettings.logo_path}
                   alt={siteSettings.site_name || 'HackerThink'}
-                  className="h-[56px] md:h-[75px] w-auto max-w-[500px] object-contain object-left"
+                  width={200}
+                  height={40}
+                  className="block h-[40px] w-[200px] max-h-[40px] max-w-[200px] object-contain object-left"
                   onError={() => setLogoFailed(true)}
                 />
               ) : (
-                <span className="text-2xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
+                <span className="text-lg font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
                   {siteSettings.site_name || 'HackerThink'}
                 </span>
               )}
@@ -158,7 +159,7 @@ export function Navbar() {
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-md mx-8 hidden md:flex md:items-center">
+          <div className="flex-1 max-w-sm lg:max-w-md mx-4 lg:mx-8 hidden md:flex md:items-center">
             <form 
               onSubmit={(e) => {
                 e.preventDefault();

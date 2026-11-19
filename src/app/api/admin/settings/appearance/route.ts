@@ -7,6 +7,7 @@ import { Pool } from 'pg';
 import { isDatabaseAssetStorageEnabled } from '@/lib/assetStorageSettings';
 import { siteAssetPublicUrl, upsertSiteAsset } from '@/lib/siteAssets';
 import { invalidateSiteSettingsCache } from '@/lib/siteSettings';
+import { padLogoBuffer } from '@/lib/padLogoImage';
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -152,13 +153,23 @@ export async function POST(request: NextRequest) {
       key: 'logo' | 'favicon' | 'footer_logo',
       fallbackMime: string
     ): Promise<string> => {
-      const buffer = Buffer.from(await file.arrayBuffer());
+      let buffer = Buffer.from(await file.arrayBuffer());
+      let mime = mimeFromFile(file, fallbackMime);
+      let ext = getFileExtension(file.name);
+
+      // Logos: add transparent padding so the last letter isn't clipped when scaled
+      if (key === 'logo' || key === 'footer_logo') {
+        const padded = await padLogoBuffer(buffer);
+        buffer = padded.buffer;
+        mime = padded.mime;
+        ext = '.png';
+      }
+
       if (useDatabase) {
-        const mime = mimeFromFile(file, fallbackMime);
         await upsertSiteAsset(key, mime, buffer, file.name);
         return siteAssetPublicUrl(key, version);
       }
-      const fileName = `${key}-${version}${getFileExtension(file.name)}`;
+      const fileName = `${key}-${version}${ext}`;
       const dir = join(process.cwd(), 'public', 'images');
       await ensureDir(dir);
       await writeFile(join(dir, fileName), buffer);

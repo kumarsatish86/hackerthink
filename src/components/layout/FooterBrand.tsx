@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
 export default function FooterBrand() {
   const [siteName, setSiteName] = useState('HackerThink');
   const [footerLogo, setFooterLogo] = useState('');
@@ -42,7 +41,9 @@ export default function FooterBrand() {
           <img
             src={footerLogo}
             alt={siteName}
-            className="h-[56px] md:h-[75px] w-auto max-w-[500px] object-contain object-left"
+            width={200}
+            height={40}
+            className="block h-[40px] w-[200px] max-h-[40px] max-w-[200px] object-contain object-left"
             onError={() => setLogoFailed(true)}
           />
         ) : (

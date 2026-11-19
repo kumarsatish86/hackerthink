@@ -2,7 +2,6 @@
 
 import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
 import Image from 'next/image';
-
 export default function AppearanceSettings() {
   const [settings, setSettings] = useState({
     siteLogo: '/images/default-logo.png',
@@ -279,26 +278,28 @@ export default function AppearanceSettings() {
                 Site Logo
               </label>
               
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-56 h-24 bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden rounded-md px-2">
+              <div className="flex flex-col gap-4">
+                <div className="w-[200px] h-[40px] bg-gray-100 border border-gray-200 flex items-center justify-start rounded-md px-1 overflow-hidden">
                   {logoPreview ? (
                     <img 
                       src={logoPreview} 
                       alt="Logo Preview" 
-                      className="max-w-full max-h-full object-contain"
+                      width={200}
+                      height={40}
+                      className="block h-[40px] w-[200px] max-h-[40px] max-w-[200px] object-contain object-left"
                       onError={() => setLogoPreview(null)}
                     />
                   ) : (
-                    <div className="text-gray-400 flex flex-col items-center justify-center">
+                    <div className="text-gray-400 flex items-center gap-2">
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span className="text-xs mt-1">No logo</span>
+                      <span className="text-xs">No logo</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex-grow space-y-3">
+                <div className="space-y-3">
                   <input
                     type="file"
                     id="logo"
@@ -308,10 +309,10 @@ export default function AppearanceSettings() {
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 500×75 pixels (wide). Max file size: 5MB. Supported formats: PNG, JPEG, SVG, GIF.
+                    Recommended upload: PNG ~1000×250px (or similar wide ratio) with padding around the text. Max 5MB.
                   </p>
                   <p className="text-xs text-gray-500">
-                    This logo appears in the site header at up to 500×75 pixels.
+                    Displayed at 200×40px in the header and footer. Uploads get extra padding automatically so letters aren’t clipped.
                   </p>
                 </div>
               </div>
@@ -323,26 +324,28 @@ export default function AppearanceSettings() {
                 Footer Logo
               </label>
               
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-56 h-24 bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden rounded-md px-2">
+              <div className="flex flex-col gap-4">
+                <div className="w-[200px] h-[40px] bg-gray-900 border border-gray-700 flex items-center justify-start rounded-md px-1 overflow-hidden">
                   {footerLogoPreview ? (
                     <img 
                       src={footerLogoPreview} 
                       alt="Footer Logo Preview" 
-                      className="max-w-full max-h-full object-contain"
+                      width={200}
+                      height={40}
+                      className="block h-[40px] w-[200px] max-h-[40px] max-w-[200px] object-contain object-left"
                       onError={() => setFooterLogoPreview(null)}
                     />
                   ) : (
-                    <div className="text-gray-400 flex flex-col items-center justify-center">
+                    <div className="text-gray-400 flex items-center gap-2">
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <span className="text-xs mt-1">No footer logo</span>
+                      <span className="text-xs">No footer logo</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="flex-grow space-y-3">
+                <div className="space-y-3">
                   <input
                     type="file"
                     id="footerLogo"
@@ -352,7 +355,7 @@ export default function AppearanceSettings() {
                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-600 hover:file:bg-red-100"
                   />
                   <p className="text-xs text-gray-500">
-                    Recommended size: 500×75 pixels. Max 5MB. Use a light/white version for the dark footer.
+                    Displayed at 200×40px. Upload a wide PNG with padding; prefer a light/white version for the dark footer. Max 5MB.
                   </p>
                   <p className="text-xs text-gray-500">
                     Optional. If empty, the footer falls back to the site logo or site name text.
