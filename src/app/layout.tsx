@@ -40,9 +40,12 @@ export async function generateMetadata() {
       title: settings.site_name || 'AIWeb - AI News, Tools & Learning Platform',
       description: settings.site_description || 'Your comprehensive platform for AI news, tools, learning, and model training',
       icons: {
-        icon: [{ url: faviconUrl, type: faviconType }],
+        icon: [
+          { url: faviconUrl, type: faviconType, sizes: '32x32' },
+          { url: faviconUrl, type: faviconType, sizes: '16x16' },
+        ],
         shortcut: [{ url: faviconUrl, type: faviconType }],
-        apple: [{ url: faviconUrl, type: faviconType }],
+        apple: [{ url: faviconUrl, type: faviconType, sizes: '180x180' }],
       },
     };
   } catch (error) {

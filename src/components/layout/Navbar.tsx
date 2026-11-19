@@ -137,20 +137,20 @@ export function Navbar() {
       {/* Main Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-12">
+          <div className="flex justify-between items-center h-16 md:h-[4.25rem]">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center py-1">
               {siteSettings.logo_path && !logoFailed ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={siteSettings.logo_path}
                   alt={siteSettings.site_name || 'HackerThink'}
-                  className="h-8 w-auto max-w-[180px] object-contain"
+                  className="h-11 md:h-12 w-auto max-w-[220px] md:max-w-[280px] object-contain object-left"
                   onError={() => setLogoFailed(true)}
                 />
               ) : (
-                <span className="text-xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
+                <span className="text-2xl font-black bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">
                   {siteSettings.site_name || 'HackerThink'}
                 </span>
               )}
